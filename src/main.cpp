@@ -38,6 +38,17 @@ int main(int argc, char** argv) {
                                             .setDescription("Height of maze")
                                             .setRequired(true)
                         )
+                        .addOption(Option("algorithm")
+                                            .addAliases({"-a", "--algorithm"})
+                                            .addArguments({"string"})
+                                            .setDescription("Algorithm to generate maze")
+                                            .setRequired(true)
+                        )
+                        .addOption(Option("seed")
+                                           .addAliases({"-se", "--seed"})
+                                           .addArguments({"double"})
+                                           .setDescription("Seed for random number generator")
+                        )
                         .addOption(Option("start")
                                             .addAliases({"-s", "--start"})
                                             .addArguments({"int", "int"})
@@ -50,6 +61,18 @@ int main(int argc, char** argv) {
                                             .setDescription("End position of maze")
                                             .setDefaults({-1, -1})
                         )
+                        .addOption(Option("pathWidth")
+                                           .addAliases({"-pw", "--pathWidth"})
+                                           .addArguments({"int"})
+                                           .setDescription("Path width between walls")
+                                           .setDefaults({3})
+                        )
+                        .addOption(Option("wallWidth")
+                                           .addAliases({"-ww", "--wallWidth"})
+                                           .addArguments({"int"})
+                                           .setDescription("Wall width between paths")
+                                           .setDefaults({1})
+                        )
                         .addOption(Option("file")
                                             .addAliases({"-f", "--file"})
                                             .addArguments({"string"})
@@ -60,61 +83,17 @@ int main(int argc, char** argv) {
                                             .addArguments({"string"})
                                             .setDescription("Path to image")
                         )
-                        .addOption(Option("algorithm")
-                                            .addAliases({"-a", "--algorithm"})
-                                            .addArguments({"string"})
-                                            .setDescription("Algorithm to generate maze")
-                                            .setRequired(true)
-                        )
-                        .addOption(Option("seed")
-                                            .addAliases({"-se", "--seed"})
-                                            .addArguments({"double"})
-                                            .setDescription("Seed for random number generator")
-                        )
-                        .addOption(Option("gap")
-                                            .addAliases({"-g", "--gap"})
-                                            .addArguments({"int"})
-                                            .setDescription("Gap between cells")
-                                            .setDefaults({3})
-                        )
-                        .addOption(Option("path")
-                                            .addAliases({"-p", "--path"})
-                                            .setDescription("Show path from start to end")
-                        )
                         .returns([=](std::map<std::string, std::optional<std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>>>> map) {
 
-                            for (auto const& [key, val] : map) {
-                                cout << key << " : ";
-
-                                if (val != std::nullopt) {
-                                    for (auto const& v : val.value()) {
-                                        if (v.index() == 0) {
-                                            cout << std::get<int>(v) << " ";
-                                        } else if (v.index() == 1) {
-                                            cout << std::get<double>(v) << " ";
-                                        } else if (v.index() == 2) {
-                                            cout << std::get<bool>(v) << " ";
-                                        } else if (v.index() == 3) {
-                                            cout << std::get<std::string>(v) << " ";
-                                        } else {
-                                            cout << "nullopt ";
-                                        }
-                                    }
-                                } else {
-                                    cout << "null";
-                                }
-
-                                cout << endl;
-                            }
-
                             std::string algorithm;
-
-                            if (map["algorithm"].has_value()) {
-                                algorithm = std::get<std::string>(map["algorithm"].value()[0]);
-                            }
-
                             int width = 0;
                             int height = 0;
+                            unsigned int seed = time(nullptr);
+
+                            if (map["algorithm"].has_value()) {
+                                // TODO: Get algorithm from map
+                                algorithm = std::get<std::string>(map["algorithm"].value()[0]);
+                            }
 
                             if (map["width"].has_value()) {
                                 width = std::get<int>(map["width"].value()[0]);
@@ -123,8 +102,6 @@ int main(int argc, char** argv) {
                             if (map["height"].has_value()) {
                                 height = std::get<int>(map["height"].value()[0]);
                             }
-
-                            unsigned int seed = time(nullptr);
 
                             if (map["seed"].has_value()) {
                                 seed = static_cast<unsigned int>(std::get<double>(map["seed"].value()[0]));
@@ -144,7 +121,7 @@ int main(int argc, char** argv) {
 
                                 builder.setStart({x, y});
 
-                                if (!builder.isValid()) {
+                                if (builder.isValid().has_value()) {
                                     cout << " mazelib:  - Start: " << x << " " << y << " (invalid)" << endl;
                                     return 1;
                                 } else {
@@ -156,9 +133,14 @@ int main(int argc, char** argv) {
                                 int x = std::get<int>(map["end"].value()[0]);
                                 int y = std::get<int>(map["end"].value()[1]);
 
-                                builder.setEnd({x, y});
+                                if (x == -1 && y == -1) {
+                                    x = width - 1;
+                                    y = height - 1;
+                                }
 
-                                if (!builder.isValid()) {
+                                builder.setEnd({x,y});
+
+                                if (builder.isValid().has_value()) {
                                     cout << " mazelib:  - End: " << x << " " << y << " (invalid)" << endl;
                                     return 1;
                                 } else {
@@ -166,29 +148,66 @@ int main(int argc, char** argv) {
                                 }
                             }
 
-                            if (map["path"].has_value()) {
-//                                builder.setPath(true);
+                            if (map["wallWidth"].has_value()) {
+                                int wallWidth = std::get<int>(map["wallWidth"].value()[0]);
 
-                                cout << " mazelib:  - Path: true" << endl;
+                                builder.setWallWidth(wallWidth);
+
+                                if (builder.isValid().has_value()) {
+                                    cout << " mazelib:  - Wall Width: " << wallWidth << " (invalid)" << endl;
+                                    return 1;
+                                } else {
+                                    cout << " mazelib:  - Wall Width: " << wallWidth << endl;
+                                }
                             }
 
-                            if (map["gap"].has_value()) {
-                                int gap = std::get<int>(map["gap"].value()[0]);
+                            if (map["pathWidth"].has_value()) {
+                                int pathWidth = std::get<int>(map["pathWidth"].value()[0]);
 
-//                                builder.setGap(gap);
+                                builder.setPathWidth(pathWidth);
 
-                                cout << " mazelib:  - Gap: " << gap << endl;
+                                if (builder.isValid().has_value()) {
+                                    cout << " mazelib:  - Path Width: " << pathWidth << " (invalid)" << endl;
+                                    return 1;
+                                } else {
+                                    cout << " mazelib:  - Path Width: " << pathWidth << endl;
+                                }
                             }
 
+                            Maze maze = builder.build();
 
-//                            if (map["file"].index)) {
-//                                cout << " mazelib:  - File: " << get<string>(map["file"][0]) << endl;
-//                            }
-//
-//                            if (!map["image"].empty()) {
-//                                cout << " mazelib:  - Image: " << get<string>(map["image"][0]) << endl;
-//                            }
+                            if (map["file"].has_value() || map["image"].has_value()) {
 
+                                if (map["image"].has_value()) {
+                                    std::string image = std::get<std::string>(map["image"].value()[0]);
+
+                                    cout << " mazelib:  - Image Path: " << image << endl;
+
+                                    int status = ImageSavingMethod().save(maze,image).valueOr(1);
+
+                                    if (status == 0) {
+                                        cout << " mazelib:     - Image saved successfully" << endl;
+                                    } else {
+                                        cout << " mazelib:     - Image saving failed" << endl;
+                                    }
+                                }
+
+                                if (map["file"].has_value()) {
+                                    std::string file = std::get<std::string>(map["file"].value()[0]);
+
+                                    cout << " mazelib:  - File Path: " << file << endl;
+
+                                    int status = TextFileSavingMethod().save(maze, file).valueOr(1);
+
+                                    if (status == 0) {
+                                        cout << " mazelib:     - File saved successfully" << endl;
+                                    } else {
+                                        cout << " mazelib:     - File saving failed" << endl;
+                                    }
+                                }
+                            }
+
+                            cout << endl;
                             return 0;
                         })
     );

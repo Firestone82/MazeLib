@@ -417,3 +417,9 @@ Maze MazeBuilder::build() {
             this->graph
     );
 }
+
+std::optional<std::string> MazeBuilder::isValid() const {
+    // TODO: Checks
+
+    return std::nullopt;
+}
