@@ -107,26 +107,79 @@ int main(int argc, char** argv) {
                                 cout << endl;
                             }
 
-//                            std::string algorithm = std::get<std::string>(map["algorithm"][0]);
-//
-//                            int width = std::get<int>(map["width"][0]);
-//                            int height = std::get<int>(map["height"][0]);
-//
-//                            int startX = std::get<int>(map["start"][0]);
-//                            int startY = std::get<int>(map["start"][1]);
-//
-//                            int endX = std::get<int>(map["end"][0]);
-//                            int endY = std::get<int>(map["end"][1]);
-//
-//                            int gap = std::get<int>(map["gap"][0]);
-//
-//                            cout << endl;
-//                            cout << " mazelib: Generating maze..." << endl;
-//                            cout << " mazelib:  - Width: " << width << endl;
-//                            cout << " mazelib:  - Height: " << height << endl;
-//                            cout << " mazelib:  - Start: " << startX << ", " << startY << endl;
-//                            cout << " mazelib:  - End: " << endX << ", " << endY << endl;
-//                            cout << " mazelib:  - Algorithm: " << algorithm << endl;
+                            std::string algorithm;
+
+                            if (map["algorithm"].has_value()) {
+                                algorithm = std::get<std::string>(map["algorithm"].value()[0]);
+                            }
+
+                            int width = 0;
+                            int height = 0;
+
+                            if (map["width"].has_value()) {
+                                width = std::get<int>(map["width"].value()[0]);
+                            }
+
+                            if (map["height"].has_value()) {
+                                height = std::get<int>(map["height"].value()[0]);
+                            }
+
+                            unsigned int seed = time(nullptr);
+
+                            if (map["seed"].has_value()) {
+                                seed = static_cast<unsigned int>(std::get<double>(map["seed"].value()[0]));
+                            }
+
+                            cout << endl;
+                            cout << " mazelib: Generating maze..." << endl;
+                            cout << " mazelib:  - Algorithm: " << algorithm << endl;
+                            cout << " mazelib:  - Width: " << width << endl;
+                            cout << " mazelib:  - Height: " << height << endl;
+
+                            MazeBuilder builder = KruskalAlgorithm(seed).generate(width, height);
+
+                            if (map["start"].has_value()) {
+                                int x = std::get<int>(map["start"].value()[0]);
+                                int y = std::get<int>(map["start"].value()[1]);
+
+                                builder.setStart({x, y});
+
+                                if (!builder.isValid()) {
+                                    cout << " mazelib:  - Start: " << x << " " << y << " (invalid)" << endl;
+                                    return 1;
+                                } else {
+                                    cout << " mazelib:  - Start: " << x << " " << y << endl;
+                                }
+                            }
+
+                            if (map["end"].has_value()) {
+                                int x = std::get<int>(map["end"].value()[0]);
+                                int y = std::get<int>(map["end"].value()[1]);
+
+                                builder.setEnd({x, y});
+
+                                if (!builder.isValid()) {
+                                    cout << " mazelib:  - End: " << x << " " << y << " (invalid)" << endl;
+                                    return 1;
+                                } else {
+                                    cout << " mazelib:  - End: " << x << " " << y << endl;
+                                }
+                            }
+
+                            if (map["path"].has_value()) {
+//                                builder.setPath(true);
+
+                                cout << " mazelib:  - Path: true" << endl;
+                            }
+
+                            if (map["gap"].has_value()) {
+                                int gap = std::get<int>(map["gap"].value()[0]);
+
+//                                builder.setGap(gap);
+
+                                cout << " mazelib:  - Gap: " << gap << endl;
+                            }
+
 
 //                            if (map["file"].index)) {
 //                                cout << " mazelib:  - File: " << get<string>(map["file"][0]) << endl;
@@ -134,18 +187,6 @@ int main(int argc, char** argv) {
 //
 //                            if (!map["image"].empty()) {
 //                                cout << " mazelib:  - Image: " << get<string>(map["image"][0]) << endl;
-//                            }
-//
-//                            if (!map["seed"].empty()) {
-//                                cout << " mazelib:  - Seed: " << get<double>(map["seed"][0]) << endl;
-//                            }
-//
-//                            if (!map["gap"].empty()) {
-//                                cout << " mazelib:  - Gap: " << get<int>(map["gap"][0]) << endl;
-//                            }
-//
-//                            if (!map["path"].empty()) {
-//                                cout << " mazelib:  - Path: " << get<bool>(map["path"][0]) << endl;
 //                            }
 
                             return 0;
