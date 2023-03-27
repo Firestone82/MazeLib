@@ -291,27 +291,27 @@ int main(int argc, char** argv) {
                       .returns([=](std::map<std::string, std::optional<std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>>>> map) {
                             cout << endl << " Parsed Arguments:" << endl;
 
-                          for (auto const& [key, val] : map) {
-                              cout << key << " : ";
-
-                              if (val != std::nullopt) {
-                                  for (auto const& v : val.value()) {
-                                      if (v.index() == 0) {
-                                          cout << std::get<int>(v) << " 0 ";
-                                      } else if (v.index() == 1) {
-                                          cout << std::get<double>(v) << " 1 ";
-                                      } else if (v.index() == 2) {
-                                          cout << std::get<bool>(v) << " 2 ";
-                                      } else if (v.index() == 3) {
-                                          cout << std::get<std::string>(v) << " 3 ";
-                                      }
-                                  }
-                              } else {
-                                  cout << "null";
-                              }
-
-                              cout << endl;
-                          }
+//                          for (auto const& [key, val] : map) {
+//                              cout << key << " : ";
+//
+//                              if (val != std::nullopt) {
+//                                  for (auto const& v : val.value()) {
+//                                      if (v.index() == 0) {
+//                                          cout << std::get<int>(v) << " 0 ";
+//                                      } else if (v.index() == 1) {
+//                                          cout << std::get<double>(v) << " 1 ";
+//                                      } else if (v.index() == 2) {
+//                                          cout << std::get<bool>(v) << " 2 ";
+//                                      } else if (v.index() == 3) {
+//                                          cout << std::get<std::string>(v) << " 3 ";
+//                                      }
+//                                  }
+//                              } else {
+//                                  cout << "null";
+//                              }
+//
+//                              cout << endl;
+//                          }
 
                             return 0;
                         })
