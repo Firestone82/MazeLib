@@ -7,8 +7,8 @@ Expected<int> TextFileSavingMethod::save(const Maze& maze, std::string fileName)
 }
 
 Expected<int> TextFileSavingMethod::save(const Maze& maze, std::string fileName, std::optional<MazePath> path) {
-    if (maze.isValid() != std::nullopt) return Expected<int>(maze.isValid().value());
-    if (path != std::nullopt && path.value().isValid() != std::nullopt) return Expected<int>(path.value().isValid().value());
+    if (maze.isValid() != std::nullopt) return Expected<int>(maze.getError().value());
+    if (path != std::nullopt && path.value().getError() != std::nullopt) return Expected<int>(path.value().getError().value());
 
     nlohmann::ordered_json mazeObject = {
         {"width", maze.getWidth()},

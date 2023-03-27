@@ -106,49 +106,65 @@ Graph Maze::getGraph() const {
     return this->graph;
 }
 
-std::optional<std::string> Maze::isValid() const {
+std::optional<std::vector<std::string>> Maze::isValid() const {
+    std::vector<std::string> errors;
+
     if (this->width <= 0) {
-        return "Width must be greater than 0";
+        errors.push_back("Width must be greater than 0");
     }
 
     if (this->height <= 0) {
-        return "Height must be greater than 0";
+        errors.push_back("Height must be greater than 0");
     }
 
     if (this->pathWidth <= 0) {
-        return "Path width must be greater than 0";
+        errors.push_back("Path width must be greater than 0");
     }
 
     if (this->wallWidth <= 0) {
-        return "Wall width must be greater than 0";
+        errors.push_back("Wall width must be greater than 0");
     }
 
     if (std::get<0>(this->start) < 0 || std::get<0>(this->start) >= this->width) {
-        return "Start X coordinate must be between 0 and width";
+        errors.push_back("Start X coordinate must be between 0 and width");
     }
 
     if (std::get<1>(this->start) < 0 || std::get<1>(this->start) >= this->height) {
-        return "Start Y coordinate must be between 0 and height";
+        errors.push_back("Start Y coordinate must be between 0 and height");
     }
 
     if (std::get<0>(this->end) < 0 || std::get<0>(this->end) >= this->width) {
-        return "End X coordinate must be between 0 and width";
+        errors.push_back("End X coordinate must be between 0 and width");
     }
 
     if (std::get<1>(this->end) < 0 || std::get<1>(this->end) >= this->height) {
-        return "End Y coordinate must be between 0 and height";
+        errors.push_back("End Y coordinate must be between 0 and height");
     }
 
     if (this->start == this->end) {
-        return "Start and end coordinates must be different";
+        errors.push_back("Start and end coordinates must be different");
     }
 
     if (this->graph.size() < 4) {
-        return "Graph must have at least 4 node";
+        errors.push_back("Graph must have at least 4 node");
     }
 
     if (this->graph.size() != this->width * this->height) {
-        return "Graph must have the same amount of nodes as the width and height of the maze";
+        errors.push_back("Graph must have the same number of nodes as width * height");
+    }
+
+    if (errors.size() > 0) {
+        return errors;
+    }
+
+    return std::nullopt;
+}
+
+std::optional<std::string> Maze::getError() const {
+    auto errors = this->isValid();
+
+    if (errors.has_value()) {
+        return errors.value()[0];
     }
 
     return std::nullopt;
@@ -222,9 +238,25 @@ std::vector<std::shared_ptr<Node>> MazePath::getNodes() const {
     return this->nodes;
 }
 
-std::optional<std::string> MazePath::isValid() const {
+std::optional<std::vector<std::string>> MazePath::isValid() const {
+    std::vector<std::string> errors;
+
     if (this->nodes.size() < 2) {
-        return "Path must have at least 2 nodes";
+        errors.push_back("Path must have at least 2 nodes");
+    }
+
+    if (errors.size() > 0) {
+        return errors;
+    }
+
+    return std::nullopt;
+}
+
+std::optional<std::string> MazePath::getError() const {
+    auto errors = this->isValid();
+
+    if (errors.has_value()) {
+        return errors.value()[0];
     }
 
     return std::nullopt;
@@ -403,7 +435,7 @@ Graph MazeBuilder::getGraph() {
  * Build the maze
  * @return maze
  */
-Maze MazeBuilder::build() {
+Maze MazeBuilder::build() const {
     return Maze(
             this->width,
             this->height,
@@ -416,10 +448,4 @@ Maze MazeBuilder::build() {
             this->seed,
             this->graph
     );
-}
-
-std::optional<std::string> MazeBuilder::isValid() const {
-    // TODO: Checks
-
-    return std::nullopt;
 }

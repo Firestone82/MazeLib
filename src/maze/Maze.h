@@ -31,7 +31,8 @@ class Maze {
         unsigned int getSeed() const;
         Graph getGraph() const;
 
-        std::optional<std::string> isValid() const;
+        std::optional<std::string> getError() const;
+        std::optional<std::vector<std::string>>isValid() const;
 };
 
 class MazePath {
@@ -53,7 +54,8 @@ class MazePath {
         void addNode(std::shared_ptr<Node> node);
         std::vector<std::shared_ptr<Node>> getNodes() const;
 
-        std::optional<std::string> isValid() const;
+        std::optional<std::string> getError() const;
+        std::optional<std::vector<std::string>>isValid() const;
 };
 
 class MazeBuilder {
@@ -97,7 +99,5 @@ class MazeBuilder {
         void setGraph(const Graph& graph);
         Graph getGraph();
 
-        std::optional<std::string> isValid() const;
-
-        Maze build();
+        Maze build() const;
 };

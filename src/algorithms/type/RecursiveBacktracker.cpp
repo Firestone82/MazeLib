@@ -3,7 +3,7 @@
 using namespace std;
 
 Expected<MazePath> RecursiveBacktrackerAlgorithm::solve(Maze& maze) {
-    if (maze.isValid() != nullopt) return Expected<MazePath>(maze.isValid().value());
+    if (maze.isValid() != nullopt) return Expected<MazePath>(maze.getError().value());
 
     stack<shared_ptr<Node>> stack;
     vector<shared_ptr<Node>> nodes;

@@ -113,7 +113,16 @@ int main(int argc, char** argv) {
                             cout << " mazelib:  - Width: " << width << endl;
                             cout << " mazelib:  - Height: " << height << endl;
 
-                            MazeBuilder builder = KruskalAlgorithm(seed).generate(width, height);
+                            Expected<MazeBuilder> expectedBuilder = KruskalAlgorithm(seed).generate(width, height);
+
+                            if (expectedBuilder.hasError()) {
+                                cout << endl;
+                                cout << " mazelib: Maze generation failed. " << endl;
+                                cout << " mazelib:  - Error: " << expectedBuilder.error() << endl;
+                                return 2;
+                            }
+
+                            MazeBuilder builder = expectedBuilder.value();
 
                             if (map["start"].has_value()) {
                                 int x = std::get<int>(map["start"].value()[0]);
@@ -121,12 +130,7 @@ int main(int argc, char** argv) {
 
                                 builder.setStart({x, y});
 
-                                if (builder.isValid().has_value()) {
-                                    cout << " mazelib:  - Start: " << x << " " << y << " (invalid)" << endl;
-                                    return 1;
-                                } else {
-                                    cout << " mazelib:  - Start: " << x << " " << y << endl;
-                                }
+                                cout << " mazelib:  - Start: " << x << " " << y << endl;
                             }
 
                             if (map["end"].has_value()) {
@@ -140,12 +144,7 @@ int main(int argc, char** argv) {
 
                                 builder.setEnd({x,y});
 
-                                if (builder.isValid().has_value()) {
-                                    cout << " mazelib:  - End: " << x << " " << y << " (invalid)" << endl;
-                                    return 1;
-                                } else {
-                                    cout << " mazelib:  - End: " << x << " " << y << endl;
-                                }
+                                cout << " mazelib:  - End: " << x << " " << y << endl;
                             }
 
                             if (map["wallWidth"].has_value()) {
@@ -153,12 +152,7 @@ int main(int argc, char** argv) {
 
                                 builder.setWallWidth(wallWidth);
 
-                                if (builder.isValid().has_value()) {
-                                    cout << " mazelib:  - Wall Width: " << wallWidth << " (invalid)" << endl;
-                                    return 1;
-                                } else {
-                                    cout << " mazelib:  - Wall Width: " << wallWidth << endl;
-                                }
+                                cout << " mazelib:  - Wall Width: " << wallWidth << endl;
                             }
 
                             if (map["pathWidth"].has_value()) {
@@ -166,15 +160,24 @@ int main(int argc, char** argv) {
 
                                 builder.setPathWidth(pathWidth);
 
-                                if (builder.isValid().has_value()) {
-                                    cout << " mazelib:  - Path Width: " << pathWidth << " (invalid)" << endl;
-                                    return 1;
-                                } else {
-                                    cout << " mazelib:  - Path Width: " << pathWidth << endl;
-                                }
+                                cout << " mazelib:  - Path Width: " << pathWidth << endl;
                             }
 
                             Maze maze = builder.build();
+                            auto errors = maze.isValid();
+
+                            if (errors.has_value()) {
+                                cout << endl;
+                                cout << " mazelib: Maze generation failed. " << endl;
+                                cout << " mazelib:  - Errors: " << endl;
+
+                                for (const auto& error : errors.value()) {
+                                    cout << " mazelib:    -  " << error << endl;
+                                }
+
+                                cout << endl;
+                                return 3;
+                            }
 
                             if (map["file"].has_value() || map["image"].has_value()) {
 
@@ -207,7 +210,6 @@ int main(int argc, char** argv) {
                                 }
                             }
 
-                            cout << endl;
                             return 0;
                         })
     );
@@ -291,27 +293,27 @@ int main(int argc, char** argv) {
                       .returns([=](std::map<std::string, std::optional<std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>>>> map) {
                             cout << endl << " Parsed Arguments:" << endl;
 
-                          for (auto const& [key, val] : map) {
-                              cout << key << " : ";
-
-                              if (val != std::nullopt) {
-                                  for (auto const& v : val.value()) {
-                                      if (v.index() == 0) {
-                                          cout << std::get<int>(v) << " 0 ";
-                                      } else if (v.index() == 1) {
-                                          cout << std::get<double>(v) << " 1 ";
-                                      } else if (v.index() == 2) {
-                                          cout << std::get<bool>(v) << " 2 ";
-                                      } else if (v.index() == 3) {
-                                          cout << std::get<std::string>(v) << " 3 ";
-                                      }
-                                  }
-                              } else {
-                                  cout << "null";
-                              }
-
-                              cout << endl;
-                          }
+//                          for (auto const& [key, val] : map) {
+//                              cout << key << " : ";
+//
+//                              if (val != std::nullopt) {
+//                                  for (auto const& v : val.value()) {
+//                                      if (v.index() == 0) {
+//                                          cout << std::get<int>(v) << " 0 ";
+//                                      } else if (v.index() == 1) {
+//                                          cout << std::get<double>(v) << " 1 ";
+//                                      } else if (v.index() == 2) {
+//                                          cout << std::get<bool>(v) << " 2 ";
+//                                      } else if (v.index() == 3) {
+//                                          cout << std::get<std::string>(v) << " 3 ";
+//                                      }
+//                                  }
+//                              } else {
+//                                  cout << "null";
+//                              }
+//
+//                              cout << endl;
+//                          }
 
                             return 0;
                         })

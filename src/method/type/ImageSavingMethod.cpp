@@ -5,8 +5,8 @@ Expected<int> ImageSavingMethod::save(const Maze& maze, std::string fileName) {
 }
 
 Expected<int> ImageSavingMethod::save(const Maze& maze, std::string fileName, std::optional<MazePath> path) {
-    if (maze.isValid() != std::nullopt) return Expected<int>(maze.isValid().value());
-    if (path != std::nullopt && path.value().isValid() != std::nullopt) return Expected<int>(path.value().isValid().value());
+    if (maze.isValid() != std::nullopt) return Expected<int>(maze.getError().value());
+    if (path != std::nullopt && path.value().getError() != std::nullopt) return Expected<int>(path.value().getError().value());
 
     int pathWidth = maze.getPathWidth();
     int wallWidth = maze.getWallWidth();

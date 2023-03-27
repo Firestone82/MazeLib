@@ -25,7 +25,7 @@ KruskalAlgorithm::KruskalAlgorithm(unsigned int seed) : GeneratingAlgorithm("Kru
  */
 Expected<MazeBuilder> KruskalAlgorithm::generate(int width, int height) {
     if (this->seed <= 0)            return Expected<MazeBuilder>("Seed must be greater than 0");
-    if (width < 2 || height < 2)    return Expected<MazeBuilder>("Width and height must be greater than 2");
+    if (width < 2 || height < 2)    return Expected<MazeBuilder>("Width and height must be greater than 1");
 
     // Seed the random number generator
     srand(this->seed);
