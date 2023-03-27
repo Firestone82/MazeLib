@@ -91,7 +91,6 @@ int main(int argc, char** argv) {
                             unsigned int seed = time(nullptr);
 
                             if (map["algorithm"].has_value()) {
-                                // TODO: Get algorithm from map
                                 algorithm = std::get<std::string>(map["algorithm"].value()[0]);
                             }
 
@@ -107,13 +106,22 @@ int main(int argc, char** argv) {
                                 seed = static_cast<unsigned int>(std::get<double>(map["seed"].value()[0]));
                             }
 
-                            cout << endl;
-                            cout << " mazelib: Generating maze..." << endl;
-                            cout << " mazelib:  - Algorithm: " << algorithm << endl;
-                            cout << " mazelib:  - Width: " << width << endl;
-                            cout << " mazelib:  - Height: " << height << endl;
+                            std::unique_ptr<GeneratingAlgorithm> generatingAlgorithm = GeneratingAlgorithm::getGenerator(algorithm, seed);
 
-                            Expected<MazeBuilder> expectedBuilder = KruskalAlgorithm(seed).generate(width, height);
+                            if (generatingAlgorithm == nullptr) {
+                                cout << endl;
+                                cout << " mazelib: Maze generation failed. " << endl;
+                                cout << " mazelib:  - Error: Unknown algorithm '" << algorithm << "'" << endl;
+                                return 1;
+                            } else {
+                                cout << endl;
+                                cout << " mazelib: Generating maze..." << endl;
+                                cout << " mazelib:  - Algorithm: " << algorithm << endl;
+                                cout << " mazelib:  - Width: " << width << endl;
+                                cout << " mazelib:  - Height: " << height << endl;
+                            }
+
+                            Expected<MazeBuilder> expectedBuilder = generatingAlgorithm->generate(width, height);
 
                             if (expectedBuilder.hasError()) {
                                 cout << endl;
@@ -172,10 +180,9 @@ int main(int argc, char** argv) {
                                 cout << " mazelib:  - Errors: " << endl;
 
                                 for (const auto& error : errors.value()) {
-                                    cout << " mazelib:    -  " << error << endl;
+                                    cout << " mazelib:     - " << error << endl;
                                 }
 
-                                cout << endl;
                                 return 3;
                             }
 

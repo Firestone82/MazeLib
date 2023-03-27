@@ -30,6 +30,10 @@ class GeneratingAlgorithm : public Algorithm {
         virtual ~GeneratingAlgorithm() = default;
 
         virtual Expected<MazeBuilder> generate(int width, int height) = 0;
+
+        static std::vector<std::unique_ptr<GeneratingAlgorithm>> getGenerators();
+        static std::unique_ptr<GeneratingAlgorithm> getGenerator(std::string name);
+        static std::unique_ptr<GeneratingAlgorithm> getGenerator(std::string name, unsigned int seed);
 };
 
 class KruskalAlgorithm : public GeneratingAlgorithm {
@@ -45,10 +49,13 @@ class KruskalAlgorithm : public GeneratingAlgorithm {
 
 class SolvingAlgorithm : public Algorithm {
     public:
-        explicit SolvingAlgorithm(std::string name) : Algorithm(name,"solving") {};
+        explicit SolvingAlgorithm(std::string name);
         virtual ~SolvingAlgorithm() = default;
 
         virtual Expected<MazePath> solve(Maze& maze) = 0;
+
+        static std::vector<std::unique_ptr<SolvingAlgorithm>> getGenerators();
+        static std::unique_ptr<SolvingAlgorithm> getGenerator(std::string name);
 };
 
 class RecursiveBacktrackerAlgorithm : public SolvingAlgorithm {
@@ -58,4 +65,3 @@ class RecursiveBacktrackerAlgorithm : public SolvingAlgorithm {
 
         Expected<MazePath> solve(Maze& maze) override;
 };
-
