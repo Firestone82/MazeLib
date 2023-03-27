@@ -142,6 +142,7 @@ int Category::call(int argc, char** argv) const {
         }
     }
 
+
     // If there is no arguments but there is required options, show error
     if (argc == 0 && required) {
         std::cout << std::endl << " mazelib: Missing required arguments, try 'mazelib " << this->getName() << " --help' for more information!" << std::endl;
@@ -149,7 +150,7 @@ int Category::call(int argc, char** argv) const {
     }
 
     // Show help message
-    if (strcmp(argv[0], "--help") == 0) {
+    if (argc != 0 && strcmp(argv[0], "--help") == 0) {
         std::cout << "" << std::endl;
         std::cout << " Command: " << this->getUsage() << std::endl;
         std::cout << "" << std::endl;
