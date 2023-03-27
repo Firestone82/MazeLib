@@ -28,6 +28,24 @@ std::string Algorithm::getType() {
 }
 
 /**
+ * Returns all algorithms
+ * @return list of algorithms
+ */
+std::vector<std::shared_ptr<Algorithm>> Algorithm::getAlgorithms() {
+    std::vector<std::shared_ptr<Algorithm>> algorithms;
+
+    for (auto& generator : GeneratingAlgorithm::getGenerators()) {
+        algorithms.push_back(generator);
+    }
+
+    for (auto& solver : SolvingAlgorithm::getSolvers()) {
+        algorithms.push_back(solver);
+    }
+
+    return algorithms;
+}
+
+/**
 * =================================================================================================
 */
 
@@ -46,8 +64,8 @@ GeneratingAlgorithm::GeneratingAlgorithm(std::string name, unsigned int seed)
  * Returns all generators
  * @return list of generators
  */
-std::vector<std::unique_ptr<GeneratingAlgorithm>> GeneratingAlgorithm::getGenerators() {
-    std::vector<std::unique_ptr<GeneratingAlgorithm>> generators;
+std::vector<std::shared_ptr<GeneratingAlgorithm>> GeneratingAlgorithm::getGenerators() {
+    std::vector<std::shared_ptr<GeneratingAlgorithm>> generators;
 
     generators.push_back(std::make_unique<KruskalAlgorithm>());
 
@@ -59,7 +77,7 @@ std::vector<std::unique_ptr<GeneratingAlgorithm>> GeneratingAlgorithm::getGenera
  * @param name generator name
  * @return Generator
  */
-std::unique_ptr<GeneratingAlgorithm> GeneratingAlgorithm::getGenerator(std::string name) {
+std::shared_ptr<GeneratingAlgorithm> GeneratingAlgorithm::getGenerator(std::string name) {
     return GeneratingAlgorithm::getGenerator(name,time(nullptr));
 }
 
@@ -69,12 +87,12 @@ std::unique_ptr<GeneratingAlgorithm> GeneratingAlgorithm::getGenerator(std::stri
  * @param seed seed of the generator
  * @return Generator
  */
-std::unique_ptr<GeneratingAlgorithm> GeneratingAlgorithm::getGenerator(std::string name, unsigned int seed) {
+std::shared_ptr<GeneratingAlgorithm> GeneratingAlgorithm::getGenerator(std::string name, unsigned int seed) {
     std::transform(name.begin(),name.end(),name.begin(),::tolower);
 
     for (auto& generator : GeneratingAlgorithm::getGenerators()) {
         if (generator->getName() == name) {
-            return std::make_unique<KruskalAlgorithm>(seed);
+            return std::make_shared<KruskalAlgorithm>(seed);
         }
     }
 
@@ -95,8 +113,8 @@ SolvingAlgorithm::SolvingAlgorithm(std::string name)
     // empty
 };
 
-std::vector<std::unique_ptr<SolvingAlgorithm>> SolvingAlgorithm::getGenerators() {
-    std::vector<std::unique_ptr<SolvingAlgorithm>> generators;
+std::vector<std::shared_ptr<SolvingAlgorithm>> SolvingAlgorithm::getSolvers() {
+    std::vector<std::shared_ptr<SolvingAlgorithm>> generators;
 
     generators.push_back(std::make_unique<RecursiveBacktrackerAlgorithm>());
 
@@ -108,10 +126,10 @@ std::vector<std::unique_ptr<SolvingAlgorithm>> SolvingAlgorithm::getGenerators()
  * @param name solver name
  * @return Solver
  */
-std::unique_ptr<SolvingAlgorithm> SolvingAlgorithm::getGenerator(std::string name) {
+std::shared_ptr<SolvingAlgorithm> SolvingAlgorithm::getSolvers(std::string name) {
     std::transform(name.begin(),name.end(),name.begin(),::tolower);
 
-    for (auto& solver : SolvingAlgorithm::getGenerators()) {
+    for (auto& solver : SolvingAlgorithm::getSolvers()) {
         if (solver->getName() == name) {
             return std::move(solver);
         }

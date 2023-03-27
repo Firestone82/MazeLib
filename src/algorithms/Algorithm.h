@@ -17,6 +17,8 @@ class Algorithm {
 
         std::string getName();
         std::string getType();
+
+        static std::vector<std::shared_ptr<Algorithm>> getAlgorithms();
 };
 
 // --------------------------------
@@ -31,9 +33,9 @@ class GeneratingAlgorithm : public Algorithm {
 
         virtual Expected<MazeBuilder> generate(int width, int height) = 0;
 
-        static std::vector<std::unique_ptr<GeneratingAlgorithm>> getGenerators();
-        static std::unique_ptr<GeneratingAlgorithm> getGenerator(std::string name);
-        static std::unique_ptr<GeneratingAlgorithm> getGenerator(std::string name, unsigned int seed);
+        static std::vector<std::shared_ptr<GeneratingAlgorithm>> getGenerators();
+        static std::shared_ptr<GeneratingAlgorithm> getGenerator(std::string name);
+        static std::shared_ptr<GeneratingAlgorithm> getGenerator(std::string name, unsigned int seed);
 };
 
 class KruskalAlgorithm : public GeneratingAlgorithm {
@@ -54,8 +56,8 @@ class SolvingAlgorithm : public Algorithm {
 
         virtual Expected<MazePath> solve(Maze& maze) = 0;
 
-        static std::vector<std::unique_ptr<SolvingAlgorithm>> getGenerators();
-        static std::unique_ptr<SolvingAlgorithm> getGenerator(std::string name);
+        static std::vector<std::shared_ptr<SolvingAlgorithm>> getSolvers();
+        static std::shared_ptr<SolvingAlgorithm> getSolvers(std::string name);
 };
 
 class RecursiveBacktrackerAlgorithm : public SolvingAlgorithm {
