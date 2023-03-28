@@ -1,13 +1,38 @@
 #include "../headers/Head.h"
-#include "Algorithm.h"
-
 
 /**
  * @brief Construct a new Algorithm:: Algorithm object
  * @param name algorithm name
  * @param type algorithm type
  */
-Algorithm::Algorithm(std::string name, std::string type) : name(name), type(type) {
+Algorithm::Algorithm(std::string name, std::string type)
+    : name(name), type(type) {
+
+    // empty
+};
+
+/**
+ * @brief Construct a new Algorithm:: Algorithm object
+ * @param name algorithm name
+ * @param type algorithm type
+ * @param complexity algorithm complexity
+ */
+Algorithm::Algorithm(std::string name, std::string type, std::string complexity)
+    : name(name), type(type), complexity(complexity) {
+
+    // empty
+};
+
+/**
+ * @brief Construct a new Algorithm:: Algorithm object
+ * @param name algorithm name
+ * @param type algorithm type
+ * @param complexity algorithm complexity
+ * @param description algorithm description
+ */
+Algorithm::Algorithm(std::string name, std::string type, std::string complexity, std::string description)
+    : name(name), type(type), complexity(complexity), description(description) {
+
     // empty
 };
 
@@ -25,6 +50,22 @@ std::string Algorithm::getName() {
  */
 std::string Algorithm::getType() {
     return this->type;
+}
+
+/**
+ * Returns the complexity of the algorithm
+ * @return complexity of the algorithm
+ */
+std::string Algorithm::getComplexity() {
+    return this->complexity;
+}
+
+/**
+ * Returns the description of the algorithm
+ * @return description of the algorithm
+ */
+std::string Algorithm::getDescription() {
+    return this->description;
 }
 
 /**

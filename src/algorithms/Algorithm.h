@@ -7,16 +7,22 @@
 class Maze;
 
 class Algorithm {
-    private:
+    protected:
         std::string name;
         std::string type;
+        std::string complexity = "O(1)";
+        std::string description = "No description";
 
     public:
         Algorithm(std::string name, std::string type);
+        Algorithm(std::string name, std::string type, std::string complexity);
+        Algorithm(std::string name, std::string type, std::string complexity, std::string description);
         virtual ~Algorithm() = default;
 
         std::string getName();
         std::string getType();
+        std::string getComplexity();
+        std::string getDescription();
 
         static std::vector<std::shared_ptr<Algorithm>> getAlgorithms();
 };
@@ -62,7 +68,7 @@ class SolvingAlgorithm : public Algorithm {
 
 class RecursiveBacktrackerAlgorithm : public SolvingAlgorithm {
     public:
-        RecursiveBacktrackerAlgorithm() : SolvingAlgorithm("RecursiveBacktracker") {};
+        RecursiveBacktrackerAlgorithm();
         virtual ~RecursiveBacktrackerAlgorithm() = default;
 
         Expected<MazePath> solve(Maze& maze) override;

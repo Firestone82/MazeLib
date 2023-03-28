@@ -2,11 +2,16 @@
 
 using namespace std;
 
+#define DESCRIPTION "Kruskal's algorithm is a method to find the smallest set of edges that connects all vertices in a weighted graph. " \
+                    "It works by sorting edges by weight and adding them to the set one by one, avoiding cycles."
+#define COMPLEXITY "O(E log E)"
+
 /**
  * @brief Construct a new Kruskal Algorithm:: Kruskal Algorithm object
  */
-KruskalAlgorithm::KruskalAlgorithm() : GeneratingAlgorithm("Kruskal",time(nullptr)) {
-    // Nothing
+KruskalAlgorithm::KruskalAlgorithm() : GeneratingAlgorithm("Kruskal",0) {
+    this->description = DESCRIPTION;
+    this->complexity = COMPLEXITY;
 }
 
 /**
@@ -14,7 +19,8 @@ KruskalAlgorithm::KruskalAlgorithm() : GeneratingAlgorithm("Kruskal",time(nullpt
  * @param seed seed of the algorithm
  */
 KruskalAlgorithm::KruskalAlgorithm(unsigned int seed) : GeneratingAlgorithm("Kruskal", seed) {
-    // Nothing
+    this->description = DESCRIPTION;
+    this->complexity = COMPLEXITY;
 }
 
 /**
