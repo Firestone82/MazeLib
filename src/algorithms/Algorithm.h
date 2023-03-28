@@ -37,6 +37,8 @@ class GeneratingAlgorithm : public Algorithm {
         GeneratingAlgorithm(std::string name, unsigned int seed);
         virtual ~GeneratingAlgorithm() = default;
 
+        void setSeed(unsigned int seed);
+
         virtual Expected<MazeBuilder> generate(int width, int height) = 0;
 
         static std::vector<std::shared_ptr<GeneratingAlgorithm>> getGenerators();

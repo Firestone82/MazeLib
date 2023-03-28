@@ -102,6 +102,14 @@ GeneratingAlgorithm::GeneratingAlgorithm(std::string name, unsigned int seed)
 };
 
 /**
+ * Sets the seed of the algorithm
+ * @param seed seed of the algorithm
+ */
+void GeneratingAlgorithm::setSeed(unsigned int seed) {
+    this->seed = seed;
+}
+
+/**
  * Returns all generators
  * @return list of generators
  */
@@ -132,8 +140,12 @@ std::shared_ptr<GeneratingAlgorithm> GeneratingAlgorithm::getGenerator(std::stri
     std::transform(name.begin(),name.end(),name.begin(),::tolower);
 
     for (auto& generator : GeneratingAlgorithm::getGenerators()) {
-        if (generator->getName() == name) {
-            return std::make_shared<KruskalAlgorithm>(seed);
+        std::string target = generator->getName();
+        std::transform(target.begin(),target.end(),target.begin(),::tolower);
+
+        if (target == name) {
+            generator->setSeed(seed);
+            return generator;
         }
     }
 
@@ -171,8 +183,11 @@ std::shared_ptr<SolvingAlgorithm> SolvingAlgorithm::getSolvers(std::string name)
     std::transform(name.begin(),name.end(),name.begin(),::tolower);
 
     for (auto& solver : SolvingAlgorithm::getSolvers()) {
-        if (solver->getName() == name) {
-            return std::move(solver);
+        std::string target = solver->getName();
+        std::transform(target.begin(),target.end(),target.begin(),::tolower);
+
+        if (target == name) {
+            return solver;
         }
     }
 
