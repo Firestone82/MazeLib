@@ -24,6 +24,7 @@ int main(int argc, char** argv) {
 
     interface.addCategory(Category()
                         .setName("generate")
+                        .addAliases({"gen"})
                         .setDescription("Generate maze to file or image")
                         .setUsage("mazelib generate [options]")
                         .addOption(Option("width")
@@ -106,7 +107,7 @@ int main(int argc, char** argv) {
                                 seed = static_cast<unsigned int>(std::get<double>(map["seed"].value()[0]));
                             }
 
-                            std::unique_ptr<GeneratingAlgorithm> generatingAlgorithm = GeneratingAlgorithm::getGenerator(algorithm, seed);
+                            std::shared_ptr<GeneratingAlgorithm> generatingAlgorithm = GeneratingAlgorithm::getGenerator(algorithm, seed);
 
                             if (generatingAlgorithm == nullptr) {
                                 cout << endl;
@@ -283,6 +284,7 @@ int main(int argc, char** argv) {
 
     interface.addCategory(Category()
                         .setName("algorithms")
+                        .addAliases({"algs", "algos"})
                         .setDescription("Show available algorithms")
                         .setUsage("mazelib algorithms")
                         .addOption(Option("order")
@@ -297,30 +299,83 @@ int main(int argc, char** argv) {
                                             .setDescription("Type of algorithms")
                                             .setDefaults({"all"})
                         )
-                      .returns([=](std::map<std::string, std::optional<std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>>>> map) {
-                            cout << endl << " Parsed Arguments:" << endl;
+                        .addOption(Option("desc")
+                                            .addAliases({"-d", "--description"})
+                                            .setDescription("Show description of algorithms")
+                        )
+                        .returns([=](std::map<std::string, std::optional<std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>>>> map) {
 
-//                          for (auto const& [key, val] : map) {
-//                              cout << key << " : ";
-//
-//                              if (val != std::nullopt) {
-//                                  for (auto const& v : val.value()) {
-//                                      if (v.index() == 0) {
-//                                          cout << std::get<int>(v) << " 0 ";
-//                                      } else if (v.index() == 1) {
-//                                          cout << std::get<double>(v) << " 1 ";
-//                                      } else if (v.index() == 2) {
-//                                          cout << std::get<bool>(v) << " 2 ";
-//                                      } else if (v.index() == 3) {
-//                                          cout << std::get<std::string>(v) << " 3 ";
-//                                      }
-//                                  }
-//                              } else {
-//                                  cout << "null";
-//                              }
-//
-//                              cout << endl;
-//                          }
+                            std::string order = std::get<std::string>(map["order"].value()[0]);
+                            std::transform(order.begin(),order.end(),order.begin(),::tolower);
+
+                            // Check for valid order
+                            if (order != "name" && order != "type" && order != "both") {
+                                cout << " mazelib: Invalid order of algorithms. Available: 'name', 'type'." << endl;
+                                return 1;
+                            }
+
+                            std::string type = std::get<std::string>(map["type"].value()[0]);
+                            std::transform(type.begin(),type.end(),type.begin(),::tolower);
+
+                            // Check for valid type
+                            if (type != "all" && type != "generating" && type != "solving") {
+                                cout << " mazelib: Invalid type of algorithms. Available: 'all', 'generating', 'solving'." << endl;
+                                return 1;
+                            }
+
+                            std::vector<std::shared_ptr<Algorithm>> algorithms = Algorithm::getAlgorithms();
+
+                            // Sort algorithms
+                            if (order == "name") {
+                                std::sort(algorithms.begin(),algorithms.end(),[](const std::shared_ptr<Algorithm>& a, const std::shared_ptr<Algorithm>& b) {
+                                    return a->getName() < b->getName();
+                                });
+                            } else if (order == "type") {
+                                std::sort(algorithms.begin(),algorithms.end(),[](const std::shared_ptr<Algorithm>& a, const std::shared_ptr<Algorithm>& b) {
+                                    return a->getType() < b->getType();
+                                });
+                            } else if (order == "both") {
+                                std::sort(algorithms.begin(),algorithms.end(),[](const std::shared_ptr<Algorithm>& a, const std::shared_ptr<Algorithm>& b) {
+                                    return a->getType() + a->getName() < b->getType() + b->getName();
+                                });
+                            }
+
+                            cout << "" << endl;
+                            cout << " Available Algorithms: " << endl;
+
+                            // Print algorithms
+                            for (const auto& algorithm : algorithms) {
+                                if (type == "all" || (type == "generating" && algorithm->getType() == "generating") || (type == "solving" && algorithm->getType() == "solving")) {
+                                    if (std::get<bool>(map["desc"].value()[0])) {
+                                        cout << "  - " << algorithm->getName() << endl;
+                                        cout << "      - Type: " << (algorithm->getType() == "generating" ? "Generating" : "Solving") << endl;
+                                        cout << "      - Complexity: " << algorithm->getComplexity() << endl;
+
+                                        cout << "      - Description: " << endl;
+
+                                        std::string description = algorithm->getDescription();
+
+                                        while (description.size() > 100) {
+                                            int i = 100;
+
+                                            while (description[i] != ' ') {
+                                                i--;
+                                            }
+
+                                            cout << "          " << description.substr(0,i) << endl;
+
+                                            description = description.substr(i + 1);
+                                        }
+
+                                        cout << "          " << description << endl;
+                                    } else {
+                                        cout << "  - " << std::setw(20) << std::left << algorithm->getName();
+                                        cout << " | " << std::setw(10) << std::left << (algorithm->getType() == "generating" ? "Generating" : "Solving");
+                                        cout << " | " << std::setw(10) << std::left << algorithm->getComplexity();
+                                        cout << endl;
+                                    }
+                                }
+                            }
 
                             return 0;
                         })
