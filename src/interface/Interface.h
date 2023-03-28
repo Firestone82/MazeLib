@@ -51,8 +51,8 @@ class Category {
         Category& setName(std::string name);
         std::string getName() const;
 
-        Category& addAlias(std::string alias);
-        Category& addAliases(std::vector<std::string> aliases);
+        Category& setAlias(std::string alias);
+        Category& setAliases(std::vector<std::string> aliases);
         std::vector<std::string> getAliases() const;
 
         Category& setDescription(std::string description);

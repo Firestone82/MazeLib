@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
 
     interface.addCategory(Category()
                         .setName("version")
-                        .addAliases({"--version", "-v"})
+                        .setAliases({"--version", "-v"})
                         .setDescription("Show programs version number")
                         .setUsage("mazelib version")
                         .returns([=]() {
@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
 
     interface.addCategory(Category()
                         .setName("generate")
-                        .addAliases({"gen"})
+                        .setAliases({"gen"})
                         .setDescription("Generate maze to file or image")
                         .setUsage("mazelib generate [options]")
                         .addOption(Option("width")
@@ -397,7 +397,7 @@ int main(int argc, char** argv) {
                                     if (mazePath.hasError()) {
                                         cout << setw(7) << left << "FAILED" << " | ";
                                         cout << setw(12) << left << "N/A" << " | ";
-                                        cout << "N/A";
+                                        cout << "N/A" << endl;
                                         continue;
                                     }
 
@@ -405,8 +405,7 @@ int main(int argc, char** argv) {
 
                                     cout << setw(7) << left << "SUCCESS" << " | ";
                                     cout << setw(12) << left << path.getLength() << " | ";
-                                    cout << path.getSolvingTime() << "ms";
-                                    cout << endl;
+                                    cout << path.getSolvingTime() << "ms" << endl;
                                 }
 
                                 cout << endl;
@@ -441,7 +440,7 @@ int main(int argc, char** argv) {
 
     interface.addCategory(Category()
                         .setName("algorithms")
-                        .addAliases({"algs", "algos"})
+                        .setAliases({"algs", "algos"})
                         .setDescription("Show available algorithms")
                         .setUsage("mazelib algorithms")
                         .addOption(Option("order")
@@ -539,40 +538,40 @@ int main(int argc, char** argv) {
     );
 
     interface.addCategory(Category()
-                          .setName("help")
-                          .addAliases({"--help", "-h"})
-                          .setDescription("Show help message")
-                          .setUsage("mazelib help")
-                          .returns([=]() {
-                              cout << HEADER;
-                              cout << "" << endl;
-                              cout << " Format: mazelib <cmd> [options]" << endl;
-                              cout << "" << endl;
-                              cout << " Commands:" << endl;
-                              cout << "    help, --help, -h             | Show program help message (this)" << endl;
+                        .setName("help")
+                        .setAliases({"--help", "-h"})
+                        .setDescription("Show help message")
+                        .setUsage("mazelib help")
+                        .returns([=]() {
+                            cout << HEADER;
+                            cout << "" << endl;
+                            cout << " Format: mazelib <cmd> [options]" << endl;
+                            cout << "" << endl;
+                            cout << " Commands:" << endl;
+                            cout << "    help, --help, -h             | Show program help message (this)" << endl;
 
-                              for (const auto& category : interface.getCategories()) {
-                                  std::cout << "    ";
+                            for (const auto& category : interface.getCategories()) {
+                                std::cout << "    ";
 
-                                  std::string aliases;
-                                  aliases += category->getName() + ", ";
-                                  for (const auto& alias : category->getAliases()) {
-                                      aliases += alias + ", ";
-                                  }
-                                  aliases = aliases.substr(0,aliases.size() - 2);
+                                std::string aliases;
+                                aliases += category->getName() + ", ";
+                                for (const auto& alias : category->getAliases()) {
+                                    aliases += alias + ", ";
+                                }
+                                aliases = aliases.substr(0,aliases.size() - 2);
 
-                                  std::cout << std::setw(20) << std::left << aliases << "\t | ";
-                                  std::cout << std::setw(50) << std::left << category->getDescription() << std::endl;
-                              }
+                                std::cout << std::setw(20) << std::left << aliases << "\t | ";
+                                std::cout << std::setw(50) << std::left << category->getDescription() << std::endl;
+                            }
 
-                              cout << "" << endl;
-                              cout << " Options:" << endl;
-                              cout << "  -h, --help      | Show this help message and exit          | [boolean]" << endl;
-                              cout << "  -v, --version   | Show programs version number and exit    | [boolean]" << endl;
-                              cout << "" << endl;
+                            cout << "" << endl;
+                            cout << " Options:" << endl;
+                            cout << "  -h, --help      | Show this help message and exit          | [boolean]" << endl;
+                            cout << "  -v, --version   | Show programs version number and exit    | [boolean]" << endl;
+                            cout << "" << endl;
 
-                              return 0;
-                          })
+                            return 0;
+                        })
     );
 
     return interface.run(argc, argv);

@@ -76,12 +76,12 @@ std::string Category::getName() const {
     return this->name;
 }
 
-Category& Category::addAlias(std::string alias) {
+Category& Category::setAlias(std::string alias) {
     this->aliases.push_back(alias);
     return *this;
 }
 
-Category& Category::addAliases(std::vector<std::string> aliases) {
+Category& Category::setAliases(std::vector<std::string> aliases) {
     this->aliases.insert(this->aliases.end(), aliases.begin(), aliases.end());
     return *this;
 }
