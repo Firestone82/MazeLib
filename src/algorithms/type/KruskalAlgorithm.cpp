@@ -3,7 +3,7 @@
 using namespace std;
 
 #define DESCRIPTION "Kruskal's algorithm is a method to find the smallest set of edges that connects all vertices in a weighted graph. " \
-                    "It works by sorting edges by weight and adding them to the set one by one, avoiding cycles."
+                    "It works by sorting edges by weight and adding them to the set one by one, avoiding cycles. "
 #define COMPLEXITY "O(E log E)"
 
 /**
@@ -46,6 +46,8 @@ Expected<MazeBuilder> KruskalAlgorithm::generate(int width, int height) {
 
     int iters = width * height - 1;
     while (iters > 0) {
+        std::cout << iters << "%\r" << std::flush;
+
         int targetX = rand() % width;
         int targetY = rand() % height;
 
@@ -96,5 +98,5 @@ Expected<MazeBuilder> KruskalAlgorithm::generate(int width, int height) {
         iters--;
     }
 
-    return Expected(MazeBuilder(width, height,(clock() - startTime),this->getName(), seed, graph));
+    return Expected<MazeBuilder>(MazeBuilder(width, height,(clock() - startTime),this->getName(), seed, graph));
 }

@@ -1,7 +1,11 @@
 #include "../headers/Head.h"
 
-Option::Option(std::string name) : name(name), required(false) {
-    // Nothing
+// TODO: Add Comments
+
+Option::Option(std::string name)
+    : name(name), required(false) {
+
+    // empty
 }
 
 std::string Option::getName() const {
@@ -67,21 +71,24 @@ std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>> Option
  * =================================
  */
 
-Category& Category::setName(std::string name) {
-    this->name = name;
-    return *this;
+// TODO: Add Comments
+
+Category::Category(std::string name)
+    : name(name) {
+
+    // empty
 }
 
 std::string Category::getName() const {
     return this->name;
 }
 
-Category& Category::setAlias(std::string alias) {
+Category& Category::addAlias(std::string alias) {
     this->aliases.push_back(alias);
     return *this;
 }
 
-Category& Category::setAliases(std::vector<std::string> aliases) {
+Category& Category::addAliases(std::vector<std::string> aliases) {
     this->aliases.insert(this->aliases.end(), aliases.begin(), aliases.end());
     return *this;
 }
@@ -199,7 +206,7 @@ int Category::call(int argc, char** argv) const {
                 if (alias == argv[i]) {
 
                     // Check if there is enough arguments
-                    if (i + option.getArguments().size() >= argc) {
+                    if (i + static_cast<int>(option.getArguments().size()) >= argc) {
                         std::cout << std::endl << " mazelib: Missing arguments, try 'mazelib " << this->getName() << " --help' for more information!" << std::endl;
                         return 1;
                     }
@@ -219,7 +226,7 @@ int Category::call(int argc, char** argv) const {
                         }
 
                         // All required arguments have been found, skip the rest
-                        if (a > option.getArguments().size() - 1) {
+                        if (a > static_cast<int>(option.getArguments().size()) - 1) {
                             continue;
                         }
 
@@ -291,11 +298,13 @@ int Category::call(int argc, char** argv) const {
  * =================================
  */
 
+// TODO: Add Comments
+
 void Interface::addCategory(Category category) {
-    this->categories.push_back(std::make_shared<Category>(category));
+    this->categories.push_back(category);
 }
 
-std::vector<std::shared_ptr<Category>> Interface::getCategories() const {
+std::vector<Category> Interface::getCategories() const {
     return this->categories;
 }
 
@@ -303,20 +312,28 @@ void Interface::setDefault(std::function<int()> callable) {
     this->callable = callable;
 }
 
+void Interface::setUsage(std::string usage) {
+    this->usage = usage;
+}
+
+std::string Interface::getUsage() const {
+    return this->usage;
+}
+
 int Interface::run(int argc, char** argv) {
     if (argc == 1) {
-        std::cout << std::endl << " mazelib: Unknown command, try 'mazelib --help' for more information!" << std::endl;
+        std::cout << std::endl << this->usage << std::endl;
         return 0;
     }
 
     for (const auto& category : this->categories) {
-        if (category->getName() == argv[1]) {
-            return category->call(argc - 2,argv + 2);
+        if (category.getName() == argv[1]) {
+            return category.call(argc - 2,argv + 2);
         }
 
-        for (const auto& alias : category->getAliases()) {
+        for (const auto& alias : category.getAliases()) {
             if (alias == argv[1]) {
-                return category->call(argc - 2,argv + 2);
+                return category.call(argc - 2,argv + 2);
             }
         }
     }

@@ -4,9 +4,15 @@ Expected<int> ImageSavingMethod::save(const Maze& maze, std::string fileName) {
     return save(maze, fileName,std::nullopt);
 }
 
+// TODO-Extra: Add a way to set colors for the path, wall, start, end, and background
 Expected<int> ImageSavingMethod::save(const Maze& maze, std::string fileName, std::optional<MazePath> path) {
-    if (maze.isValid() != std::nullopt) return Expected<int>(maze.getError().value());
-    if (path != std::nullopt && path.value().getError() != std::nullopt) return Expected<int>(path.value().getError().value());
+    if (maze.isValid().hasError()) return maze.isValid();
+    if (path != std::nullopt && path->isValid().hasError()) return path->isValid();
+
+    // Check if file has a valid extension
+    if (fileName.substr(fileName.length() - 4) != ".png" && fileName.substr(fileName.length() - 4) != ".jpg" && fileName.substr(fileName.length() - 5) != ".jpeg") {
+        return Expected<int>("File name must end with .png, .jpg, or .jpeg");
+    }
 
     int pathWidth = maze.getPathWidth();
     int wallWidth = maze.getWallWidth();
@@ -45,14 +51,6 @@ Expected<int> ImageSavingMethod::save(const Maze& maze, std::string fileName, st
     }
 
     for (const auto& node: maze.getGraph().getNodes()) {
-//        // Draw node box
-//        image.drawRect(
-//                node->getX() * pathWidth + node->getX() * wallWidth + wallWidth,
-//                node->getY() * pathWidth + node->getY() * wallWidth + wallWidth,
-//                pathWidth,
-//                pathWidth,
-//                {50,50,50}
-//        );
 
         // Draw start node
         if (node->getX() == std::get<0>(maze.getStart()) && node->getY() == std::get<1>(maze.getStart())) {

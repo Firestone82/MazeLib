@@ -17,7 +17,7 @@ class Maze {
 
     public:
         Maze(int width, int height, double generationTime, std::string generationAlgorithm,
-             Coordinate start, Coordinate end, int pathWidth, int wallWidth, double seed, const Graph& graph);
+             Coordinate start, Coordinate end, int pathWidth, int wallWidth, unsigned int seed, const Graph& graph);
         ~Maze() = default;
 
         int getWidth() const;
@@ -31,8 +31,7 @@ class Maze {
         unsigned int getSeed() const;
         Graph getGraph() const;
 
-        std::optional<std::string> getError() const;
-        std::optional<std::vector<std::string>>isValid() const;
+        Expected<int> isValid() const;
 };
 
 class MazePath {
@@ -54,8 +53,7 @@ class MazePath {
         void addNode(std::shared_ptr<Node> node);
         std::vector<std::shared_ptr<Node>> getNodes() const;
 
-        std::optional<std::string> getError() const;
-        std::optional<std::vector<std::string>>isValid() const;
+        Expected<int> isValid() const;
 };
 
 class MazeBuilder {
@@ -72,8 +70,8 @@ class MazeBuilder {
         Graph graph;
 
     public:
-        MazeBuilder(int width, int height, double generationTime, std::string generationAlgorithm, double seed);
-        MazeBuilder(int width, int height, double generationTime, std::string generationAlgorithm, double seed, const Graph& graph);
+        MazeBuilder(int width, int height, double generationTime, std::string generationAlgorithm, unsigned int seed);
+        MazeBuilder(int width, int height, double generationTime, std::string generationAlgorithm, unsigned int seed, const Graph& graph);
         ~MazeBuilder() = default;
 
         int getWidth() const;
@@ -93,11 +91,13 @@ class MazeBuilder {
         void setWallWidth(int wallWidth);
         int getWallWidth() const;
 
-        void setSeed(double seed);
+        void setSeed(unsigned int seed);
         unsigned int getSeed() const;
 
         void setGraph(const Graph& graph);
         Graph getGraph();
 
+        // TODO-Extra: Switch this methods output
         Maze build() const;
+        Expected<Maze> buildExpected() const;
 };

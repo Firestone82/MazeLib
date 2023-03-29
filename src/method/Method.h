@@ -12,7 +12,7 @@ class Method {
         std::string type;
 
     public:
-        Method(std::string name, std::string type);
+        /* -- */ Method(std::string name, std::string type);
         virtual ~Method() = default;
 
         std::string getName();
@@ -32,7 +32,7 @@ class SavingMethod : public Method {
 
 class TextFileSavingMethod : public SavingMethod {
     public:
-        TextFileSavingMethod() : SavingMethod("Text File") {};
+        /* -- */ TextFileSavingMethod() : SavingMethod("Text File") {};
         virtual ~TextFileSavingMethod() = default;
 
         Expected<int> save(const Maze& maze, std::string fileName) override;
@@ -41,7 +41,7 @@ class TextFileSavingMethod : public SavingMethod {
 
 class ImageSavingMethod : public SavingMethod {
     public:
-        ImageSavingMethod() : SavingMethod("Image File") {};
+        /* -- */ ImageSavingMethod() : SavingMethod("Image File") {};
         virtual ~ImageSavingMethod() = default;
 
         Expected<int> save(const Maze& maze, std::string fileName) override;
@@ -60,7 +60,7 @@ class LoadingMethod : public Method {
 
 class TextFileLoadingMethod : public LoadingMethod {
     public:
-        TextFileLoadingMethod() : LoadingMethod("Text File") {};
+        /* -- */ TextFileLoadingMethod() : LoadingMethod("Text File") {};
         virtual ~TextFileLoadingMethod() = default;
 
         Expected<MazeBuilder> load(std::string fileName) override;

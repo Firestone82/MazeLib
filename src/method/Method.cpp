@@ -5,9 +5,11 @@
  * @param name method name
  * @param type method type
  */
-Method::Method(std::string name, std::string type) : name(name), type(type) {
+Method::Method(std::string name, std::string type)
+    : name(name), type(type) {
+
     // empty
-};
+}
 
 /**
  * Returns the name of the method
@@ -24,8 +26,3 @@ std::string Method::getName() {
 std::string Method::getType() {
     return this->type;
 }
-
-/**
-* =================================================================================================
-*/
-

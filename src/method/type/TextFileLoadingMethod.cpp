@@ -11,6 +11,11 @@ Expected<MazeBuilder> TextFileLoadingMethod::load(std::string fileName) {
 
     json json;
 
+    // Check if file has a valid extension
+    if (fileName.substr(fileName.length() - 4) != ".txt" && fileName.substr(fileName.length() - 4) != ".json") {
+        return Expected<MazeBuilder>("File name must end with .txt or .json");
+    }
+
     try {
         std::ifstream file(fileName);
         json = json::parse(file);
@@ -27,7 +32,9 @@ Expected<MazeBuilder> TextFileLoadingMethod::load(std::string fileName) {
     Coordinate end = {json["coords"]["end"][0],json["coords"]["end"][1]};
     int pathWidth = json["pathWidth"];
     int wallWidth = json["wallWidth"];
-    int seed = json["seed"].get<nlohmann::json::number_float_t>();
+
+    // TODO: Fix loading seed as unsigned int from text file
+    unsigned int seed = json["seed"].get<nlohmann::json::number_float_t>();
 
     Graph graph = Graph(width, height);
 
@@ -50,4 +57,5 @@ Expected<MazeBuilder> TextFileLoadingMethod::load(std::string fileName) {
     mazeBuilder.setWallWidth(wallWidth);
 
     return Expected<MazeBuilder>(mazeBuilder);
+
 }

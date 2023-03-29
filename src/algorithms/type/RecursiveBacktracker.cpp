@@ -2,8 +2,10 @@
 
 using namespace std;
 
-#define DESCRIPTION "Recursive Backtracker is a maze-solving algorithm that uses a depth-first search strategy to explore all possible paths in a maze." \
-                    "Given a starting point, the algorithm explores all possible paths until it reaches a dead end. "
+#define DESCRIPTION "Recursive Backtracker is a maze-solving algorithm that uses a depth-first search strategy to explore all possible paths in a maze. " \
+                    "Given a starting point, the algorithm explores all possible paths until it reaches a dead end. " \
+                    "After that, it backtracks until it finds a path that has not been explored yet. " \
+                    "If the algorithm backtracks to the starting point without finding a path, it means that the maze has no solution."
 #define COMPLEXITY "O(n)"
 
 RecursiveBacktrackerAlgorithm::RecursiveBacktrackerAlgorithm() : SolvingAlgorithm("RecursiveBacktracker") {
@@ -12,7 +14,7 @@ RecursiveBacktrackerAlgorithm::RecursiveBacktrackerAlgorithm() : SolvingAlgorith
 }
 
 Expected<MazePath> RecursiveBacktrackerAlgorithm::solve(Maze& maze) {
-    if (maze.isValid() != nullopt) return Expected<MazePath>(maze.getError().value());
+    if (maze.isValid().hasError()) return Expected<MazePath>(maze.isValid().errors());
 
     stack<shared_ptr<Node>> stack;
     vector<shared_ptr<Node>> nodes;

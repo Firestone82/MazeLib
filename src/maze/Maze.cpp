@@ -9,10 +9,12 @@
  * @param start start coordinate
  * @param end end coordinate
  * @param pathWidth width of path
+ * @param wallWidth width of wall
+ * @param seed seed of maze
  * @param graph graph of maze
  */
 Maze::Maze(int width, int height, double generationTime, std::string generationAlgorithm, Coordinate start, Coordinate end,
-           int pathWidth, int wallWidth, double seed, const Graph& graph)
+           int pathWidth, int wallWidth, unsigned int seed, const Graph& graph)
     : width(width),
       height(height),
       generationTime(generationTime),
@@ -21,9 +23,10 @@ Maze::Maze(int width, int height, double generationTime, std::string generationA
       end(end),
       pathWidth(pathWidth),
       wallWidth(wallWidth),
+      seed(seed),
       graph(graph) {
 
-    // Nothing
+    // empty
 }
 
 /**
@@ -106,68 +109,58 @@ Graph Maze::getGraph() const {
     return this->graph;
 }
 
-std::optional<std::vector<std::string>> Maze::isValid() const {
+Expected<int> Maze::isValid() const {
     std::vector<std::string> errors;
 
     if (this->width <= 0) {
-        errors.push_back("Width must be greater than 0");
+        errors.emplace_back("Width must be greater than 0");
     }
 
     if (this->height <= 0) {
-        errors.push_back("Height must be greater than 0");
+        errors.emplace_back("Height must be greater than 0");
     }
 
     if (this->pathWidth <= 0) {
-        errors.push_back("Path width must be greater than 0");
+        errors.emplace_back("Path width must be greater than 0");
     }
 
     if (this->wallWidth <= 0) {
-        errors.push_back("Wall width must be greater than 0");
+        errors.emplace_back("Wall width must be greater than 0");
     }
 
     if (std::get<0>(this->start) < 0 || std::get<0>(this->start) >= this->width) {
-        errors.push_back("Start X coordinate must be between 0 and width");
+        errors.emplace_back("Start X coordinate must be between 0 and width");
     }
 
     if (std::get<1>(this->start) < 0 || std::get<1>(this->start) >= this->height) {
-        errors.push_back("Start Y coordinate must be between 0 and height");
+        errors.emplace_back("Start Y coordinate must be between 0 and height");
     }
 
     if (std::get<0>(this->end) < 0 || std::get<0>(this->end) >= this->width) {
-        errors.push_back("End X coordinate must be between 0 and width");
+        errors.emplace_back("End X coordinate must be between 0 and width");
     }
 
     if (std::get<1>(this->end) < 0 || std::get<1>(this->end) >= this->height) {
-        errors.push_back("End Y coordinate must be between 0 and height");
+        errors.emplace_back("End Y coordinate must be between 0 and height");
     }
 
     if (this->start == this->end) {
-        errors.push_back("Start and end coordinates must be different");
+        errors.emplace_back("Start and end coordinates must be different");
     }
 
     if (this->graph.size() < 4) {
-        errors.push_back("Graph must have at least 4 node");
+        errors.emplace_back("Graph must have at least 4 node");
     }
 
     if (this->graph.size() != this->width * this->height) {
-        errors.push_back("Graph must have the same number of nodes as width * height");
+        errors.emplace_back("Graph must have the same number of nodes as width * height");
     }
 
-    if (errors.size() > 0) {
-        return errors;
+    if (!errors.empty()) {
+        return Expected<int>(errors);
     }
 
-    return std::nullopt;
-}
-
-std::optional<std::string> Maze::getError() const {
-    auto errors = this->isValid();
-
-    if (errors.has_value()) {
-        return errors.value()[0];
-    }
-
-    return std::nullopt;
+    return Expected<int>(0);
 }
 
 /**
@@ -203,7 +196,7 @@ double MazePath::getSolvingTime() const {
  * @return length of the path
  */
 int MazePath::getLength() const {
-    return this->nodes.size();
+    return static_cast<int>(this->nodes.size());
 }
 
 /**
@@ -238,28 +231,18 @@ std::vector<std::shared_ptr<Node>> MazePath::getNodes() const {
     return this->nodes;
 }
 
-std::optional<std::vector<std::string>> MazePath::isValid() const {
+Expected<int> MazePath::isValid() const {
     std::vector<std::string> errors;
 
     if (this->nodes.size() < 2) {
-        errors.push_back("Path must have at least 2 nodes");
+        errors.emplace_back("Path must have at least 2 nodes");
     }
 
-    if (errors.size() > 0) {
-        return errors;
+    if (!errors.empty()) {
+        return Expected<int>(errors);
     }
 
-    return std::nullopt;
-}
-
-std::optional<std::string> MazePath::getError() const {
-    auto errors = this->isValid();
-
-    if (errors.has_value()) {
-        return errors.value()[0];
-    }
-
-    return std::nullopt;
+    return Expected<int>(0);
 }
 
 /**
@@ -271,7 +254,7 @@ std::optional<std::string> MazePath::getError() const {
  * @param width width of maze
  * @param height height of maze
  */
-MazeBuilder::MazeBuilder(int width, int height, double generationTime, std::string generationAlgorithm, double seed)
+MazeBuilder::MazeBuilder(int width, int height, double generationTime, std::string generationAlgorithm,  unsigned int seed)
     : width(width),
       height(height),
       generationTime(generationTime),
@@ -290,7 +273,7 @@ MazeBuilder::MazeBuilder(int width, int height, double generationTime, std::stri
  * @param height height of maze
  * @param graph graph of maze
  */
-MazeBuilder::MazeBuilder(int width, int height, double generationTime, std::string generationAlgorithm, double seed, const Graph& graph)
+MazeBuilder::MazeBuilder(int width, int height, double generationTime, std::string generationAlgorithm,  unsigned int seed, const Graph& graph)
     : width(width),
       height(height),
       generationTime(generationTime),
@@ -403,7 +386,7 @@ int MazeBuilder::getWallWidth() const {
  * Set the seed of the maze
  * @param seed seed
  */
-void MazeBuilder::setSeed(double seed) {
+void MazeBuilder::setSeed( unsigned int seed) {
     this->seed = seed;
 }
 
@@ -448,4 +431,18 @@ Maze MazeBuilder::build() const {
             this->seed,
             this->graph
     );
+}
+
+/**
+ * Build the maze
+ * @return maze
+ */
+Expected<Maze> MazeBuilder::buildExpected() const {
+    Maze maze = this->build();
+
+    if (maze.isValid().hasError()) {
+        return Expected<Maze>(maze.isValid().errors());
+    }
+
+    return Expected<Maze>(maze);
 }

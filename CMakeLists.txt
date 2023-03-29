@@ -27,4 +27,4 @@ add_executable(mazelib
         src/method/type/ImageSavingMethod.cpp
         src/method/type/TextFileLoadingMethod.cpp
         src/method/type/TextFileSavingMethod.cpp
-        src/headers/Expected.h src/example.cpp src/interface/Interface.cpp src/interface/Interface.h)
+        src/headers/Expected.h src/example.cpp src/interface/Interface.cpp src/interface/Interface.h src/algorithms/type/BreadthFirstSearch.cpp)

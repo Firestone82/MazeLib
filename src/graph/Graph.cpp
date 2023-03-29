@@ -95,8 +95,8 @@ Graph Graph::clone() {
 
             newNode->setID(node->getID());
 
-            for (auto neighbour : node->getNeighbours()) {
-                newNode->addNeighbour(newGraph.getNode(neighbour->getX(), neighbour->getY()));
+            for (const auto& neighbour : node->getNeighbours()) {
+                newNode->addNeighbour(newGraph.getNode(neighbour->getX(),neighbour->getY()));
             }
         }
     }
@@ -158,5 +158,5 @@ std::shared_ptr<Node> Graph::getNode(int x, int y) {
  * @return Size of the graph
  */
 int Graph::size() const {
-    return this->nodes.size();
+    return static_cast<int>(this->nodes.size());
 }

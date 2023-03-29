@@ -7,8 +7,13 @@ Expected<int> TextFileSavingMethod::save(const Maze& maze, std::string fileName)
 }
 
 Expected<int> TextFileSavingMethod::save(const Maze& maze, std::string fileName, std::optional<MazePath> path) {
-    if (maze.isValid() != std::nullopt) return Expected<int>(maze.getError().value());
-    if (path != std::nullopt && path.value().getError() != std::nullopt) return Expected<int>(path.value().getError().value());
+    if (maze.isValid().hasError()) return maze.isValid();
+    if (path != std::nullopt && path->isValid().hasError()) return path->isValid();
+
+    // Check if file has a valid extension
+    if (fileName.substr(fileName.length() - 4) != ".txt" && fileName.substr(fileName.length() - 4) != ".json") {
+        return Expected<int>("File name must end with .txt or .json");
+    }
 
     nlohmann::ordered_json mazeObject = {
         {"width", maze.getWidth()},
@@ -69,4 +74,5 @@ Expected<int> TextFileSavingMethod::save(const Maze& maze, std::string fileName,
     }
 
     return Expected<int>(0);
+
 }
