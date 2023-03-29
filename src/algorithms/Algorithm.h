@@ -5,6 +5,8 @@
 // --------------------------------
 
 class Maze;
+class GeneratingAlgorithm;
+class SolvingAlgorithm;
 
 class Algorithm {
     protected:
@@ -25,6 +27,13 @@ class Algorithm {
         std::string getDescription();
 
         static std::vector<std::shared_ptr<Algorithm>> getAlgorithms();
+
+        static std::vector<std::shared_ptr<GeneratingAlgorithm>> getGenerators();
+        static std::shared_ptr<GeneratingAlgorithm> getGenerator(std::string name);
+        static std::shared_ptr<GeneratingAlgorithm> getGenerator(std::string name, unsigned int seed);
+
+        static std::vector<std::shared_ptr<SolvingAlgorithm>> getSolvers();
+        static std::shared_ptr<SolvingAlgorithm> getSolver(std::string name);
 };
 
 // --------------------------------
@@ -34,16 +43,13 @@ class GeneratingAlgorithm : public Algorithm {
         unsigned int seed;
 
     public:
-        GeneratingAlgorithm(std::string name, unsigned int seed);
+        /* -- */ GeneratingAlgorithm(std::string name, unsigned int seed);
         virtual ~GeneratingAlgorithm() = default;
 
         void setSeed(unsigned int seed);
 
         virtual Expected<MazeBuilder> generate(int width, int height) = 0;
 
-        static std::vector<std::shared_ptr<GeneratingAlgorithm>> getGenerators();
-        static std::shared_ptr<GeneratingAlgorithm> getGenerator(std::string name);
-        static std::shared_ptr<GeneratingAlgorithm> getGenerator(std::string name, unsigned int seed);
 };
 
 class KruskalAlgorithm : public GeneratingAlgorithm {
@@ -64,14 +70,20 @@ class SolvingAlgorithm : public Algorithm {
 
         virtual Expected<MazePath> solve(Maze& maze) = 0;
 
-        static std::vector<std::shared_ptr<SolvingAlgorithm>> getSolvers();
-        static std::shared_ptr<SolvingAlgorithm> getSolvers(std::string name);
 };
 
 class RecursiveBacktrackerAlgorithm : public SolvingAlgorithm {
     public:
-        RecursiveBacktrackerAlgorithm();
+        /* -- */ RecursiveBacktrackerAlgorithm();
         virtual ~RecursiveBacktrackerAlgorithm() = default;
+
+        Expected<MazePath> solve(Maze& maze) override;
+};
+
+class BreadthFirstSearchAlgorithm : public SolvingAlgorithm {
+    public:
+        /* -- */ BreadthFirstSearchAlgorithm();
+        virtual ~BreadthFirstSearchAlgorithm() = default;
 
         Expected<MazePath> solve(Maze& maze) override;
 };
