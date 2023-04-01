@@ -13,7 +13,7 @@
  * @param seed seed of maze
  * @param graph graph of maze
  */
-Maze::Maze(int width, int height, double generationTime, std::string generationAlgorithm, Coordinate start, Coordinate end,
+Maze::Maze(int width, int height, long long generationTime, std::string generationAlgorithm, Coordinate start, Coordinate end,
            int pathWidth, int wallWidth, unsigned int seed, const Graph& graph)
     : width(width),
       height(height),
@@ -49,7 +49,7 @@ int Maze::getHeight() const {
  * Get the generation time of the maze
  * @return
  */
-double Maze::getGenerationTime() const {
+long long Maze::getGenerationTime() const {
     return this->generationTime;
 }
 
@@ -167,7 +167,7 @@ Expected<int> Maze::isValid() const {
  * ====================================================
  */
 
-MazePath::MazePath(double solvingTime, std::string solvingAlgorithm, std::vector<std::shared_ptr<Node>> nodes)
+MazePath::MazePath(long long solvingTime, std::string solvingAlgorithm, std::vector<std::shared_ptr<Node>> nodes)
     : solvingTime(solvingTime),
       solvingAlgorithm(solvingAlgorithm),
       nodes(nodes) {
@@ -187,7 +187,7 @@ std::string MazePath::getSolvingAlgorithm() const {
  * @brief Get the time it took to solve the path
  * @return Time it took to solve the path
  */
-double MazePath::getSolvingTime() const {
+long long MazePath::getSolvingTime() const {
     return this->solvingTime;
 }
 
@@ -254,7 +254,7 @@ Expected<int> MazePath::isValid() const {
  * @param width width of maze
  * @param height height of maze
  */
-MazeBuilder::MazeBuilder(int width, int height, double generationTime, std::string generationAlgorithm,  unsigned int seed)
+MazeBuilder::MazeBuilder(int width, int height, long long generationTime, std::string generationAlgorithm, unsigned int seed)
     : width(width),
       height(height),
       generationTime(generationTime),
@@ -273,7 +273,7 @@ MazeBuilder::MazeBuilder(int width, int height, double generationTime, std::stri
  * @param height height of maze
  * @param graph graph of maze
  */
-MazeBuilder::MazeBuilder(int width, int height, double generationTime, std::string generationAlgorithm,  unsigned int seed, const Graph& graph)
+MazeBuilder::MazeBuilder(int width, int height, long long generationTime, std::string generationAlgorithm, unsigned int seed, const Graph& graph)
     : width(width),
       height(height),
       generationTime(generationTime),
@@ -306,7 +306,7 @@ int MazeBuilder::getHeight() const {
  * Get generation time of the maze
  * @return generation time
  */
-double MazeBuilder::getGenerationTime() const {
+long long MazeBuilder::getGenerationTime() const {
     return this->generationTime;
 }
 

@@ -239,7 +239,7 @@ int main(int argc, char **argv) {
 
                         }
 
-                        cout << " mazelib: Maze generated successfully! Took: " << maze.getGenerationTime() << "ms" << endl;
+                        cout << " mazelib: Maze generated successfully! Took: " << (maze.getGenerationTime()  / 1000) << "us" << endl;
 
                         return 0;
                     });
@@ -343,7 +343,7 @@ int main(int argc, char **argv) {
             .returns(
                     [=](std::map<std::string, std::optional<std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>>>> map) {
 
-                        unsigned int start = clock();
+                        auto startTime = std::chrono::high_resolution_clock::now();
 
                         std::string input = std::get<std::string>(map["fileInput"].value()[0]);
                         Expected<MazeBuilder> loader = TextFileLoadingMethod().load(input);
@@ -433,7 +433,7 @@ int main(int argc, char **argv) {
 
                                 cout << setw(7) << left << "SUCCESS" << " | ";
                                 cout << setw(12) << left << path.getLength() << " | ";
-                                cout << path.getSolvingTime() << "ms" << endl;
+                                cout << (path.getSolvingTime() / 1000) << "us" << endl;
 
                                 ImageSavingMethod().save(loadedMaze, "path-" + alg->getName() + ".png", path);
                             }
@@ -452,11 +452,14 @@ int main(int argc, char **argv) {
                                 MazePath path = mazePath.value();
 
                                 cout << " mazelib:    - Path length: " << mazePath.value().getLength() << endl;
-                                cout << " mazelib:    - Time taken: " << path.getSolvingTime() << "ms" << endl;
+                                cout << " mazelib:    - Time taken: " << (path.getSolvingTime() / 1000) << "us" << endl;
                             }
                         }
 
-                        cout << endl << " mazelib: Testing finished! Total time taken: " << (clock() - start) << "ms" << endl;
+                        auto endTime = std::chrono::high_resolution_clock::now();
+                        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
+
+                        cout << endl << " mazelib: Testing finished! Total time taken: " << (duration / 1000) << "us" << endl;
 
                         return 0;
                     });
@@ -524,6 +527,15 @@ int main(int argc, char **argv) {
                         cout << "" << endl;
                         cout << " mazelib: Available Algorithms: " << endl;
 
+                        int nameLength = 0;
+                        for (const auto &alg: algorithms) {
+                            int len = static_cast<int>(alg->getName().length());
+
+                            if (len > nameLength) {
+                                nameLength = len;
+                            }
+                        }
+
                         // Print algorithms
                         for (const auto &algorithm: algorithms) {
                             if (type == "all" ||
@@ -552,7 +564,7 @@ int main(int argc, char **argv) {
 
                                     cout << " mazelib:         " << description << endl;
                                 } else {
-                                    cout << " mazelib:  - " << std::setw(20) << std::left << algorithm->getName();
+                                    cout << " mazelib:  - " << std::setw(nameLength) << std::left << algorithm->getName();
                                     cout << " | " << std::setw(10) << std::left << (algorithm->getType() == "generating" ? "Generating" : "Solving");
                                     cout << " | " << std::setw(10) << std::left << algorithm->getComplexity();
                                     cout << endl;

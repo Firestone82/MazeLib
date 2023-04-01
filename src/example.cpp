@@ -32,7 +32,7 @@ int example() {
     cout << "  - Status:           " << (status == 0 ? "Saved" : "Error") << endl; // Returns "Solved", "Error"
     cout << "" << endl;
 
-    MazePath generatedPath = RecursiveBacktrackerAlgorithm().solve(mazeGenerated);
+    MazePath generatedPath = DepthFirstSearchAlgorithm().solve(mazeGenerated);
     status = TextFileSavingMethod().save(mazeGenerated,"mazePath.txt",generatedPath).valueOr(1);
 
     cout << " Saved path to file:     " << "mazePath.txt" << endl;

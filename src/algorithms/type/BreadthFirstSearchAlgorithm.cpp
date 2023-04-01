@@ -15,11 +15,12 @@ Expected<MazePath> BreadthFirstSearchAlgorithm::solve(Maze& maze) {
     if (maze.isValid().hasError()) return Expected<MazePath>(maze.isValid().errors());
 
     queue<shared_ptr<Node>> queue;
+    vector<shared_ptr<Node>> path;
 
     Graph graph = maze.getGraph().clone();
-    double startTime = clock();
+    auto startTime = std::chrono::high_resolution_clock::now();
 
-    // Set the IDs of the nodes
+    // Set the IDs of the path
     for (const auto& node : graph.getNodes()) {
         node->setID(0);
     }
@@ -29,12 +30,13 @@ Expected<MazePath> BreadthFirstSearchAlgorithm::solve(Maze& maze) {
     shared_ptr<Node> endNode = graph.getNode(maze.getEnd());
 
     // Set start as visited
-    startNode->setID(1);
+    shared_ptr<Node> currentNode = startNode;
+    startNode->setID(0);
     queue.push(startNode);
 
     // Iterate through the queue until path is found
     while (!queue.empty()) {
-        shared_ptr<Node> currentNode = queue.front();
+        currentNode = queue.front();
         queue.pop();
 
         // Increase ID
@@ -42,23 +44,7 @@ Expected<MazePath> BreadthFirstSearchAlgorithm::solve(Maze& maze) {
 
         // If end is found, reconstruct path
         if (currentNode->getX() == endNode->getX() && currentNode->getY() == endNode->getY()) {
-            int id = currentNode->getID();
-            vector<shared_ptr<Node>> nodes;
-
-            while (id > 0) {
-                nodes.push_back(currentNode);
-
-                for (const auto& neighbor : currentNode->getNeighbours()) {
-                    if (neighbor->getID() == id - 1) {
-                        currentNode = neighbor;
-                        break;
-                    }
-                }
-
-                id--;
-            }
-
-            return Expected(MazePath((clock() - startTime),this->getName(), nodes));
+            break;
         }
 
         // Try to find a neighbour that is not visited
@@ -70,5 +56,25 @@ Expected<MazePath> BreadthFirstSearchAlgorithm::solve(Maze& maze) {
         }
     }
 
-    return Expected<MazePath>("Maze path was not found!");
+    if (currentNode == startNode) {
+        return Expected<MazePath>("No path found");
+    }
+
+    while (currentNode->getID() > 1) {
+        path.push_back(currentNode);
+
+        for (const auto& neighbor : currentNode->getNeighbours()) {
+            if (neighbor->getID() == currentNode->getID() - 1) {
+                currentNode = neighbor;
+                break;
+            }
+        }
+    }
+
+    path.push_back(startNode);
+
+    auto endTime = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
+
+    return Expected(MazePath(duration,this->getName(),path));
 }

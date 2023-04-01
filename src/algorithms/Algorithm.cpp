@@ -133,8 +133,11 @@ std::shared_ptr<GeneratingAlgorithm> Algorithm::getGenerator(std::string name, u
 std::vector<std::shared_ptr<SolvingAlgorithm>> Algorithm::getSolvers() {
     std::vector<std::shared_ptr<SolvingAlgorithm>> generators;
 
-    generators.push_back(std::make_shared<RecursiveBacktrackerAlgorithm>());
     generators.push_back(std::make_shared<BreadthFirstSearchAlgorithm>());
+    generators.push_back(std::make_shared<DepthFirstSearchAlgorithm>());
+    generators.push_back(std::make_shared<TremauxsAlgorithm>());
+    generators.push_back(std::make_shared<WallFollowingAlgorithm>());
+    generators.push_back(std::make_shared<DijkstraAlgorithm>());
 
     return generators;
 }

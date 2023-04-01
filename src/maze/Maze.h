@@ -6,7 +6,7 @@ class Maze {
     private:
         int width;
         int height;
-        double generationTime;
+        long long generationTime;
         std::string generationAlgorithm;
         Coordinate start;
         Coordinate end;
@@ -16,13 +16,13 @@ class Maze {
         Graph graph;
 
     public:
-        Maze(int width, int height, double generationTime, std::string generationAlgorithm,
+        Maze(int width, int height, long long generationTime, std::string generationAlgorithm,
              Coordinate start, Coordinate end, int pathWidth, int wallWidth, unsigned int seed, const Graph& graph);
         ~Maze() = default;
 
         int getWidth() const;
         int getHeight() const;
-        double getGenerationTime() const;
+        long long getGenerationTime() const;
         std::string getGenerationAlgorithm() const;
         Coordinate getStart() const;
         Coordinate getEnd() const;
@@ -36,16 +36,16 @@ class Maze {
 
 class MazePath {
     private:
-        double solvingTime;
+        long long solvingTime;
         std::string solvingAlgorithm;
         std::vector<std::shared_ptr<Node>> nodes;
 
     public:
-        MazePath(double solvingTime, std::string solvingAlgorithm, std::vector<std::shared_ptr<Node>> nodes);
+        MazePath(long long solvingTime, std::string solvingAlgorithm, std::vector<std::shared_ptr<Node>> nodes);
         ~MazePath() = default;
 
         std::string getSolvingAlgorithm() const;
-        double getSolvingTime() const;
+        long long getSolvingTime() const;
 
         int getLength() const;
         int getJunctionCount() const;
@@ -60,7 +60,7 @@ class MazeBuilder {
     private:
         int width;
         int height;
-        double generationTime;
+        long long generationTime;
         std::string generationAlgorithm;
         Coordinate start;
         Coordinate end;
@@ -70,13 +70,13 @@ class MazeBuilder {
         Graph graph;
 
     public:
-        MazeBuilder(int width, int height, double generationTime, std::string generationAlgorithm, unsigned int seed);
-        MazeBuilder(int width, int height, double generationTime, std::string generationAlgorithm, unsigned int seed, const Graph& graph);
+        MazeBuilder(int width, int height, long long generationTime, std::string generationAlgorithm, unsigned int seed);
+        MazeBuilder(int width, int height, long long generationTime, std::string generationAlgorithm, unsigned int seed, const Graph& graph);
         ~MazeBuilder() = default;
 
         int getWidth() const;
         int getHeight() const;
-        double getGenerationTime() const;
+        long long getGenerationTime() const;
         std::string getGenerationAlgorithm() const;
 
         void setStart(Coordinate start);

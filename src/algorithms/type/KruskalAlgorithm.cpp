@@ -2,9 +2,8 @@
 
 using namespace std;
 
-#define DESCRIPTION "Kruskal's algorithm is a method to find the smallest set of edges that connects all vertices in a weighted graph. " \
-                    "It works by sorting edges by weight and adding them to the set one by one, avoiding cycles. "
-#define COMPLEXITY "O(E log E)"
+#define DESCRIPTION ""
+#define COMPLEXITY ""
 
 /**
  * @brief Construct a new Kruskal Algorithm:: Kruskal Algorithm object
@@ -37,7 +36,7 @@ Expected<MazeBuilder> KruskalAlgorithm::generate(int width, int height) {
     srand(this->seed);
 
     Graph graph = Graph(width, height);
-    double startTime = clock();
+    auto startTime = std::chrono::high_resolution_clock::now();
 
     // Set the IDs of the nodes
     for (const auto& node : graph.getNodes()) {
@@ -98,5 +97,39 @@ Expected<MazeBuilder> KruskalAlgorithm::generate(int width, int height) {
         iters--;
     }
 
-    return Expected<MazeBuilder>(MazeBuilder(width, height,(clock() - startTime),this->getName(), seed, graph));
+    // Add some random cycles to the graph
+    for (int i = 0; i < 100; i++) {
+        int x = rand() % width;
+        int y = rand() % height;
+
+        shared_ptr<Node> node = graph.getNode(x, y);
+
+        // Randomly choose a direction
+        tuple<int, int> direction = make_tuple(0,0);
+        switch (rand() % 4) {
+            case 1: { direction = {-1, 0}; break; } // LEFT
+            case 2: { direction = { 0,-1}; break; } // UP
+            case 3: { direction = { 1, 0}; break; } // RIGHT
+            case 4: { direction = { 0, 1}; break; } // DOWN
+        }
+
+        // Calculate the neighbour coordinates
+        int neighbourX = x + get<0>(direction);
+        int neighbourY = y + get<1>(direction);
+
+        // Check if the neighbour is out of bounds
+        if (neighbourX < 0 || neighbourX >= width || neighbourY < 0 || neighbourY >= height) {
+            continue;
+        }
+
+        shared_ptr<Node> neighbour = graph.getNode(neighbourX, neighbourY);
+
+        node->addNeighbour(neighbour);
+        neighbour->addNeighbour(node);
+    }
+
+    auto endTime = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
+
+    return Expected<MazeBuilder>(MazeBuilder(width, height,duration,this->getName(), seed, graph));
 }

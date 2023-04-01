@@ -72,10 +72,18 @@ class SolvingAlgorithm : public Algorithm {
 
 };
 
-class RecursiveBacktrackerAlgorithm : public SolvingAlgorithm {
+class WallFollowingAlgorithm : public SolvingAlgorithm {
     public:
-        /* -- */ RecursiveBacktrackerAlgorithm();
-        virtual ~RecursiveBacktrackerAlgorithm() = default;
+        /* -- */ WallFollowingAlgorithm();
+        virtual ~WallFollowingAlgorithm() = default;
+
+        Expected<MazePath> solve(Maze& maze) override;
+};
+
+class TremauxsAlgorithm : public SolvingAlgorithm {
+    public:
+        /* -- */ TremauxsAlgorithm();
+        virtual ~TremauxsAlgorithm() = default;
 
         Expected<MazePath> solve(Maze& maze) override;
 };
@@ -84,6 +92,30 @@ class BreadthFirstSearchAlgorithm : public SolvingAlgorithm {
     public:
         /* -- */ BreadthFirstSearchAlgorithm();
         virtual ~BreadthFirstSearchAlgorithm() = default;
+
+        Expected<MazePath> solve(Maze& maze) override;
+};
+
+class DepthFirstSearchAlgorithm : public SolvingAlgorithm {
+    public:
+        /* -- */ DepthFirstSearchAlgorithm();
+        virtual ~DepthFirstSearchAlgorithm() = default;
+
+        Expected<MazePath> solve(Maze& maze) override;
+};
+
+class LeeAlgorithm : public SolvingAlgorithm {
+    public:
+        /* -- */ LeeAlgorithm();
+        virtual ~LeeAlgorithm() = default;
+
+        Expected<MazePath> solve(Maze& maze) override;
+};
+
+class DijkstraAlgorithm : public SolvingAlgorithm {
+    public:
+        /* -- */ DijkstraAlgorithm();
+        virtual ~DijkstraAlgorithm() = default;
 
         Expected<MazePath> solve(Maze& maze) override;
 };

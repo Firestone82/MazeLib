@@ -22,9 +22,9 @@ add_executable(mazelib
         src/maze/Maze.cpp
         src/algorithms/Algorithm.cpp
         src/algorithms/type/KruskalAlgorithm.cpp
-        src/algorithms/type/RecursiveBacktracker.cpp
+        src/algorithms/type/DepthFirstSearchAlgorithm.cpp
         src/method/Method.cpp
         src/method/type/ImageSavingMethod.cpp
         src/method/type/TextFileLoadingMethod.cpp
         src/method/type/TextFileSavingMethod.cpp
-        src/headers/Expected.h src/example.cpp src/interface/Interface.cpp src/interface/Interface.h src/algorithms/type/BreadthFirstSearch.cpp)
+        src/headers/Expected.h src/example.cpp src/interface/Interface.cpp src/interface/Interface.h src/algorithms/type/BreadthFirstSearchAlgorithm.cpp src/algorithms/type/TremauxsAlgorithm.cpp src/algorithms/type/WallFollower.cpp src/algorithms/type/DijkstraAlgorithm.cpp src/algorithms/type/LeeAlgorithm.cpp)
