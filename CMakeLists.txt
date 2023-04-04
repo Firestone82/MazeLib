@@ -27,4 +27,4 @@ add_executable(mazelib
         src/method/type/ImageSavingMethod.cpp
         src/method/type/TextFileLoadingMethod.cpp
         src/method/type/TextFileSavingMethod.cpp
-        src/headers/Expected.h src/example.cpp src/interface/Interface.cpp src/interface/Interface.h src/algorithms/type/BreadthFirstSearchAlgorithm.cpp src/algorithms/type/TremauxsAlgorithm.cpp src/algorithms/type/WallFollower.cpp src/algorithms/type/DijkstraAlgorithm.cpp src/algorithms/type/LeeAlgorithm.cpp)
+        src/headers/Expected.h src/example.cpp src/interface/Interface.cpp src/interface/Interface.h src/algorithms/type/BreadthFirstSearchAlgorithm.cpp src/algorithms/type/TremauxsAlgorithm.cpp src/algorithms/type/WallFollowingAlgorithm.cpp src/algorithms/type/DijkstraAlgorithm.cpp src/algorithms/type/LeeAlgorithm.cpp)

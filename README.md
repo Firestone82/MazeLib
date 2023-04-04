@@ -16,7 +16,8 @@ Tato část bude obsluhovat jednotlivé funkce:
    - Načtení vstupu ze souboru
    - Uložení do souboru nebo do obrázku
  - Zjištění nejrychlejšího algoritmu pro vyřešení bludiště
-   - Výpis tabulky
+   - Výpis tabulky s výsledky
+ - Výpis všech dostupných algoritmů
 
 ## Grafická část projektu (GUI)
 Grafická část projektu napsána v jazyce python, bude pomocí knihovny tkinker a 
@@ -32,105 +33,146 @@ Důležité třídy pro práci:
 - Graph (Třída pro uchování obsahu bludiště)
   - Node (Podtřída pro uchování pole bludiště)
 - Image (Třída pro export bludiště do obrázku)
+- Interface (Třída pro uchování rozhraní)
 
 ## API Usage
 ```c++
-int main() {
-    MazeBuilder mazeBuilderGenerated = KruskalAlgorithm().generate(10,10);
+void example() {
+    // Creation of a maze
+    MazeBuilder mazeBuilderGenerated = KruskalAlgorithm(time(nullptr)).generate(10,10);
     mazeBuilderGenerated.setStart({0,0});
-    mazeBuilderGenerated.setEnd({mazeBuilderGenerated.getWidth() - 1, mazeBuilderGenerated.getHeight() - 1});
-    mazeBuilderGenerated.setPathWidth(10);
+    mazeBuilderGenerated.setEnd({mazeBuilderGenerated.getWidth() - 1,mazeBuilderGenerated.getHeight() - 1});
+    mazeBuilderGenerated.setPathWidth(30);
+    mazeBuilderGenerated.setWallWidth(3);
 
+    // Building the maze
     Maze mazeGenerated = mazeBuilderGenerated.build();
-    TextFileSavingMethod().save(mazeGenerated, "maze.txt");
 
-    cout << " Saved maze to file: " << "maze.txt" << endl;
-    cout << "  - Created with:    " mazeGenerated.getCreator() << endl;                                      // Returns "Kruskal"
-    cout << "  - Creation time    " mazeGenerated.getCreationTime() << endl;                                 // Returns time in milliseconds
-    cout << "  - Maze dimensions: " << mazeGenerated.getWidth() << "x" << mazeGenerated.getHeight() << endl; // Returns "10x10"
-    cout << "  - MazePath width:      " << mazeGenerated.getPathWidth() << endl;                                 // Returns "10"
+    // Exporting the maze to a file
+    TextFileSavingMethod().save(mazeGenerated,"maze.txt");
 
-    MazePath generatedPath = RecursiveBacktrackerAlgorithm().solve(mazeGenerated);
-    TextFileSavingMethod().save(mazeGenerated, "path.txt", generatedPath);
+    // Exporting the maze to an image
+    ImageSavingMethod().save(mazeGenerated,"maze.png");
 
-    cout << " Saved path to file: " << "path.txt" << endl;
-    cout << "Solved with:         " generatedPath.getAlgorithm() << endl;                                   // Returns "RecursiveBacktracker"
-    cout << "Solved in:           " generatedPath.getTime() << "ms" << endl;                                // Returns time in milliseconds
-    cout << "MazePath length:         " generatedPath.getLength() << endl;                                      // Returns length of path
-    cout << "Amount of junctions: " generatedPath.getJunctionCount() << endl;                               // Returns amount of junctions
+    // Loading a maze from a file
+    Expected<MazeBuilder> mazeBuilderLoaded = TextFileLoadingMethod().load("maze.txt");
 
-    // --------------------------------
+    // Checking for errors
+    if (mazeBuilderLoaded.hasError()) {
+        cout << "Error: " << mazeBuilderLoaded.error() << endl;
+        return 1;
+    }
 
-    MazeBuilder mazeBuilderLoaded = TextFileLoadingMethod().load("maze.json");
-    mazeBuilderLoaded.setStart({0, 0});
-    mazeBuilderLoaded.setEnd({mazeBuilderLoaded.getWidth() - 1, mazeBuilderLoaded.getHeight() - 1});
-    mazeBuilderLoaded.setPathWidth(10);
+    // Solving the maze
+    MazePath generatedPath = DepthFirstSearchAlgorithm().solve(mazeGenerated);
 
-    Maze mazeLoaded = mazeBuilderGenerated.build();
-    ImageSavingMethod().save(mazeLoaded, "maze.png");
+    // Exporting the maze to a file with the path
+    TextFileSavingMethod().save(mazeGenerated,"mazePath.txt",generatedPath);
 
-    cout << " Loaded maze from file: " << "maze.json" << endl;
-    cout << "  - Created with:       " mazeLoaded.getCreator() << endl;                                      // Returns "Kruskal"
-    cout << "  - Creation time       " mazeLoaded.getCreationTime() << endl;                                 // Returns time in milliseconds
-    cout << "  - Maze dimensions:    " << mazeLoaded.getWidth() << "x" << mazeLoaded.getHeight() << endl;    // Returns "10x10"
-    cout << "  - MazePath width:         " << mazeLoaded.getPathWidth() << endl;                                 // Returns "10"
-
-    MazePath loadedPath = RecursiveBacktrackerAlgorithm().solve(mazeLoaded);
-    ImageSavingMethod().save(mazeLoaded, "path.png", loadedPath);
-
-    cout << " Saved path to file: " << "path.png" << endl;
-    cout << "Solved with:         " generatedPath.getAlgorithm() << endl;                                   // Returns "RecursiveBacktracker"
-    cout << "Solved in:           " generatedPath.getTime() << "ms" << endl;                                // Returns time in milliseconds
-    cout << "MazePath length:         " generatedPath.getLength() << endl;                                      // Returns length of path
-    cout << "Amount of junctions: " generatedPath.getJunctionCount() << endl;                               // Returns amount of junctions
-    
-    return 0;
+    // Exporting the maze to an image with the path
+    ImageSavingMethod().save(mazeGenerated,"mazePath.png",generatedPath);
 }
 ```
 
+## Requirements:
+- C++17
+- CMake 3.22.1+
+- Python 3.9.7+ (for GUI)
+
+## Images
+Example maze output:
+
+![Generated maze](assets/maze.png)
+![Solved maze](assets/mazeSolved.png)
+
 ## CLI Usage
-```md
-mazelib <cmd> [options]
+<details>
+<summary>Click to show help CLI</summary>
+
+```
+ __  __               _      _ _
+|  \/  |             | |    (_) |
+| \  / | __ _ _______| |     _| |__
+| |\/| |/ _` |_  / _ \ |    | | '_ \
+| |  | | (_| |/ /  __/ |____| | |_) |
+|_|  |_|\__,_/___\___|______|_|_.__/
+Author: Pavel Mikula (MIK0486)
+
+Format: mazelib <cmd> [options]
 
 Commands:
-    help            |  - Show help message
-    generate        |  - Generate maze to file or image
-    solve           |  - Solve maze from file or image
-    algorithms      |  - Show all algorithms
+  help                           | Show program help message (this)
+  version, ver                   | Show programs version number
+  generate, gen                  | Generate maze to file or image
+  solve                          | Solve maze from file or image
+  test                           | Test algorithms
+  algorithms, algs, algos        | Show available algorithms
 
 Options:
-    -h, --help      | Show this help message and exit          | [boolean]
-    -v, --version   | Show programs version number and exit    | [boolean]
+  -h, --help      | Show this help message and exit          | [boolean]
+  -v, --version   | Show programs version number and exit    | [boolean]
 ```
+</details>
+
+<details>
+<summary>Click to show generate CLI</summary>
+
 ```
-mazelib generate [options]
+Command: mazelib generate [options]
 
 Options:
-    -w, --width [value]         | Width of maze to be generated         | [number]
-    -h, --height [value]        | Height of maze to be generated        | [number]
-    -s, --start [x] [y]         | Start position of maze                | [number] [number]
-    -e, --end [x] [y]           | End position of maze                  | [number] [number]
-    -a, --algorithm [type]      | Name of algorithm to generate output  | [string]
-    -f, --file [path]           | Output path of file generated         | [string]
-    -i, --image [path]          | Output path of image generated        | [string] 
-    -g, --gap [value]           | Gap between cells on image            | [number]
-    -p, --path                  | Whether or not to show origin path    | [bolean]
+  -w, --width           | Width of maze                                     REQUIRED | [int]
+  -h, --height          | Height of maze                                    REQUIRED | [int]
+  -a, --algorithm       | Algorithm to generate maze                        REQUIRED | [string]
+  -se, --seed           | Seed of the maze                                           | [double]
+  -s, --start           | Start position of maze                                     | [int] [int]
+  -e, --end             | End position of maze                                       | [int] [int]
+  -pw, --pathWidth      | Width of the path between walls                            | [int]
+  -ww, --wallWidth      | Width of wall between paths                                | [int]
+  -f, --file            | Path to the file, where maze will be saved                 | [string]
+  -i, --image           | Path to the image, where maze will be saved                | [string]
 ```
+</details>
+
+<details>
+<summary>Click to show solve CLI</summary>
+
 ```
-mazelib solve [options]
-    
-Options:
-    -i, --input [path]          | Input path of file to be loaded       | [string]
-    -a, --algorithm [type]      | Name of algorithm to process input    | [string]
-    -o, --output [path]         | Ouput path of file generated          | [string] 
-    -im, --image [path]         | Output path of image generated        | [string] 
-    -g, --gap [value]           | Gap between cells                     | [number]
-    -p, --path                  | Whether or not to show origin path    | [bolean]
-```
-```
-mazelib algorithms [options]
+Command: mazelib solve [options]
 
 Options:
-    -o, --order [type] [asc]    | Order algorithms by specific order    | [type, "asc, desc"] [bolean]
-    -f, --filter [type]         | Filter algorithms by type             | [string]
+  -fi, --fileIn         | Path to the input file of maze                    REQUIRED | [string]
+  -a, --algorithm       | Algorithm to solve maze                           REQUIRED | [string]
+  -s, --start           | Start position of maze                                     | [int] [int]
+  -e, --end             | End position of maze                                       | [int] [int]
+  -fo, --fileOut        | Path to the file, where maze will be saved                 | [string]
+  -i, --image           | Path to the image, where maze will be saved                | [string]
 ```
+</details>
+
+<details>
+<summary>Click to show test CLI</summary>
+
+```
+Command: mazelib test [options]
+
+Options:
+  -fi, --fileIn         | Path to the file, from which maze will be loaded  REQUIRED | [string]
+  -a, --algorithm       | Algorithms to test, separated by commas                    | [string]
+  -fo, --fileOut        | Path to the file, where maze will be saved                 | [string]
+  -t, --table           | Output results printed in table                            |
+```
+</details>
+
+<details>
+<summary>Click to show algorithms CLI</summary>
+
+```
+Command: mazelib algorithms
+
+Options:
+  -o, --order           | Order of algorithms                                        | [string]
+  -t, --type            | Type of algorithms                                         | [string]
+  -d, --description     | Hide description of algorithms                             |
+```
+</details>

@@ -2,8 +2,8 @@
 
 using namespace std;
 
-#define DESCRIPTION ""
-#define COMPLEXITY ""
+#define DESCRIPTION "Wall Following Algorithm is a maze-solving algorithm that follows either the left or right wall of the maze, keeping it always on one side. It moves forward until it reaches a junction, and then turns in the direction of the wall it is following. If it reaches a dead end, it turns around and follows the wall on the other side. The algorithm terminates when it reaches the destination or returns to the starting point. The time complexity of Wall Following Algorithm is O(N), where N is the number of cells in the maze. It works for mazes with or without loops, but may not find the shortest path."
+#define COMPLEXITY "O(N)"
 
 WallFollowingAlgorithm::WallFollowingAlgorithm() : SolvingAlgorithm("WallFollowingAlgorithm") {
     this->description = DESCRIPTION;
@@ -87,6 +87,8 @@ Expected<MazePath> WallFollowingAlgorithm::solve(Maze &maze) {
         path.push_back(stack.top());
         stack.pop();
     }
+
+    reverse(path.begin(), path.end());
 
     auto endTime = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();

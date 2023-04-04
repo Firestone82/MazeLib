@@ -90,42 +90,34 @@ int main(int argc, char **argv) {
             .returns(
                     [=](std::map<std::string, std::optional<std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>>>> map) {
 
+                        auto startTime = std::chrono::high_resolution_clock::now();
+
                         // Required arguments
-                        std::string algorithm;
-                        int width = 0;
-                        int height = 0;
+                        int width = std::get<int>(map["width"].value()[0]);
+                        int height = std::get<int>(map["height"].value()[0]);
                         unsigned int seed = time(nullptr);
-
-                        if (map["algorithm"].has_value()) {
-                            algorithm = std::get<std::string>(map["algorithm"].value()[0]);
-                        }
-
-                        if (map["width"].has_value()) {
-                            width = std::get<int>(map["width"].value()[0]);
-                        }
-
-                        if (map["height"].has_value()) {
-                            height = std::get<int>(map["height"].value()[0]);
-                        }
 
                         if (map["seed"].has_value()) {
                             seed = static_cast<unsigned int>(std::get<double>(map["seed"].value()[0]));
                         }
 
-                        std::shared_ptr<GeneratingAlgorithm> generatingAlgorithm = Algorithm::getGenerator(algorithm, seed);
+                        cout << "" << endl;
+                        cout << " mazelib: Starting maze generating" << endl;
+                        cout << "" << endl;
+                        cout << " mazelib: Gathering input: " << endl;
+                        cout << " mazelib:  - Width: " << width << endl;
+                        cout << " mazelib:  - Height: " << height << endl;
+                        cout << " mazelib:  - Seed: " << seed << endl;
+
+                        std::string target = std::get<std::string>(map["algorithm"].value()[0]);
+                        std::shared_ptr<GeneratingAlgorithm> generatingAlgorithm = Algorithm::getGenerator(target, seed);
+
+                        cout << " mazelib:  - Algorithm: " << target << endl;
 
                         // Check if algorithm exists
                         if (generatingAlgorithm == nullptr) {
-                            cout << endl;
-                            cout << " mazelib: Maze generation failed. " << endl;
-                            cout << " mazelib:  - Error: Unknown algorithm '" << algorithm << "'" << endl;
+                            cout << " mazelib:     - No algorithm was found. " << endl;
                             return 1;
-                        } else {
-                            cout << endl;
-                            cout << " mazelib: Generating maze..." << endl;
-                            cout << " mazelib:  - Algorithm: " << generatingAlgorithm->getName() << endl;
-                            cout << " mazelib:  - Width: " << width << endl;
-                            cout << " mazelib:  - Height: " << height << endl;
                         }
 
                         Expected<MazeBuilder> expectedBuilder = generatingAlgorithm->generate(width, height);
@@ -135,10 +127,10 @@ int main(int argc, char **argv) {
                         if (expectedBuilder.hasError()) {
                             cout << endl;
                             cout << " mazelib: Maze generation failed. " << endl;
-                            cout << " mazelib:  - Errors: " << endl;
+                            cout << " mazelib:   - Errors: " << endl;
 
                             for (const auto& error: expectedBuilder.errors()) {
-                                cout << " mazelib:     - " << error << endl;
+                                cout << " mazelib:      - " << error << endl;
                             }
 
                             return 1;
@@ -195,16 +187,20 @@ int main(int argc, char **argv) {
                         if (expectedMaze.hasError()) {
                             cout << endl;
                             cout << " mazelib: Maze building failed. " << endl;
-                            cout << " mazelib:  - Errors: " << endl;
+                            cout << " mazelib:   - Errors: " << endl;
 
                             for (const auto& error: expectedMaze.errors()) {
-                                cout << " mazelib:     - " << error << endl;
+                                cout << " mazelib:      - " << error << endl;
                             }
 
                             return 1;
                         }
 
                         Maze maze = expectedMaze.value();
+
+                        // Print maze info
+                        cout << endl;
+                        cout << " mazelib: Gathering output:" << endl;
 
                         // Saving methods
                         if (map["file"].has_value() || map["image"].has_value()) {
@@ -239,7 +235,12 @@ int main(int argc, char **argv) {
 
                         }
 
-                        cout << " mazelib: Maze generated successfully! Took: " << (maze.getGenerationTime()  / 1000) << "us" << endl;
+                        auto endTime = std::chrono::high_resolution_clock::now();
+                        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
+
+                        cout << " mazeLib:  - Maze generating time: " << (maze.getGenerationTime() / 1000) << "us" << endl;
+
+                        cout << endl << " mazelib: Maze generated successfully! Took: " << (duration  / 1000) << "us" << endl;
 
                         return 0;
                     });
@@ -249,7 +250,7 @@ int main(int argc, char **argv) {
     Category solve = Category("solve")
             .setDescription("Solve maze from file or image")
             .setUsage("mazelib solve [options]")
-            .addOption(Option("file")
+            .addOption(Option("fileInput")
                                .addAliases({"-fi", "--fileIn"})
                                .addArguments({"string"})
                                .setDescription("Path to the input file of maze")
@@ -261,17 +262,17 @@ int main(int argc, char **argv) {
                                .setDescription("Algorithm to solve maze")
                                .setRequired(true)
             )
-            .addOption(Option("pathWidth")
-                               .addAliases({"-pw", "--pathWidth"})
-                               .addArguments({"int"})
-                               .setDescription("Width of the path between walls")
-                               .setDefaults({3})
+            .addOption(Option("start")
+                               .addAliases({"-s", "--start"})
+                               .addArguments({"int", "int"})
+                               .setDescription("Start position of maze")
+                               .setDefaults({0, 0})
             )
-            .addOption(Option("wallWidth")
-                               .addAliases({"-ww", "--wallWidth"})
-                               .addArguments({"int"})
-                               .setDescription("Width of wall between paths")
-                               .setDefaults({1})
+            .addOption(Option("end")
+                               .addAliases({"-e", "--end"})
+                               .addArguments({"int", "int"})
+                               .setDescription("End position of maze")
+                               .setDefaults({-1, -1})
             )
             .addOption(Option("fileOutput")
                                .addAliases({"-fo", "--fileOut"})
@@ -285,31 +286,155 @@ int main(int argc, char **argv) {
             )
             .returns(
                     [=](std::map<std::string, std::optional<std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>>>> map) {
-                        cout << endl << " Parsed Arguments:" << endl;
 
-                        for (auto const &[key, val]: map) {
-                            cout << key << " : ";
+                        auto startTime = std::chrono::high_resolution_clock::now();
 
-                            if (val != std::nullopt) {
-                                for (auto const &v: val.value()) {
-                                    if (v.index() == 0) {
-                                        cout << std::get<int>(v) << " 0 ";
-                                    } else if (v.index() == 1) {
-                                        cout << std::get<double>(v) << " 1 ";
-                                    } else if (v.index() == 2) {
-                                        cout << std::get<bool>(v) << " 2 ";
-                                    } else if (v.index() == 3) {
-                                        cout << std::get<std::string>(v) << " 3 ";
-                                    }
-                                }
-                            } else {
-                                cout << "null";
-                            }
+                        // Required arguments
+                        std::string input = std::get<std::string>(map["fileInput"].value()[0]);
+                        Expected<MazeBuilder> loader = TextFileLoadingMethod().load(input);
 
-                            cout << endl;
+                        cout << "" << endl;
+                        cout << " mazelib: Starting maze solving" << endl;
+                        cout << "" << endl;
+                        cout << " mazelib: Gathering input: " << endl;
+                        cout << " mazelib:  - Input file: " << input << endl;
+
+                        // Check if loading was successful
+                        if (loader.hasError()) {
+                            cout << " mazelib:     - Loading failed. Error: " << loader.error() << endl;
+                            return 1;
                         }
 
-                        // TODO: Implement solving method
+                        MazeBuilder builder = loader.value();
+
+                        // Print maze info
+                        cout << " mazelib:  - Generated by: " << builder.getGenerationAlgorithm() << endl;
+                        cout << " mazelib:  - Width: " << builder.getWidth() << endl;
+                        cout << " mazelib:  - Height: " << builder.getHeight() << endl;
+
+                        // Set maze start point
+                        if (map["start"].has_value()) {
+                            int x = std::get<int>(map["start"].value()[0]);
+                            int y = std::get<int>(map["start"].value()[1]);
+
+                            builder.setStart({x, y});
+
+                            cout << " mazelib:  - Start: (" << x << ", " << y << ")" << endl;
+                        }
+
+                        // Set maze end point
+                        if (map["end"].has_value()) {
+                            int x = std::get<int>(map["end"].value()[0]);
+                            int y = std::get<int>(map["end"].value()[1]);
+
+                            if (x == -1 && y == -1) {
+                                x = builder.getWidth() - 1;
+                                y = builder.getHeight() - 1;
+                            }
+
+                            builder.setEnd({x,y});
+
+                            cout << " mazelib:  - End: (" << x << ", " << y << ")" << endl;
+                        }
+
+                        std::string target = std::get<std::string>(map["algorithm"].value()[0]);
+                        std::shared_ptr<SolvingAlgorithm> solvingAlgorithm = Algorithm::getSolver(target);
+
+                        cout << " mazelib:  - Algorithm: " << target << endl;
+
+                        // Check if any algorithms was found
+                        if (solvingAlgorithm == nullptr) {
+                            cout << " mazelib:     - No algorithm was found. " << endl;
+                            return 1;
+                        }
+
+                        Expected<Maze> expected = builder.buildExpected();
+
+                        // Check if maze is valid
+                        if (expected.hasError()) {
+                            cout << endl;
+                            cout << " mazelib: Maze solving failed. " << endl;
+                            cout << " mazelib:  - Errors: " << endl;
+
+                            for (const auto& error: expected.errors()) {
+                                cout << " mazelib:     - " << error << endl;
+                            }
+
+                            return 1;
+                        }
+
+                        Maze maze = expected.value();
+                        MazePath mazePath = solvingAlgorithm->solve(maze);
+
+                        // Saving methods
+                        if (map["fileOutput"].has_value() || map["image"].has_value()) {
+
+                            if (map["image"].has_value()) {
+                                std::string image = std::get<std::string>(map["image"].value()[0]);
+
+                                cout << " mazelib:  - Image Path: " << image << endl;
+
+                                Expected<int> status = ImageSavingMethod().save(maze,image,mazePath);
+
+                                if (status.hasError()) {
+                                    cout << " mazelib:     - Image saving failed. Error: " << status.error() << endl;
+                                } else {
+                                    cout << " mazelib:     - Image saved successfully!" << endl;
+                                }
+                            }
+
+                            if (map["fileOutput"].has_value()) {
+                                std::string file = std::get<std::string>(map["fileOutput"].value()[0]);
+
+                                cout << " mazelib:  - File Path: " << file << endl;
+
+                                Expected<int> status = TextFileSavingMethod().save(maze,file,mazePath);
+
+                                if (status.hasError()) {
+                                    cout << " mazelib:     - File saving failed. Error: " << status.error() << endl;
+                                } else {
+                                    cout << " mazelib:     - File saved successfully!" << endl;
+                                }
+                            }
+
+                        }
+
+                        cout << endl;
+                        cout << " mazeLib: Gathering output: " << endl;
+                        cout << " mazeLib:  - Maze path length: " << mazePath.getLength() << endl;
+                        cout << " mazeLib:  - Maze path: " << endl;
+                        cout << " mazeLib:     - ";
+
+                        int count = 0;
+                        for (const auto& point: mazePath.getNodes()) {
+                            if (point->getX() == get<0>(maze.getStart()) && point->getY() == get<1>(maze.getStart())) {
+                                cout << "Start --> ";
+                                count += 2;
+                                continue;
+                            }
+
+                            cout << "(" << point->getX() << ", " << point->getY() << ") ";
+
+                            if (point->getX() == get<0>(maze.getEnd()) && point->getY() == get<1>(maze.getEnd())) {
+                                cout << "-> End";
+                            } else {
+                                cout << "-> ";
+                            }
+
+                            if (count % 4 == 0 && mazePath.getLength() > 10) {
+                                count = 0;
+                                cout << endl << " mazeLib:     - ";
+                            }
+
+                            count++;
+                        }
+
+                        auto endTime = std::chrono::high_resolution_clock::now();
+                        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
+
+                        cout << endl << " mazeLib:  - Maze solving time: " << (mazePath.getSolvingTime() / 1000) << "us" << endl;
+
+                        cout << endl << " mazelib: Maze solved successfully! Took: " << (duration  / 1000) << "us" << endl;
 
                         return 0;
                     });
@@ -351,7 +476,7 @@ int main(int argc, char **argv) {
                         cout << "" << endl;
                         cout << " mazelib: Starting maze testing" << endl;
                         cout << "" << endl;
-                        cout << " mazelib:  Gathering input: " << endl;
+                        cout << " mazelib: Gathering input: " << endl;
                         cout << " mazelib:  - Input file: " << input << endl;
 
                         // Check if loading was successful
@@ -364,9 +489,9 @@ int main(int argc, char **argv) {
 
                         // Print maze info
                         cout << " mazelib:  - Maze info:" << endl;
-                        cout << " mazelib:    - Generated by: " << builder.getGenerationAlgorithm() << endl;
-                        cout << " mazelib:    - Width: " << builder.getWidth() << endl;
-                        cout << " mazelib:    - Height: " << builder.getHeight() << endl;
+                        cout << " mazelib:     - Generated by: " << builder.getGenerationAlgorithm() << endl;
+                        cout << " mazelib:     - Width: " << builder.getWidth() << endl;
+                        cout << " mazelib:     - Height: " << builder.getHeight() << endl;
 
                         std::vector<std::shared_ptr<SolvingAlgorithm>> algorithms;
                         std::string target = std::get<std::string>(map["algorithms"].value()[0]);
@@ -434,8 +559,6 @@ int main(int argc, char **argv) {
                                 cout << setw(7) << left << "SUCCESS" << " | ";
                                 cout << setw(12) << left << path.getLength() << " | ";
                                 cout << (path.getSolvingTime() / 1000) << "us" << endl;
-
-                                ImageSavingMethod().save(loadedMaze, "path-" + alg->getName() + ".png", path);
                             }
                         } else {
                             // Test all algorithms
@@ -451,8 +574,8 @@ int main(int argc, char **argv) {
 
                                 MazePath path = mazePath.value();
 
-                                cout << " mazelib:    - Path length: " << mazePath.value().getLength() << endl;
-                                cout << " mazelib:    - Time taken: " << (path.getSolvingTime() / 1000) << "us" << endl;
+                                cout << " mazelib:     - Path length: " << mazePath.value().getLength() << endl;
+                                cout << " mazelib:     - Time taken: " << (path.getSolvingTime() / 1000) << "us" << endl;
                             }
                         }
 
@@ -557,12 +680,12 @@ int main(int argc, char **argv) {
                                             i--;
                                         }
 
-                                        cout << " mazelib:         " << description.substr(0, i) << endl;
+                                        cout << " mazelib:        " << description.substr(0, i) << endl;
 
                                         description = description.substr(i + 1);
                                     }
 
-                                    cout << " mazelib:         " << description << endl;
+                                    cout << " mazelib:        " << description << endl;
                                 } else {
                                     cout << " mazelib:  - " << std::setw(nameLength) << std::left << algorithm->getName();
                                     cout << " | " << std::setw(10) << std::left << (algorithm->getType() == "generating" ? "Generating" : "Solving");
@@ -571,6 +694,8 @@ int main(int argc, char **argv) {
                                 }
                             }
                         }
+
+                        cout << " mazelib: " << algorithms.size() << " algorithms available." << endl;
 
                         return 0;
                     });
@@ -587,10 +712,10 @@ int main(int argc, char **argv) {
                 cout << " Format: mazelib <cmd> [options]" << endl;
                 cout << "" << endl;
                 cout << " Commands:" << endl;
-                cout << "    help                         | Show program help message (this)" << endl;
+                cout << "   help                           | Show program help message (this)" << endl;
 
                 for (const auto &category: interface.getCategories()) {
-                    std::cout << "    ";
+                    std::cout << "   ";
 
                     std::string aliases;
                     aliases += category.getName() + ", ";
@@ -601,14 +726,14 @@ int main(int argc, char **argv) {
                     }
                     aliases = aliases.substr(0, aliases.size() - 2);
 
-                    std::cout << std::setw(20) << std::left << aliases << "\t | ";
+                    std::cout << std::setw(30) << std::left << aliases << " | ";
                     std::cout << std::setw(50) << std::left << category.getDescription() << std::endl;
                 }
 
                 cout << "" << endl;
                 cout << " Options:" << endl;
-                cout << "  -h, --help      | Show this help message and exit          | [boolean]" << endl;
-                cout << "  -v, --version   | Show programs version number and exit    | [boolean]" << endl;
+                cout << "   -h, --help      | Show this help message and exit          | [boolean]" << endl;
+                cout << "   -v, --version   | Show programs version number and exit    | [boolean]" << endl;
                 cout << "" << endl;
 
                 return 0;

@@ -2,8 +2,8 @@
 
 using namespace std;
 
-#define DESCRIPTION ""
-#define COMPLEXITY ""
+#define DESCRIPTION "Lee Algorithm, also known as Breadth-First Search Algorithm, finds the shortest path between two points in a maze or a grid. It starts at the starting point, visits neighbors, and marks them with a distance. The algorithm maintains a queue of cells to be visited, adding neighbors that haven't been visited yet. The time and space complexity of Lee Algorithm is O(N), where N is the number of cells in the grid. It only works on grids with cells of the same size and movement in four directions (up, down, left, right)."
+#define COMPLEXITY "O(N)"
 
 LeeAlgorithm::LeeAlgorithm() : SolvingAlgorithm("LeeAlgorithm") {
     this->description = DESCRIPTION;
@@ -89,6 +89,8 @@ Expected<MazePath> LeeAlgorithm::solve(Maze &maze) {
         path.push_back(stack.top());
         stack.pop();
     }
+
+    reverse(path.begin(), path.end());
 
     auto endTime = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();

@@ -2,8 +2,8 @@
 
 using namespace std;
 
-#define DESCRIPTION ""
-#define COMPLEXITY ""
+#define DESCRIPTION "Depth-First Search (DFS) is an algorithm that traverses a graph or a tree by exploring as far as possible along each branch before backtracking. The algorithm starts at the root node (or any arbitrary node) and explores as far as possible along each branch before backtracking."
+#define COMPLEXITY "O(V+E)"
 
 DepthFirstSearchAlgorithm::DepthFirstSearchAlgorithm() : SolvingAlgorithm("DepthFirstSearchAlgorithm") {
     this->description = DESCRIPTION;
@@ -67,6 +67,8 @@ Expected<MazePath> DepthFirstSearchAlgorithm::solve(Maze& maze) {
         path.push_back(stack.top());
         stack.pop();
     }
+
+    reverse(path.begin(), path.end());
 
     auto endTime = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();

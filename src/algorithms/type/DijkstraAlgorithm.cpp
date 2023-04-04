@@ -2,8 +2,8 @@
 
 using namespace std;
 
-#define DESCRIPTION ""
-#define COMPLEXITY ""
+#define DESCRIPTION "Dijkstra's maze solving algorithm uses a graph to represent a maze, where nodes are cells and edges are possible paths. The algorithm starts at the starting cell, explores neighboring cells, and selects the cell with the shortest distance. It repeats this process until the destination cell is reached or all cells have been visited. The algorithm maintains a list of unvisited cells with their distances initialized to infinity, except for the starting cell which is set to 0. The shortest path can be reconstructed by following previous cells from the destination cell back to the starting cell."
+#define COMPLEXITY "O((V+E)logV)"
 
 DijkstraAlgorithm::DijkstraAlgorithm() : SolvingAlgorithm("DijkstraAlgorithm") {
     this->description = DESCRIPTION;

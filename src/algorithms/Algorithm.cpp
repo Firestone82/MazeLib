@@ -121,7 +121,7 @@ std::shared_ptr<GeneratingAlgorithm> Algorithm::getGenerator(std::string name, u
         std::string target = generator->getName();
         std::transform(target.begin(), target.end(), target.begin(), tolower);
 
-        if (target == name) {
+        if (target == name || target == name + "algorithm") {
             generator->setSeed(seed);
             return generator;
         }
@@ -135,9 +135,10 @@ std::vector<std::shared_ptr<SolvingAlgorithm>> Algorithm::getSolvers() {
 
     generators.push_back(std::make_shared<BreadthFirstSearchAlgorithm>());
     generators.push_back(std::make_shared<DepthFirstSearchAlgorithm>());
+    generators.push_back(std::make_shared<DijkstraAlgorithm>());
+    generators.push_back(std::make_shared<LeeAlgorithm>());
     generators.push_back(std::make_shared<TremauxsAlgorithm>());
     generators.push_back(std::make_shared<WallFollowingAlgorithm>());
-    generators.push_back(std::make_shared<DijkstraAlgorithm>());
 
     return generators;
 }
@@ -154,7 +155,7 @@ std::shared_ptr<SolvingAlgorithm> Algorithm::getSolver(std::string name) {
         std::string target = solver->getName();
         std::transform(target.begin(), target.end(), target.begin(), tolower);
 
-        if (target == name) {
+        if (target == name || target == name + "algorithm") {
             return solver;
         }
     }

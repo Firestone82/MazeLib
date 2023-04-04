@@ -2,8 +2,8 @@
 
 using namespace std;
 
-#define DESCRIPTION ""
-#define COMPLEXITY ""
+#define DESCRIPTION "Tremaux's Algorithm is a maze-solving algorithm that randomly chooses paths at junctions and marks them. It retraces its steps when it reaches a dead end or a visited junction until it finds an unvisited junction. The time and space complexity is O(N), where N is the number of cells in the maze. It may not work for mazes with loops and does not guarantee finding the shortest path."
+#define COMPLEXITY "O(N)"
 
 TremauxsAlgorithm::TremauxsAlgorithm() : SolvingAlgorithm("TremauxsAlgorithm") {
     this->description = DESCRIPTION;

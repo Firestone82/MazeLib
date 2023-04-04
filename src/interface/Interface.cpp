@@ -164,7 +164,7 @@ int Category::call(int argc, char** argv) const {
         std::cout << " Options:" << std::endl;
 
         for (const auto& option : this->options) {
-            std::cout << "    ";
+            std::cout << "   ";
 
             std::string aliases;
             for (const auto& alias : option.getAliases()) {

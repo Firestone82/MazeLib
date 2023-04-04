@@ -3,8 +3,8 @@
 
 using namespace std;
 
-#define DESCRIPTION ""
-#define COMPLEXITY ""
+#define DESCRIPTION "Breadth-first search (BFS) is an algorithm for traversing or searching tree or graph data structures. It starts at the tree root (or some arbitrary node of a graph, sometimes referred to as a 'search key'[1]), and explores all of the neighbor nodes at the present depth prior to moving on to the nodes at the next depth level. "
+#define COMPLEXITY "O(|V| + |E|)"
 
 BreadthFirstSearchAlgorithm::BreadthFirstSearchAlgorithm() : SolvingAlgorithm("BreadthFirstSearch") {
     this->description = DESCRIPTION;
@@ -72,6 +72,7 @@ Expected<MazePath> BreadthFirstSearchAlgorithm::solve(Maze& maze) {
     }
 
     path.push_back(startNode);
+    reverse(path.begin(), path.end());
 
     auto endTime = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();

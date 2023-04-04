@@ -2,8 +2,8 @@
 
 using namespace std;
 
-#define DESCRIPTION ""
-#define COMPLEXITY ""
+#define DESCRIPTION "Kruskal's Algorithm generates a perfect maze with no loops or isolated walls by randomly removing walls to create passages between cells. It creates a list of remaining walls, sorts them by weight, and adds walls with the lowest weights to the maze one by one."
+#define COMPLEXITY "O(E log E)"
 
 /**
  * @brief Construct a new Kruskal Algorithm:: Kruskal Algorithm object
@@ -98,35 +98,35 @@ Expected<MazeBuilder> KruskalAlgorithm::generate(int width, int height) {
     }
 
     // Add some random cycles to the graph
-    for (int i = 0; i < 100; i++) {
-        int x = rand() % width;
-        int y = rand() % height;
-
-        shared_ptr<Node> node = graph.getNode(x, y);
-
-        // Randomly choose a direction
-        tuple<int, int> direction = make_tuple(0,0);
-        switch (rand() % 4) {
-            case 1: { direction = {-1, 0}; break; } // LEFT
-            case 2: { direction = { 0,-1}; break; } // UP
-            case 3: { direction = { 1, 0}; break; } // RIGHT
-            case 4: { direction = { 0, 1}; break; } // DOWN
-        }
-
-        // Calculate the neighbour coordinates
-        int neighbourX = x + get<0>(direction);
-        int neighbourY = y + get<1>(direction);
-
-        // Check if the neighbour is out of bounds
-        if (neighbourX < 0 || neighbourX >= width || neighbourY < 0 || neighbourY >= height) {
-            continue;
-        }
-
-        shared_ptr<Node> neighbour = graph.getNode(neighbourX, neighbourY);
-
-        node->addNeighbour(neighbour);
-        neighbour->addNeighbour(node);
-    }
+//    for (int i = 0; i < 100; i++) {
+//        int x = rand() % width;
+//        int y = rand() % height;
+//
+//        shared_ptr<Node> node = graph.getNode(x, y);
+//
+//        // Randomly choose a direction
+//        tuple<int, int> direction = make_tuple(0,0);
+//        switch (rand() % 4) {
+//            case 1: { direction = {-1, 0}; break; } // LEFT
+//            case 2: { direction = { 0,-1}; break; } // UP
+//            case 3: { direction = { 1, 0}; break; } // RIGHT
+//            case 4: { direction = { 0, 1}; break; } // DOWN
+//        }
+//
+//        // Calculate the neighbour coordinates
+//        int neighbourX = x + get<0>(direction);
+//        int neighbourY = y + get<1>(direction);
+//
+//        // Check if the neighbour is out of bounds
+//        if (neighbourX < 0 || neighbourX >= width || neighbourY < 0 || neighbourY >= height) {
+//            continue;
+//        }
+//
+//        shared_ptr<Node> neighbour = graph.getNode(neighbourX, neighbourY);
+//
+//        node->addNeighbour(neighbour);
+//        neighbour->addNeighbour(node);
+//    }
 
     auto endTime = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
