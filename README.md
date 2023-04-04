@@ -1,6 +1,5 @@
 # Projekt do C++ a Python (Maze Generator / Solver)
 
-#### Autor projektu: Pavel Mikula (MIK0486)
 
 ## Téma Projektu
 Projekt se bude zabývat generaci a řešením bludišť. Pro zpracování bude rozdělen do dvou částí. 
@@ -177,3 +176,7 @@ Options:
   -d, --description     | Hide description of algorithms                             |
 ```
 </details>
+
+---
+### Autor projektu: Pavel Mikula (MIK0486)
+- Took approximately 66 hours
