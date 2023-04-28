@@ -179,4 +179,4 @@ Options:
 
 ---
 ### Autor projektu: Pavel Mikula (MIK0486)
-- Took approximately 66 hours
+- Took approximately 77 hours
