@@ -61,6 +61,14 @@ std::vector<std::shared_ptr<Node>> Node::getNeighbours() {
 }
 
 /**
+ * @brief Clear the neighbours of the node
+ * @return
+ */
+void Node::clearNeighbours() {
+    this->neighbours.clear();
+}
+
+/**
  * ====================================================
  */
 
@@ -82,6 +90,15 @@ Graph::Graph(int width, int height) {
 }
 
 /**
+ * @brief Destroy the Graph:: Graph object
+ */
+Graph::~Graph() {
+    for (const auto& node : this->nodes) {
+        node->clearNeighbours();
+    }
+}
+
+/**
  * @brief Construct a new Graph:: Graph object
  * @param graph Graph to copy
  */
@@ -90,13 +107,13 @@ Graph Graph::clone() {
 
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
-            auto node = this->getNode(x, y);
-            auto newNode = newGraph.getNode(x, y);
+            std::shared_ptr<Node> node = this->getNode(x, y);
+            std::shared_ptr<Node> newNode = newGraph.getNode(x, y);
 
             newNode->setID(node->getID());
 
             for (const auto& neighbour : node->getNeighbours()) {
-                newNode->addNeighbour(newGraph.getNode(neighbour->getX(),neighbour->getY()));
+                newNode->addNeighbour(newGraph.getNode(neighbour->getX(), neighbour->getY()));
             }
         }
     }

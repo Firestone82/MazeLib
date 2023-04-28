@@ -1,6 +1,10 @@
 #pragma once
 
-#include "../headers/Head.h"
+#include <vector>
+#include <string>
+#include <memory>
+#include <tuple>
+#include <iostream>
 
 typedef std::tuple<int, int> Coordinate;
 
@@ -24,6 +28,7 @@ class Node {
 
         void addNeighbour(std::shared_ptr<Node> node);
         std::vector<std::shared_ptr<Node>> getNeighbours();
+        void clearNeighbours();
 
 };
 
@@ -36,7 +41,7 @@ class Graph {
 
     public:
         Graph(int width, int height);
-        ~Graph() = default;
+        ~Graph();
 
         int getWidth() const;
         int getHeight() const;

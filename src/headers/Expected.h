@@ -1,5 +1,10 @@
 #pragma once
 
+#include <string>
+#include <vector>
+#include <optional>
+#include <stdexcept>
+
 template <typename T>
 class Expected {
     public:

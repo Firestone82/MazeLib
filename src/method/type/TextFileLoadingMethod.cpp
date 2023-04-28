@@ -12,7 +12,7 @@ Expected<MazeBuilder> TextFileLoadingMethod::load(std::string fileName) {
     json json;
 
     // Check if file has a valid extension
-    if (fileName.substr(fileName.length() - 4) != ".txt" && fileName.substr(fileName.length() - 4) != ".json") {
+    if (fileName.substr(fileName.length() - 4) != ".txt" && fileName.substr(fileName.length() - 5) != ".json") {
         return Expected<MazeBuilder>("File name must end with .txt or .json");
     }
 
@@ -36,7 +36,7 @@ Expected<MazeBuilder> TextFileLoadingMethod::load(std::string fileName) {
     // TODO: Fix loading seed as unsigned int from text file
     unsigned int seed = json["seed"].get<nlohmann::json::number_float_t>();
 
-    Graph graph = Graph(width, height);
+    std::shared_ptr<Graph> graph = std::make_shared<Graph>(width, height);
 
     for (const auto& node : json["mazeNodes"]) {
         int x = node["x"];
@@ -46,7 +46,7 @@ Expected<MazeBuilder> TextFileLoadingMethod::load(std::string fileName) {
             int neighborX = neighbor["x"];
             int neighborY = neighbor["y"];
 
-            graph.getNode(x, y)->addNeighbour(graph.getNode(neighborX,neighborY));
+            graph->getNode(x, y)->addNeighbour(graph->getNode(neighborX,neighborY));
         }
     }
 
@@ -55,6 +55,10 @@ Expected<MazeBuilder> TextFileLoadingMethod::load(std::string fileName) {
     mazeBuilder.setEnd(end);
     mazeBuilder.setPathWidth(pathWidth);
     mazeBuilder.setWallWidth(wallWidth);
+
+    if (mazeBuilder.buildExpected().hasError()) {
+        return Expected<MazeBuilder>(mazeBuilder.buildExpected().error());
+    }
 
     return Expected<MazeBuilder>(mazeBuilder);
 

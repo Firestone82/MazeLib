@@ -32,9 +32,12 @@
 *.out
 *.app
 
-# CMake
-cmake-build-debug
-cmake-build-release
-target/
+# Jetbrains
 .idea
+
+# CMake
+cmake*
+build/
+pybind/build
+pybind/mazeLib.egg-info
 

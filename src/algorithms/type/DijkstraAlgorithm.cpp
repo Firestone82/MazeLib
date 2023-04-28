@@ -1,4 +1,4 @@
-#include "../../headers/Head.h"
+#include "../Algorithm.h"
 
 using namespace std;
 
@@ -16,7 +16,7 @@ Expected<MazePath> DijkstraAlgorithm::solve(Maze& maze) {
     std::map<std::shared_ptr<Node>, std::pair<int, std::shared_ptr<Node>>> nodes;
     vector<shared_ptr<Node>> path;
 
-    Graph graph = maze.getGraph().clone();
+    Graph graph = maze.getGraph()->clone();
     auto startTime = std::chrono::high_resolution_clock::now();
 
     // Set the IDs of the path

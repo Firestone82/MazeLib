@@ -1,6 +1,11 @@
 #pragma once
 
-#include "../headers/Head.h"
+#include <string>
+#include <vector>
+#include <memory>
+#include <tuple>
+#include "../graph/Graph.h"
+#include "../headers/Expected.h"
 
 class Maze {
     private:
@@ -13,11 +18,11 @@ class Maze {
         int pathWidth;
         int wallWidth;
         unsigned int seed;
-        Graph graph;
+        std::shared_ptr<Graph> graph;
 
     public:
         Maze(int width, int height, long long generationTime, std::string generationAlgorithm,
-             Coordinate start, Coordinate end, int pathWidth, int wallWidth, unsigned int seed, const Graph& graph);
+             Coordinate start, Coordinate end, int pathWidth, int wallWidth, unsigned int seed, std::shared_ptr<Graph>& graph);
         ~Maze() = default;
 
         int getWidth() const;
@@ -29,7 +34,7 @@ class Maze {
         int getPathWidth() const;
         int getWallWidth() const;
         unsigned int getSeed() const;
-        Graph getGraph() const;
+        std::shared_ptr<Graph> getGraph() const;
 
         Expected<int> isValid() const;
 };
@@ -67,11 +72,11 @@ class MazeBuilder {
         int pathWidth;
         int wallWidth;
         unsigned int seed;
-        Graph graph;
+        std::shared_ptr<Graph> graph;
 
     public:
-        MazeBuilder(int width, int height, long long generationTime, std::string generationAlgorithm, unsigned int seed);
-        MazeBuilder(int width, int height, long long generationTime, std::string generationAlgorithm, unsigned int seed, const Graph& graph);
+//        MazeBuilder(int width, int height, long long generationTime, std::string generationAlgorithm, unsigned int seed);
+        MazeBuilder(int width, int height, long long generationTime, std::string generationAlgorithm, unsigned int seed, std::shared_ptr<Graph>& graph);
         ~MazeBuilder() = default;
 
         int getWidth() const;
@@ -94,10 +99,10 @@ class MazeBuilder {
         void setSeed(unsigned int seed);
         unsigned int getSeed() const;
 
-        void setGraph(const Graph& graph);
-        Graph getGraph();
+        void setGraph(std::shared_ptr<Graph>& graph);
+        std::shared_ptr<Graph> getGraph();
 
         // TODO-Extra: Switch this methods output
-        Maze build() const;
-        Expected<Maze> buildExpected() const;
+        Maze build();
+        Expected<Maze> buildExpected();
 };

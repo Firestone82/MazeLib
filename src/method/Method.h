@@ -50,6 +50,26 @@ class ImageSavingMethod : public SavingMethod {
 
 // ------------
 
+class MemoryMethod : public Method {
+public:
+    explicit MemoryMethod(std::string name) : Method(name,"memory") {};
+    virtual ~MemoryMethod() = default;
+
+    virtual Expected<std::vector<unsigned char>> save(const Maze& maze) = 0;
+    virtual Expected<std::vector<unsigned char>> save(const Maze& maze, std::optional<MazePath> path) = 0;
+};
+
+class ImageMemoryMethod : public MemoryMethod {
+public:
+    /* -- */ ImageMemoryMethod() : MemoryMethod("Memory") {};
+    virtual ~ImageMemoryMethod() = default;
+
+    Expected<std::vector<unsigned char>> save(const Maze& maze) override;
+    Expected<std::vector<unsigned char>> save(const Maze& maze, std::optional<MazePath> path) override;
+};
+
+// ------------
+
 class LoadingMethod : public Method {
     public:
         explicit LoadingMethod(std::string name) : Method(name,"loading") {};

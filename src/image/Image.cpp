@@ -200,3 +200,23 @@ void Image::drawGrid(int width, Color color) {
 int Image::save(std::string filename) {
     return stbi_write_png(filename.c_str(),width,height,3,pixels.data(),width * 3);
 }
+
+/**
+ * @brief Save the image to memory
+ * @return
+ */
+Expected<std::vector<unsigned char>> Image::memory() const {
+    std::vector<unsigned char> dataVector;
+    int len = 0;
+    unsigned char* data = stbi_write_png_to_mem(reinterpret_cast<const unsigned char *>(pixels.data()), width * 3, width, height, 3, &len);
+
+    if (data == nullptr) {
+        return Expected<std::vector<unsigned char>>(std::string("Failed to write image to memory"));
+    }
+
+    for (int i = 0; i < width * height * 3; i++) {
+        dataVector.push_back(data[i]);
+    }
+
+    return Expected<std::vector<unsigned char>>(dataVector);
+}

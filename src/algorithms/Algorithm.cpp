@@ -1,4 +1,3 @@
-#include "../headers/Head.h"
 #include "Algorithm.h"
 
 /**

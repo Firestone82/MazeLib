@@ -1,5 +1,4 @@
-#include <queue>
-#include "../../headers/Head.h"
+#include "../Algorithm.h"
 
 using namespace std;
 
@@ -17,7 +16,7 @@ Expected<MazePath> BreadthFirstSearchAlgorithm::solve(Maze& maze) {
     queue<shared_ptr<Node>> queue;
     vector<shared_ptr<Node>> path;
 
-    Graph graph = maze.getGraph().clone();
+    Graph graph = maze.getGraph()->clone();
     auto startTime = std::chrono::high_resolution_clock::now();
 
     // Set the IDs of the path

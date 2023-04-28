@@ -11,7 +11,7 @@ Expected<int> TextFileSavingMethod::save(const Maze& maze, std::string fileName,
     if (path != std::nullopt && path->isValid().hasError()) return path->isValid();
 
     // Check if file has a valid extension
-    if (fileName.substr(fileName.length() - 4) != ".txt" && fileName.substr(fileName.length() - 4) != ".json") {
+    if (fileName.substr(fileName.length() - 4) != ".txt" && fileName.substr(fileName.length() - 5) != ".json") {
         return Expected<int>("File name must end with .txt or .json");
     }
 
@@ -33,7 +33,7 @@ Expected<int> TextFileSavingMethod::save(const Maze& maze, std::string fileName,
 
     json nodes;
 
-    for (const auto& node : maze.getGraph().getNodes()) {
+    for (const auto& node : maze.getGraph()->getNodes()) {
         json nodeObject = {
                 {"x", node->getX()},
                 {"y", node->getY()},

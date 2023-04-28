@@ -50,3 +50,4 @@
 #include "../interface/Interface.h"
 
 int example();
+int test();

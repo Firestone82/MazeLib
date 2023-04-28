@@ -37,4 +37,5 @@ int example() {
     // Exporting the maze to an image with the path
     ImageSavingMethod().save(mazeGenerated,"mazePath.png",generatedPath);
 
+    return 0;
 }

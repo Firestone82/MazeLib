@@ -39,4 +39,5 @@ class Image {
         void drawGrid(int width, Color color);
 
         int save(std::string filename);
+        Expected<std::vector<unsigned char>> memory() const;
 };

@@ -1,8 +1,20 @@
 #pragma once
 
-#include "../headers/Head.h"
-
 // --------------------------------
+
+#include <vector>
+#include <string>
+#include <memory>
+#include <algorithm>
+#include <ctime>
+#include <stack>
+#include <chrono>
+#include <map>
+#include <queue>
+#include <iostream>
+#include "../maze/Maze.h"
+#include "../headers/Expected.h"
+
 
 class Maze;
 class GeneratingAlgorithm;

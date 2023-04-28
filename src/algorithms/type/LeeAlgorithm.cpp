@@ -1,4 +1,4 @@
-#include "../../headers/Head.h"
+#include "../Algorithm.h"
 
 using namespace std;
 
@@ -16,7 +16,7 @@ Expected<MazePath> LeeAlgorithm::solve(Maze &maze) {
     stack<shared_ptr<Node>> stack;
     vector<shared_ptr<Node>> path;
 
-    Graph graph = maze.getGraph().clone();
+    Graph graph = maze.getGraph()->clone();
     auto startTime = std::chrono::high_resolution_clock::now();
 
     // Set the IDs of the path
@@ -25,7 +25,7 @@ Expected<MazePath> LeeAlgorithm::solve(Maze &maze) {
     }
 
     // Get start and end node
-    shared_ptr<Node> startNode = graph.getNode(maze.getStart());
+    shared_ptr<Node> startNode =graph.getNode(maze.getStart());
     shared_ptr<Node> endNode = graph.getNode(maze.getEnd());
 
     // Set start as visited

@@ -1,4 +1,4 @@
-#include "../../headers/Head.h"
+#include "../Algorithm.h"
 
 using namespace std;
 
@@ -16,7 +16,7 @@ Expected<MazePath> WallFollowingAlgorithm::solve(Maze &maze) {
     stack<shared_ptr<Node>> stack;
     vector<shared_ptr<Node>> path;
 
-    Graph graph = maze.getGraph().clone();
+    Graph graph = maze.getGraph()->clone();
     auto startTime = std::chrono::high_resolution_clock::now();
 
     // Set the IDs of the path
@@ -88,7 +88,7 @@ Expected<MazePath> WallFollowingAlgorithm::solve(Maze &maze) {
         stack.pop();
     }
 
-    reverse(path.begin(), path.end());
+    reverse(path.begin(),path.end());
 
     auto endTime = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();

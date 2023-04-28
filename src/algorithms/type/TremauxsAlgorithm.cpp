@@ -1,4 +1,4 @@
-#include "../../headers/Head.h"
+#include "../Algorithm.h"
 
 using namespace std;
 
@@ -15,7 +15,7 @@ Expected<MazePath> TremauxsAlgorithm::solve(Maze &maze) {
 
     vector<std::shared_ptr<Node>> path;
 
-    Graph graph = maze.getGraph().clone();
+    Graph graph = maze.getGraph()->clone();
     auto startTime = std::chrono::high_resolution_clock::now();
 
     // Set the IDs of the nodes
@@ -24,8 +24,8 @@ Expected<MazePath> TremauxsAlgorithm::solve(Maze &maze) {
     }
 
     // Initialize the startNode and endNode nodes
-    shared_ptr<Node> startNode = maze.getGraph().getNode(maze.getStart());
-    shared_ptr<Node> endNode = maze.getGraph().getNode(maze.getEnd());
+    shared_ptr<Node> startNode = graph.getNode(maze.getStart());
+    shared_ptr<Node> endNode = graph.getNode(maze.getEnd());
 
     // Set startNode as visited
     shared_ptr<Node> currentNode = startNode;

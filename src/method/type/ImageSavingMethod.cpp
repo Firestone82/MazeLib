@@ -32,10 +32,10 @@ Expected<int> ImageSavingMethod::save(const Maze& maze, std::string fileName, st
 
     // Draw the route
     if (path != std::nullopt) {
-        auto currentNode = maze.getGraph().getNode(maze.getStart());
+        auto currentNode = maze.getGraph()->getNode(maze.getStart());
 
         for (const auto& node : path.value().getNodes()) {
-            if (currentNode != maze.getGraph().getNode(maze.getStart())) {
+            if (currentNode != maze.getGraph()->getNode(maze.getStart())) {
                 image.drawLine(
                         (currentNode->getX() * pathWidth) + (currentNode->getX() * wallWidth) + (pathWidth / 2) + wallWidth,
                         (currentNode->getY() * pathWidth) + (currentNode->getY() * wallWidth) + (pathWidth / 2) + wallWidth,
@@ -50,7 +50,7 @@ Expected<int> ImageSavingMethod::save(const Maze& maze, std::string fileName, st
         }
     }
 
-    for (const auto& node: maze.getGraph().getNodes()) {
+    for (const auto& node: maze.getGraph()->getNodes()) {
 
         // Draw start node
         if (node->getX() == std::get<0>(maze.getStart()) && node->getY() == std::get<1>(maze.getStart())) {

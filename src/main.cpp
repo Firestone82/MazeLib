@@ -4,6 +4,8 @@ using namespace std;
 
 int main(int argc, char **argv) {
 //    example();
+//    test();
+//    return 0;
 
     Interface interface = Interface();
     interface.setUsage("mazelib: Unknown command, try 'mazelib --help' for more information!");
@@ -121,7 +123,6 @@ int main(int argc, char **argv) {
                         }
 
                         Expected<MazeBuilder> expectedBuilder = generatingAlgorithm->generate(width, height);
-                        // TODO-Extra: Add loading bar for process of generating maze
 
                         // Check if maze generation failed
                         if (expectedBuilder.hasError()) {
@@ -241,6 +242,7 @@ int main(int argc, char **argv) {
                         cout << " mazeLib:  - Maze generating time: " << (maze.getGenerationTime() / 1000) << "us" << endl;
 
                         cout << endl << " mazelib: Maze generated successfully! Took: " << (duration  / 1000) << "us" << endl;
+                        cout << "" << endl;
 
                         return 0;
                     });
@@ -435,6 +437,7 @@ int main(int argc, char **argv) {
                         cout << endl << " mazeLib:  - Maze solving time: " << (mazePath.getSolvingTime() / 1000) << "us" << endl;
 
                         cout << endl << " mazelib: Maze solved successfully! Took: " << (duration  / 1000) << "us" << endl;
+                        cout << "" << endl;
 
                         return 0;
                     });
@@ -583,6 +586,7 @@ int main(int argc, char **argv) {
                         auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
 
                         cout << endl << " mazelib: Testing finished! Total time taken: " << (duration / 1000) << "us" << endl;
+                        cout << "" << endl;
 
                         return 0;
                     });

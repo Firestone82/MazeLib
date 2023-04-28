@@ -14,7 +14,7 @@
  * @param graph graph of maze
  */
 Maze::Maze(int width, int height, long long generationTime, std::string generationAlgorithm, Coordinate start, Coordinate end,
-           int pathWidth, int wallWidth, unsigned int seed, const Graph& graph)
+           int pathWidth, int wallWidth, unsigned int seed, std::shared_ptr<Graph>& graph)
     : width(width),
       height(height),
       generationTime(generationTime),
@@ -105,7 +105,7 @@ unsigned int Maze::getSeed() const {
  * Get the graph of the maze
  * @return
  */
-Graph Maze::getGraph() const {
+std::shared_ptr<Graph> Maze::getGraph() const {
     return this->graph;
 }
 
@@ -148,11 +148,11 @@ Expected<int> Maze::isValid() const {
         errors.emplace_back("Start and end coordinates must be different");
     }
 
-    if (this->graph.size() < 4) {
+    if (this->graph->size() < 4) {
         errors.emplace_back("Graph must have at least 4 node");
     }
 
-    if (this->graph.size() != this->width * this->height) {
+    if (this->graph->size() != this->width * this->height) {
         errors.emplace_back("Graph must have the same number of nodes as width * height");
     }
 
@@ -249,23 +249,23 @@ Expected<int> MazePath::isValid() const {
 * =================================
 */
 
-/**
- * @brief Construct a new Maze Builder:: Maze Builder object
- * @param width width of maze
- * @param height height of maze
- */
-MazeBuilder::MazeBuilder(int width, int height, long long generationTime, std::string generationAlgorithm, unsigned int seed)
-    : width(width),
-      height(height),
-      generationTime(generationTime),
-      generationAlgorithm(generationAlgorithm),
-      pathWidth(6),
-      wallWidth(2),
-      seed(seed),
-      graph(Graph(width, height)) {
-
-    // empty
-}
+///**
+// * @brief Construct a new Maze Builder:: Maze Builder object
+// * @param width width of maze
+// * @param height height of maze
+// */
+//MazeBuilder::MazeBuilder(int width, int height, long long generationTime, std::string generationAlgorithm, unsigned int seed)
+//    : width(width),
+//      height(height),
+//      generationTime(generationTime),
+//      generationAlgorithm(generationAlgorithm),
+//      pathWidth(6),
+//      wallWidth(2),
+//      seed(seed),
+//      graph(Graph(width, height)) {
+//
+//    // empty
+//}
 
 /**
  * @brief Construct a new Maze Builder:: Maze Builder object
@@ -273,7 +273,7 @@ MazeBuilder::MazeBuilder(int width, int height, long long generationTime, std::s
  * @param height height of maze
  * @param graph graph of maze
  */
-MazeBuilder::MazeBuilder(int width, int height, long long generationTime, std::string generationAlgorithm, unsigned int seed, const Graph& graph)
+MazeBuilder::MazeBuilder(int width, int height, long long generationTime, std::string generationAlgorithm, unsigned int seed, std::shared_ptr<Graph>& graph)
     : width(width),
       height(height),
       generationTime(generationTime),
@@ -402,7 +402,7 @@ unsigned int MazeBuilder::getSeed() const {
  * Set the graph of the maze
  * @param graph graph of maze
  */
-void MazeBuilder::setGraph(const Graph& graph) {
+void MazeBuilder::setGraph(std::shared_ptr<Graph>& graph) {
     this->graph = graph;
 }
 
@@ -410,7 +410,7 @@ void MazeBuilder::setGraph(const Graph& graph) {
  * Get the graph of the maze
  * @return graph of maze
  */
-Graph MazeBuilder::getGraph() {
+std::shared_ptr<Graph> MazeBuilder::getGraph() {
     return this->graph;
 }
 
@@ -418,7 +418,7 @@ Graph MazeBuilder::getGraph() {
  * Build the maze
  * @return maze
  */
-Maze MazeBuilder::build() const {
+Maze MazeBuilder::build() {
     return Maze(
             this->width,
             this->height,
@@ -437,7 +437,7 @@ Maze MazeBuilder::build() const {
  * Build the maze
  * @return maze
  */
-Expected<Maze> MazeBuilder::buildExpected() const {
+Expected<Maze> MazeBuilder::buildExpected() {
     Maze maze = this->build();
 
     if (maze.isValid().hasError()) {

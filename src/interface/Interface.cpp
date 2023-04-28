@@ -1,68 +1,129 @@
 #include "../headers/Head.h"
 
-// TODO: Add Comments
-
+/**
+ * @brief Construct a new Option:: Option object
+ * @param name
+ */
 Option::Option(std::string name)
     : name(name), required(false) {
 
     // empty
 }
 
+/**
+ * @brief Get the name of the option
+ * @return
+ */
 std::string Option::getName() const {
     return this->name;
 }
 
+/**
+ * @brief Set the required flag of the option
+ * @param alias alias to add
+ * @return option
+ */
 Option& Option::addAlias(std::string alias) {
     this->aliases.push_back(alias);
     return *this;
 }
 
+/**
+ * @brief Set the required flag of the option
+ * @param aliases aliases to add
+ * @return option
+ */
 Option& Option::addAliases(std::vector<std::string> aliases) {
     this->aliases.insert(this->aliases.end(),aliases.begin(),aliases.end());
     return *this;
 }
 
+/**
+ * @brief Get the aliases of the option
+ * @return aliases
+ */
 std::vector<std::string> Option::getAliases() const {
     return this->aliases;
 }
 
+/**
+ * @brief Add an argument to the option
+ * @param argument argument to add
+ * @return option
+ */
 Option& Option::addArgument(std::string argument) {
     this->arguments.push_back(argument);
     return *this;
 }
 
+/**
+ * @brief Add arguments to the option
+ * @param arguments arguments to add
+ * @return option
+ */
 Option& Option::addArguments(std::vector<std::string> arguments) {
     this->arguments.insert(this->arguments.end(),arguments.begin(),arguments.end());
     return *this;
 }
 
+/**
+ * @brief Get the arguments of the option
+ * @return arguments
+ */
 std::vector<std::string> Option::getArguments() const {
     return this->arguments;
 }
 
+/**
+ * @brief Set the description of the option
+ * @param description description to set
+ * @return option
+ */
 Option& Option::setDescription(std::string description) {
     this->description = description;
     return *this;
 }
 
+/**
+ * @brief Get the description of the option
+ * @return description
+ */
 std::string Option::getDescription() const {
     return this->description;
 }
 
+/**
+ * @brief Set the required flag of the option
+ * @param required required flag to set
+ * @return option
+ */
 Option& Option::setRequired(bool required) {
     this->required = required;
     return *this;
 }
 
+/**
+ * @brief Get the required flag of the option
+ * @return is required
+ */
 bool Option::isRequired() const {
     return this->required;
 }
 
+/**
+ * @brief Set the default value of the option
+ * @param defaultValue default value to set
+ * @return option
+ */
 Option& Option::setDefaults(std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>> defaultValues) {
     this->defaultValues = defaultValues;
     return *this;
 }
 
+/**
+ * @brief Get the default value of the option
+ * @return default value
+ */
 std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>> Option::getDefaults() const {
     return this->defaultValues;
 }
@@ -71,55 +132,104 @@ std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>> Option
  * =================================
  */
 
-// TODO: Add Comments
-
+/**
+ * @brief Construct a new Category:: Category object
+ * @param name name of the category
+ */
 Category::Category(std::string name)
     : name(name) {
 
     // empty
 }
 
+/**
+ * @brief Get the name of the category
+ * @return name
+ */
 std::string Category::getName() const {
     return this->name;
 }
 
+/**
+ * @brief Add an alias to the category
+ * @param alias alias to add
+ * @return category
+ */
 Category& Category::addAlias(std::string alias) {
     this->aliases.push_back(alias);
     return *this;
 }
 
+/**
+ * @brief Add aliases to the category
+ * @param aliases aliases to add
+ * @return category
+ */
 Category& Category::addAliases(std::vector<std::string> aliases) {
     this->aliases.insert(this->aliases.end(), aliases.begin(), aliases.end());
     return *this;
 }
 
+/**
+ * @brief Add an option to the category
+ * @param option option to add
+ * @return category
+ */
 Category& Category::addOption(const Option& option) {
     this->options.push_back(option);
     return *this;
 }
 
+
+/**
+ * @brief Get the aliases of the category
+ * @return aliases
+ */
 std::vector<std::string> Category::getAliases() const {
     return this->aliases;
 }
 
+/**
+ * @brief Add description to the category
+ * @param description description to add
+ * @return category
+ */
 Category& Category::setDescription(std::string description) {
     this->description = description;
     return *this;
 }
 
+/**
+ * @brief Get the description of the category
+ * @return description
+ */
 std::string Category::getDescription() const {
     return this->description;
 }
 
+/**
+ * Set the usage of the category
+ * @param usage usage to set
+ * @return category
+ */
 Category& Category::setUsage(std::string usage) {
     this->usage = usage;
     return *this;
 }
 
+/**
+ * @brief Get the usage of the category
+ * @return usage
+ */
 std::string Category::getUsage() const {
     return this->usage;
 }
 
+/**
+ * @brief Set the callable of the category
+ * @param callable callable to set
+ * @return category
+ */
 Category& Category::returns(std::function<int()> callable) {
     this->callable = [callable](std::map<std::string, std::optional<std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>>>> args) {
         return callable();
@@ -128,11 +238,22 @@ Category& Category::returns(std::function<int()> callable) {
     return *this;
 }
 
+/**
+ * @brief Set the callable of the category
+ * @param callable callable to set
+ * @return category
+ */
 Category& Category::returns(std::function<int(std::map<std::string, std::optional<std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>>>>)> callable) {
     this->callable = callable;
     return *this;
 }
 
+/**
+ * @brief Call the category
+ * @param argc argument count
+ * @param argv argument values
+ * @return int
+ */
 int Category::call(int argc, char** argv) const {
     std::map<std::string, std::optional<std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>>>> arguments;
 
@@ -298,28 +419,52 @@ int Category::call(int argc, char** argv) const {
  * =================================
  */
 
-// TODO: Add Comments
-
+/**
+ * @brief Construct a new Category:: Category object
+ * @param category
+ */
 void Interface::addCategory(Category category) {
     this->categories.push_back(category);
 }
 
+/**
+ * @brief Get the Categories object
+ * @return categories
+ */
 std::vector<Category> Interface::getCategories() const {
     return this->categories;
 }
 
+/**
+ * @brief Set default callable
+ * @param callable callable
+ */
 void Interface::setDefault(std::function<int()> callable) {
     this->callable = callable;
 }
 
+/**
+ * @brief Set default usage
+ * @param usage usage
+ */
 void Interface::setUsage(std::string usage) {
     this->usage = usage;
 }
 
+/**
+ * @brief Get the Usage object
+ * @return usage
+ */
 std::string Interface::getUsage() const {
     return this->usage;
 }
 
+/**
+ * @brief Run the interface
+ * @param argc argument count
+ * @param argv argument vector
+ * @return an exit code
+ */
 int Interface::run(int argc, char** argv) {
     if (argc == 1) {
         std::cout << std::endl << this->usage << std::endl;
