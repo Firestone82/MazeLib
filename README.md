@@ -79,6 +79,22 @@ void example() {
 - CMake 3.22.1+
 - Python 3.9.7+ (for GUI)
 
+## Installation
+```shell
+# Clone the repository
+git clone git@github.com:Firestone82/MazeLib.git
+cd MazeLib
+
+# Building as C++ CLI
+mkdir build && cd build
+
+# Build the project
+cmake .. && make -j
+
+# Build the project
+pip install -r ../requirements.txt && pip install ..
+```
+
 ## Images
 Example maze output:
 

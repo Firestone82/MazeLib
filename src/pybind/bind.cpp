@@ -133,7 +133,7 @@ PYBIND11_MODULE(mazeLib, m) {
 
     // Bind the Maze class
     py::class_<Maze>(m,"Maze")
-            .def(py::init<int, int, long long, std::string, Coordinate, Coordinate, int, int, unsigned int, const Graph&>())
+            .def(py::init<int, int, long long, std::string, Coordinate, Coordinate, int, int, unsigned int, std::shared_ptr<Graph>&>())
             .def("getWidth",&Maze::getWidth)
             .def("getHeight",&Maze::getHeight)
             .def("getGenerationTime",&Maze::getGenerationTime)
@@ -159,8 +159,8 @@ PYBIND11_MODULE(mazeLib, m) {
 
     // Bind the MazeBuilder class
     py::class_<MazeBuilder>(m,"MazeBuilder")
-            .def(py::init<int, int, long long, std::string, unsigned int>())
-            .def(py::init<int, int, long long, std::string, unsigned int, const Graph&>())
+//            .def(py::init<int, int, long long, std::string, unsigned int>())
+            .def(py::init<int, int, long long, std::string, unsigned int, std::shared_ptr<Graph>&>())
             .def("getWidth",&MazeBuilder::getWidth)
             .def("getHeight",&MazeBuilder::getHeight)
             .def("getGenerationTime",&MazeBuilder::getGenerationTime)

@@ -38,6 +38,6 @@
 # CMake
 cmake*
 build/
-pybind/build
-pybind/mazeLib.egg-info
-
+build/pybind/build
+build/pybind/mazeLib.egg-info
+mazeLib.egg-info
