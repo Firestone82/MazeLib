@@ -1,39 +1,39 @@
-# Projekt do C++ a Python (Maze Generator / Solver)
+# Project for C++ (Maze Generator/Solver API/CLI)
 
+## Project Theme
+The project will focus on generating and solving mazes. It will be divided into two parts for processing. 
+The first part will be more focused on logic, which will be an API/CLI written in C++. 
+This API or CLI will accept user input data and create and solve mazes based on the parameters. 
+The second part of the project will focus more on graphics in Python. 
+The graphical GUI will serve as the interface for the API and will also be used in the URO subject.
 
-## Téma Projektu
-Projekt se bude zabývat generaci a řešením bludišť. Pro zpracování bude rozdělen do dvou částí. 
-První část bude spíše zaměřena na logiku, tím bude API/CLI, která bude psaná v C++. 
-Tato API nebo CLI bude přijímat uživatelská vstupní data a na základě parametrů vytvářet bludiště a řešit je. 
-Druhá část projektu bude spíše zaměřená na grafiku v jazyce Python. 
-Zde bude graficky zpracováno obsluhování API, toto grafické GUI poté poslouží také do předmětu URO.
+## Logical Part of the Project (API/CLI)
+This part will operate the following functions:
+ - Creating a maze using a specified algorithm
+   - Saving to a file or image
+ - Solving a maze using a specified algorithm
+   - Loading input from a file
+   - Saving to a file or image
+ - Finding the fastest algorithm for solving a maze
+   - Outputting a table of results
+ - Listing all available algorithms
 
-## Logická část projektu (API/CLI)
-Tato část bude obsluhovat jednotlivé funkce:
- - Vytvoření bludiště pomocí specifikovaného algoritmu
-   - Uložení do souboru nebo do obrázku
- - Vyřešení bludiště pomocí specifikovaného algoritmu
-   - Načtení vstupu ze souboru
-   - Uložení do souboru nebo do obrázku
- - Zjištění nejrychlejšího algoritmu pro vyřešení bludiště
-   - Výpis tabulky s výsledky
- - Výpis všech dostupných algoritmů
+## Graphical Part of the Project (GUI)
+The graphical part of the project, written in Python, will use the tkinter library and 
+libraries from the first part of the project to connect user interfaces with graphics. 
+The application will send requests to the API and render their outputs on the screen.
 
-## Grafická část projektu (GUI)
-Grafická část projektu napsána v jazyce python, bude pomocí knihovny tkinker a 
-knihovny z první části projektu propojovat uživatelská rozhraní s grafickým.
-Aplikace bude zasílat žádosti API a jejich výstupy vykreslovat na obrazovku.
+## API Architecture
+Important classes for work:
+ - Maze (Class for storing a maze)
+ - Algorithm (Class for utilizing an algorithm)
+   - GeneratingAlgorithm (Subclass for generating algorithms)
+   - SolvingAlgorithm (Subclass for solving algorithms)
+ - Graph (Class for storing maze content)
+   - Node (Subclass for storing maze cell)
+ - Image (Class for exporting maze to an image)
+ - Interface (Class for storing the interface)
 
-## Architektura API
-Důležité třídy pro práci:
-- Maze (Třída pro uchování bludiště)
-- Algorithm (Třída pro využívání algoritmu)
-  - GeneratingAlgorithm (Podtřída pro generujicí algoritmus)
-  - SolvingAlgorithm (Podtřída pro řešící algoritmus)
-- Graph (Třída pro uchování obsahu bludiště)
-  - Node (Podtřída pro uchování pole bludiště)
-- Image (Třída pro export bludiště do obrázku)
-- Interface (Třída pro uchování rozhraní)
 
 ## API Usage
 ```c++
