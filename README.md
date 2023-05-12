@@ -2,9 +2,11 @@
 
 # Project for C++ (Maze Library API/CLI) 
 
-<img alt="Testing" src="https://github.com/Firestone82/MazeLib/actions/workflows/cmake.yml/badge.svg">
-<img alt="License" src="https://img.shields.io/github/license/Firestone82/MazeLib">
-<img alt="GitHub issues" src="https://img.shields.io/github/issues/Firestone82/MazeLib">
+<p>
+    <img alt="Testing" src="https://github.com/Firestone82/MazeLib/actions/workflows/cmake.yml/badge.svg">
+    <img alt="License" src="https://img.shields.io/github/license/Firestone82/MazeLib">
+    <img alt="GitHub issues" src="https://img.shields.io/github/issues/Firestone82/MazeLib">
+</p>
 
 - Author: Pavel Mikula (MIK0486)
 - Took approximately 78 hours
