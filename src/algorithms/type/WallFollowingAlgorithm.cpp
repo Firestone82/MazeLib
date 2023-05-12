@@ -20,7 +20,7 @@ Expected<MazePath> WallFollowingAlgorithm::solve(Maze &maze) {
     auto startTime = std::chrono::high_resolution_clock::now();
 
     // Set the IDs of the path
-    for (const auto& node : graph.getNodes()) {
+    for (const auto &node: graph.getNodes()) {
         node->setID(0);
     }
 
@@ -43,7 +43,7 @@ Expected<MazePath> WallFollowingAlgorithm::solve(Maze &maze) {
         }
 
         bool found = false;
-        for (const auto& neighbor : currentNode->getNeighbours()) {
+        for (const auto &neighbor: currentNode->getNeighbours()) {
             if (neighbor->getID() == 0) {
                 if (neighbor->getX() == currentNode->getX() + 1) {
                     currentNode = neighbor;
@@ -88,7 +88,7 @@ Expected<MazePath> WallFollowingAlgorithm::solve(Maze &maze) {
         stack.pop();
     }
 
-    reverse(path.begin(),path.end());
+    reverse(path.begin(), path.end());
 
     auto endTime = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();

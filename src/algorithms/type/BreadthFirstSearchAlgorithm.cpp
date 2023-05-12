@@ -10,7 +10,7 @@ BreadthFirstSearchAlgorithm::BreadthFirstSearchAlgorithm() : SolvingAlgorithm("B
     this->complexity = COMPLEXITY;
 }
 
-Expected<MazePath> BreadthFirstSearchAlgorithm::solve(Maze& maze) {
+Expected<MazePath> BreadthFirstSearchAlgorithm::solve(Maze &maze) {
     if (maze.isValid().hasError()) return Expected<MazePath>(maze.isValid().errors());
 
     queue<shared_ptr<Node>> queue;
@@ -20,7 +20,7 @@ Expected<MazePath> BreadthFirstSearchAlgorithm::solve(Maze& maze) {
     auto startTime = std::chrono::high_resolution_clock::now();
 
     // Set the IDs of the path
-    for (const auto& node : graph.getNodes()) {
+    for (const auto &node: graph.getNodes()) {
         node->setID(0);
     }
 
@@ -47,7 +47,7 @@ Expected<MazePath> BreadthFirstSearchAlgorithm::solve(Maze& maze) {
         }
 
         // Try to find a neighbour that is not visited
-        for (const auto& neighbor : currentNode->getNeighbours()) {
+        for (const auto &neighbor: currentNode->getNeighbours()) {
             if (neighbor->getID() == 0) {
                 neighbor->setID(currentNode->getID());
                 queue.push(neighbor);
@@ -62,7 +62,7 @@ Expected<MazePath> BreadthFirstSearchAlgorithm::solve(Maze& maze) {
     while (currentNode->getID() > 1) {
         path.push_back(currentNode);
 
-        for (const auto& neighbor : currentNode->getNeighbours()) {
+        for (const auto &neighbor: currentNode->getNeighbours()) {
             if (neighbor->getID() == currentNode->getID() - 1) {
                 currentNode = neighbor;
                 break;
@@ -76,5 +76,5 @@ Expected<MazePath> BreadthFirstSearchAlgorithm::solve(Maze& maze) {
     auto endTime = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
 
-    return Expected(MazePath(duration,this->getName(),path));
+    return Expected(MazePath(duration, this->getName(), path));
 }

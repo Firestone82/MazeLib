@@ -1,41 +1,45 @@
-#include "headers/head.h"
+#include "maze/Maze.h"
+#include "algorithms/Algorithm.h"
+#include "method/Method.h"
 
 using namespace std;
 
-int example() {
+void example() {
+
     // Creation of a maze
-    MazeBuilder mazeBuilderGenerated = KruskalAlgorithm(time(nullptr)).generate(10,10);
-    mazeBuilderGenerated.setStart({0,0});
-    mazeBuilderGenerated.setEnd({mazeBuilderGenerated.getWidth() - 1,mazeBuilderGenerated.getHeight() - 1});
-    mazeBuilderGenerated.setPathWidth(30);
-    mazeBuilderGenerated.setWallWidth(3);
+    MazeBuilder builder = KruskalAlgorithm(time(nullptr)).generate(10, 10);
+    builder.setPathWidth(30);
+    builder.setWallWidth(3);
 
     // Building the maze
-    Maze mazeGenerated = mazeBuilderGenerated.build();
+    Maze maze = builder.build();
 
     // Exporting the maze to a file
-    TextFileSavingMethod().save(mazeGenerated,"maze.txt");
+    TextFileSavingMethod().save(maze, "maze.txt");
 
     // Exporting the maze to an image
-    ImageSavingMethod().save(mazeGenerated,"maze.png");
+    ImageSavingMethod().save(maze, "maze.png");
+
+    // --------------------------------
 
     // Loading a maze from a file
-    Expected<MazeBuilder> mazeBuilderLoaded = TextFileLoadingMethod().load("maze.txt");
+    Expected<MazeBuilder> loaded = TextFileLoadingMethod().load("maze.txt");
 
     // Checking for errors
-    if (mazeBuilderLoaded.hasError()) {
-        cout << "Error: " << mazeBuilderLoaded.error() << endl;
-        return 1;
+    if (loaded.hasError()) {
+        cout << "Error: " << loaded.error() << endl;
+        return;
+    } else {
+        builder = loaded.value();
+        maze = builder.build();
     }
 
     // Solving the maze
-    MazePath generatedPath = DepthFirstSearchAlgorithm().solve(mazeGenerated);
+    MazePath path = DepthFirstSearchAlgorithm().solve(maze);
 
     // Exporting the maze to a file with the path
-    TextFileSavingMethod().save(mazeGenerated,"mazePath.txt",generatedPath);
+    TextFileSavingMethod().save(maze, "mazePath.txt", path);
 
     // Exporting the maze to an image with the path
-    ImageSavingMethod().save(mazeGenerated,"mazePath.png",generatedPath);
-
-    return 0;
+    ImageSavingMethod().save(maze, "mazePath.png", path);
 }

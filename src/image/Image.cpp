@@ -1,4 +1,7 @@
-#include "../headers/Head.h"
+#include "Image.h"
+
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+
 #include "../headers/libs/stb_image_write.h"
 
 /**
@@ -27,7 +30,7 @@ Image::Image(int width, int height) {
     this->height = height;
 
     for (int i = 0; i < width * height; i++) {
-        pixels.push_back({16,16,16});
+        pixels.push_back({16, 16, 16});
     }
 }
 
@@ -51,7 +54,7 @@ void Image::drawLine(int x1, int y1, int x2, int y2, Color color) {
     int err = dx - dy;
 
     while (true) {
-        drawPixel(x1,y1, color);
+        drawPixel(x1, y1, color);
 
         if (x1 == x2 && y1 == y2) {
             break;
@@ -91,7 +94,7 @@ void Image::drawLine(int x1, int y1, int x2, int y2, int thickness, Color color)
         int x = x1 - thickness / 2;
         int y = y1 - thickness / 2;
 
-        drawRect(x, y,thickness,thickness, color);
+        drawRect(x, y, thickness, thickness, color);
         //drawCircle(x1 - thickness / 2,y1 - thickness / 2,thickness,color);
 
         if (x1 == x2 && y1 == y2) {
@@ -198,25 +201,5 @@ void Image::drawGrid(int width, Color color) {
  * @param filename
  */
 int Image::save(std::string filename) {
-    return stbi_write_png(filename.c_str(),width,height,3,pixels.data(),width * 3);
-}
-
-/**
- * @brief Save the image to memory
- * @return
- */
-Expected<std::vector<unsigned char>> Image::memory() const {
-    std::vector<unsigned char> dataVector;
-    int len = 0;
-    unsigned char* data = stbi_write_png_to_mem(reinterpret_cast<const unsigned char *>(pixels.data()), width * 3, width, height, 3, &len);
-
-    if (data == nullptr) {
-        return Expected<std::vector<unsigned char>>(std::string("Failed to write image to memory"));
-    }
-
-    for (int i = 0; i < width * height * 3; i++) {
-        dataVector.push_back(data[i]);
-    }
-
-    return Expected<std::vector<unsigned char>>(dataVector);
+    return stbi_write_png(filename.c_str(), width, height, 3, pixels.data(), width * 3);
 }

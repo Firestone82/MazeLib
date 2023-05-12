@@ -1,4 +1,4 @@
-#include "../headers/Head.h"
+#include "Graph.h"
 
 /**
  * @brief Construct a new Node:: Node object
@@ -93,7 +93,7 @@ Graph::Graph(int width, int height) {
  * @brief Destroy the Graph:: Graph object
  */
 Graph::~Graph() {
-    for (const auto& node : this->nodes) {
+    for (const auto &node: this->nodes) {
         node->clearNeighbours();
     }
 }
@@ -112,7 +112,7 @@ Graph Graph::clone() {
 
             newNode->setID(node->getID());
 
-            for (const auto& neighbour : node->getNeighbours()) {
+            for (const auto &neighbour: node->getNeighbours()) {
                 newNode->addNeighbour(newGraph.getNode(neighbour->getX(), neighbour->getY()));
             }
         }
@@ -151,7 +151,7 @@ std::vector<std::shared_ptr<Node>> Graph::getNodes() {
  * @return Node at the specified coordinates
  */
 std::shared_ptr<Node> Graph::getNode(Coordinate coordinate) {
-    return this->getNode(std::get<0>(coordinate),std::get<1>(coordinate));
+    return this->getNode(std::get<0>(coordinate), std::get<1>(coordinate));
 }
 
 /**

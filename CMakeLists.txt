@@ -7,9 +7,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../target)
 
 option(DISABLE_ASAN "Do not use Address sanitizer" OFF)
 
-#if(DISABLE_ASAN)
-#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
-#endif()
+if(DISABLE_ASAN)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
+endif()
 
 include_directories(C:/Users/Pavel/AppData/Local/Msys2/mingw64/include/python3.10)
 link_directories(C:/Users/Pavel/AppData/Local/Msys2/mingw64/lib/python3.10)
@@ -38,21 +38,11 @@ add_executable(mazelib
         src/method/type/ImageSavingMethod.cpp
         src/method/type/TextFileLoadingMethod.cpp
         src/method/type/TextFileSavingMethod.cpp
-        src/method/type/ImageMemoryMethod.cpp
         src/algorithms/type/BreadthFirstSearchAlgorithm.cpp
         src/algorithms/type/TremauxsAlgorithm.cpp
         src/algorithms/type/WallFollowingAlgorithm.cpp
         src/algorithms/type/DijkstraAlgorithm.cpp
         src/algorithms/type/LeeAlgorithm.cpp
-        src/test.cpp)
-
-#find_package(Python 3.6 COMPONENTS Interpreter Development REQUIRED)
-#find_package(pybind11 CONFIG REQUIRED)
-#
-#pybind11_add_module(mazeLibAPI
-#        src/pybind/test.cpp,
-#        src/pybind/bind.cpp
-#)
-
+        )
 
 

@@ -20,12 +20,12 @@ Expected<MazePath> LeeAlgorithm::solve(Maze &maze) {
     auto startTime = std::chrono::high_resolution_clock::now();
 
     // Set the IDs of the path
-    for (const auto& node : graph.getNodes()) {
+    for (const auto &node: graph.getNodes()) {
         node->setID(0);
     }
 
     // Get start and end node
-    shared_ptr<Node> startNode =graph.getNode(maze.getStart());
+    shared_ptr<Node> startNode = graph.getNode(maze.getStart());
     shared_ptr<Node> endNode = graph.getNode(maze.getEnd());
 
     // Set start as visited
@@ -45,7 +45,7 @@ Expected<MazePath> LeeAlgorithm::solve(Maze &maze) {
         }
 
         bool found = false;
-        for (const auto& neighbor : currentNode->getNeighbours()) {
+        for (const auto &neighbor: currentNode->getNeighbours()) {
             if (neighbor->getID() == 0) {
                 if (neighbor->getX() == currentNode->getX() + 1) {
                     currentNode = neighbor;

@@ -1,4 +1,5 @@
-#include "../../headers/Head.h"
+#include "../Method.h"
+#include "../../headers/libs/json.hpp"
 
 using json = nlohmann::json;
 
@@ -20,7 +21,7 @@ Expected<MazeBuilder> TextFileLoadingMethod::load(std::string fileName) {
         std::ifstream file(fileName);
         json = json::parse(file);
         file.close();
-    } catch (std::exception& e) {
+    } catch (std::exception &e) {
         return Expected<MazeBuilder>("File not found or corrupted");
     }
 
@@ -28,8 +29,8 @@ Expected<MazeBuilder> TextFileLoadingMethod::load(std::string fileName) {
     int height = json["height"];
     double generationTime = json["generationTime"];
     std::string generationAlgorithm = json["generationAlgorithm"];
-    Coordinate start = {json["coords"]["start"][0],json["coords"]["start"][1]};
-    Coordinate end = {json["coords"]["end"][0],json["coords"]["end"][1]};
+    Coordinate start = {json["coords"]["start"][0], json["coords"]["start"][1]};
+    Coordinate end = {json["coords"]["end"][0], json["coords"]["end"][1]};
     int pathWidth = json["pathWidth"];
     int wallWidth = json["wallWidth"];
 
@@ -38,15 +39,15 @@ Expected<MazeBuilder> TextFileLoadingMethod::load(std::string fileName) {
 
     std::shared_ptr<Graph> graph = std::make_shared<Graph>(width, height);
 
-    for (const auto& node : json["mazeNodes"]) {
+    for (const auto &node: json["mazeNodes"]) {
         int x = node["x"];
         int y = node["y"];
 
-        for (const auto& neighbor : node["neighbors"]) {
+        for (const auto &neighbor: node["neighbors"]) {
             int neighborX = neighbor["x"];
             int neighborY = neighbor["y"];
 
-            graph->getNode(x, y)->addNeighbour(graph->getNode(neighborX,neighborY));
+            graph->getNode(x, y)->addNeighbour(graph->getNode(neighborX, neighborY));
         }
     }
 

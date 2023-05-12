@@ -1,16 +1,17 @@
-#include "../../headers/Head.h"
+#include "../Method.h"
 
-Expected<int> ImageSavingMethod::save(const Maze& maze, std::string fileName) {
-    return save(maze, fileName,std::nullopt);
+Expected<int> ImageSavingMethod::save(const Maze &maze, std::string fileName) {
+    return save(maze, fileName, std::nullopt);
 }
 
 // TODO-Extra: Add a way to set colors for the path, wall, start, end, and background
-Expected<int> ImageSavingMethod::save(const Maze& maze, std::string fileName, std::optional<MazePath> path) {
+Expected<int> ImageSavingMethod::save(const Maze &maze, std::string fileName, std::optional<MazePath> path) {
     if (maze.isValid().hasError()) return maze.isValid();
     if (path != std::nullopt && path->isValid().hasError()) return path->isValid();
 
     // Check if file has a valid extension
-    if (fileName.substr(fileName.length() - 4) != ".png" && fileName.substr(fileName.length() - 4) != ".jpg" && fileName.substr(fileName.length() - 5) != ".jpeg") {
+    if (fileName.substr(fileName.length() - 4) != ".png" && fileName.substr(fileName.length() - 4) != ".jpg" &&
+        fileName.substr(fileName.length() - 5) != ".jpeg") {
         return Expected<int>("File name must end with .png, .jpg, or .jpeg");
     }
 
@@ -27,18 +28,20 @@ Expected<int> ImageSavingMethod::save(const Maze& maze, std::string fileName, st
 
     // Draw border
     for (int i = 0; i < wallWidth; i++) {
-        image.drawRect(i,i,width - i * 2,height - i * 2,WALL_COLOR);
+        image.drawRect(i, i, width - i * 2, height - i * 2, WALL_COLOR);
     }
 
     // Draw the route
     if (path != std::nullopt) {
         auto currentNode = maze.getGraph()->getNode(maze.getStart());
 
-        for (const auto& node : path.value().getNodes()) {
+        for (const auto &node: path.value().getNodes()) {
             if (currentNode != maze.getGraph()->getNode(maze.getStart())) {
                 image.drawLine(
-                        (currentNode->getX() * pathWidth) + (currentNode->getX() * wallWidth) + (pathWidth / 2) + wallWidth,
-                        (currentNode->getY() * pathWidth) + (currentNode->getY() * wallWidth) + (pathWidth / 2) + wallWidth,
+                        (currentNode->getX() * pathWidth) + (currentNode->getX() * wallWidth) + (pathWidth / 2) +
+                        wallWidth,
+                        (currentNode->getY() * pathWidth) + (currentNode->getY() * wallWidth) + (pathWidth / 2) +
+                        wallWidth,
                         (node->getX() * pathWidth) + (node->getX() * wallWidth) + (pathWidth / 2) + wallWidth,
                         (node->getY() * pathWidth) + (node->getY() * wallWidth) + (pathWidth / 2) + wallWidth,
                         pointWidth,
@@ -50,7 +53,7 @@ Expected<int> ImageSavingMethod::save(const Maze& maze, std::string fileName, st
         }
     }
 
-    for (const auto& node: maze.getGraph()->getNodes()) {
+    for (const auto &node: maze.getGraph()->getNodes()) {
 
         // Draw start node
         if (node->getX() == std::get<0>(maze.getStart()) && node->getY() == std::get<1>(maze.getStart())) {
@@ -58,8 +61,10 @@ Expected<int> ImageSavingMethod::save(const Maze& maze, std::string fileName, st
                 for (int x = 0; x < 2; x++) {
                     for (int y = 0; y < 2; y++) {
                         image.drawFillCircle(
-                                (node->getX() * pathWidth) + (node->getX() * wallWidth) + (pathWidth / 2) + wallWidth - x,
-                                (node->getY() * pathWidth) + (node->getY() * wallWidth) + (pathWidth / 2) + wallWidth - y,
+                                (node->getX() * pathWidth) + (node->getX() * wallWidth) + (pathWidth / 2) + wallWidth -
+                                x,
+                                (node->getY() * pathWidth) + (node->getY() * wallWidth) + (pathWidth / 2) + wallWidth -
+                                y,
                                 pointWidth,
                                 START_COLOR
                         );
@@ -81,8 +86,10 @@ Expected<int> ImageSavingMethod::save(const Maze& maze, std::string fileName, st
                 for (int x = 0; x < 2; x++) {
                     for (int y = 0; y < 2; y++) {
                         image.drawFillCircle(
-                                (node->getX() * pathWidth) + (node->getX() * wallWidth) + (pathWidth / 2) + wallWidth - x,
-                                (node->getY() * pathWidth) + (node->getY() * wallWidth) + (pathWidth / 2) + wallWidth - y,
+                                (node->getX() * pathWidth) + (node->getX() * wallWidth) + (pathWidth / 2) + wallWidth -
+                                x,
+                                (node->getY() * pathWidth) + (node->getY() * wallWidth) + (pathWidth / 2) + wallWidth -
+                                y,
                                 pointWidth,
                                 END_COLOR
                         );
@@ -102,7 +109,7 @@ Expected<int> ImageSavingMethod::save(const Maze& maze, std::string fileName, st
         bool topWall = true;
 
         // Check neighbours of node for wall drawing
-        for (const auto& neighbour: node->getNeighbours()) {
+        for (const auto &neighbour: node->getNeighbours()) {
             if (neighbour->getX() == node->getX() - 1) leftWall = false;
             if (neighbour->getY() == node->getY() - 1) topWall = false;
         }

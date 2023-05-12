@@ -10,7 +10,7 @@ DepthFirstSearchAlgorithm::DepthFirstSearchAlgorithm() : SolvingAlgorithm("Depth
     this->complexity = COMPLEXITY;
 }
 
-Expected<MazePath> DepthFirstSearchAlgorithm::solve(Maze& maze) {
+Expected<MazePath> DepthFirstSearchAlgorithm::solve(Maze &maze) {
     if (maze.isValid().hasError()) return Expected<MazePath>(maze.isValid().errors());
 
     stack<shared_ptr<Node>> stack;
@@ -20,7 +20,7 @@ Expected<MazePath> DepthFirstSearchAlgorithm::solve(Maze& maze) {
     auto startTime = std::chrono::high_resolution_clock::now();
 
     // Set the IDs of the path
-    for (const auto& node : graph.getNodes()) {
+    for (const auto &node: graph.getNodes()) {
         node->setID(0);
     }
 
@@ -44,7 +44,7 @@ Expected<MazePath> DepthFirstSearchAlgorithm::solve(Maze& maze) {
 
         // Try to find a neighbour that is not visited
         bool found = false;
-        for (const auto& neighbor : currentNode->getNeighbours()) {
+        for (const auto &neighbor: currentNode->getNeighbours()) {
             if (neighbor->getID() == 0) {
                 neighbor->setID(1);
                 stack.push(neighbor);

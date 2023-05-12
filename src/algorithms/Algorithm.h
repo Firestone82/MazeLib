@@ -17,117 +17,138 @@
 
 
 class Maze;
+
 class GeneratingAlgorithm;
+
 class SolvingAlgorithm;
 
 class Algorithm {
-    protected:
-        std::string name;
-        std::string type;
-        std::string complexity = "O(1)";
-        std::string description = "No description";
+protected:
+    std::string name;
+    std::string type;
+    std::string complexity = "O(1)";
+    std::string description = "No description";
 
-    public:
-        Algorithm(std::string name, std::string type);
-        Algorithm(std::string name, std::string type, std::string complexity);
-        Algorithm(std::string name, std::string type, std::string complexity, std::string description);
-        virtual ~Algorithm() = default;
+public:
+    Algorithm(std::string name, std::string type);
 
-        std::string getName();
-        std::string getType();
-        std::string getComplexity();
-        std::string getDescription();
+    Algorithm(std::string name, std::string type, std::string complexity);
 
-        static std::vector<std::shared_ptr<Algorithm>> getAlgorithms();
+    Algorithm(std::string name, std::string type, std::string complexity, std::string description);
 
-        static std::vector<std::shared_ptr<GeneratingAlgorithm>> getGenerators();
-        static std::shared_ptr<GeneratingAlgorithm> getGenerator(std::string name);
-        static std::shared_ptr<GeneratingAlgorithm> getGenerator(std::string name, unsigned int seed);
+    virtual ~Algorithm() = default;
 
-        static std::vector<std::shared_ptr<SolvingAlgorithm>> getSolvers();
-        static std::shared_ptr<SolvingAlgorithm> getSolver(std::string name);
+    std::string getName();
+
+    std::string getType();
+
+    std::string getComplexity();
+
+    std::string getDescription();
+
+    static std::vector<std::shared_ptr<Algorithm>> getAlgorithms();
+
+    static std::vector<std::shared_ptr<GeneratingAlgorithm>> getGenerators();
+
+    static std::shared_ptr<GeneratingAlgorithm> getGenerator(std::string name);
+
+    static std::shared_ptr<GeneratingAlgorithm> getGenerator(std::string name, unsigned int seed);
+
+    static std::vector<std::shared_ptr<SolvingAlgorithm>> getSolvers();
+
+    static std::shared_ptr<SolvingAlgorithm> getSolver(std::string name);
 };
 
 // --------------------------------
 
 class GeneratingAlgorithm : public Algorithm {
-    protected:
-        unsigned int seed;
+protected:
+    unsigned int seed;
 
-    public:
-        /* -- */ GeneratingAlgorithm(std::string name, unsigned int seed);
-        virtual ~GeneratingAlgorithm() = default;
+public:
+    /* -- */ GeneratingAlgorithm(std::string name, unsigned int seed);
 
-        void setSeed(unsigned int seed);
+    virtual ~GeneratingAlgorithm() = default;
 
-        virtual Expected<MazeBuilder> generate(int width, int height) = 0;
+    void setSeed(unsigned int seed);
+
+    virtual Expected<MazeBuilder> generate(int width, int height) = 0;
 
 };
 
 class KruskalAlgorithm : public GeneratingAlgorithm {
-    public:
-        /* -- */ KruskalAlgorithm();
-        explicit KruskalAlgorithm(unsigned int seed);
-        virtual ~KruskalAlgorithm() = default;
+public:
+    /* -- */ KruskalAlgorithm();
 
-        Expected<MazeBuilder> generate(int width, int height) override;
+    explicit KruskalAlgorithm(unsigned int seed);
+
+    virtual ~KruskalAlgorithm() = default;
+
+    Expected<MazeBuilder> generate(int width, int height) override;
 };
 
 // ------------
 
 class SolvingAlgorithm : public Algorithm {
-    public:
-        explicit SolvingAlgorithm(std::string name);
-        virtual ~SolvingAlgorithm() = default;
+public:
+    explicit SolvingAlgorithm(std::string name);
 
-        virtual Expected<MazePath> solve(Maze& maze) = 0;
+    virtual ~SolvingAlgorithm() = default;
+
+    virtual Expected<MazePath> solve(Maze &maze) = 0;
 
 };
 
 class WallFollowingAlgorithm : public SolvingAlgorithm {
-    public:
-        /* -- */ WallFollowingAlgorithm();
-        virtual ~WallFollowingAlgorithm() = default;
+public:
+    /* -- */ WallFollowingAlgorithm();
 
-        Expected<MazePath> solve(Maze& maze) override;
+    virtual ~WallFollowingAlgorithm() = default;
+
+    Expected<MazePath> solve(Maze &maze) override;
 };
 
 class TremauxsAlgorithm : public SolvingAlgorithm {
-    public:
-        /* -- */ TremauxsAlgorithm();
-        virtual ~TremauxsAlgorithm() = default;
+public:
+    /* -- */ TremauxsAlgorithm();
 
-        Expected<MazePath> solve(Maze& maze) override;
+    virtual ~TremauxsAlgorithm() = default;
+
+    Expected<MazePath> solve(Maze &maze) override;
 };
 
 class BreadthFirstSearchAlgorithm : public SolvingAlgorithm {
-    public:
-        /* -- */ BreadthFirstSearchAlgorithm();
-        virtual ~BreadthFirstSearchAlgorithm() = default;
+public:
+    /* -- */ BreadthFirstSearchAlgorithm();
 
-        Expected<MazePath> solve(Maze& maze) override;
+    virtual ~BreadthFirstSearchAlgorithm() = default;
+
+    Expected<MazePath> solve(Maze &maze) override;
 };
 
 class DepthFirstSearchAlgorithm : public SolvingAlgorithm {
-    public:
-        /* -- */ DepthFirstSearchAlgorithm();
-        virtual ~DepthFirstSearchAlgorithm() = default;
+public:
+    /* -- */ DepthFirstSearchAlgorithm();
 
-        Expected<MazePath> solve(Maze& maze) override;
+    virtual ~DepthFirstSearchAlgorithm() = default;
+
+    Expected<MazePath> solve(Maze &maze) override;
 };
 
 class LeeAlgorithm : public SolvingAlgorithm {
-    public:
-        /* -- */ LeeAlgorithm();
-        virtual ~LeeAlgorithm() = default;
+public:
+    /* -- */ LeeAlgorithm();
 
-        Expected<MazePath> solve(Maze& maze) override;
+    virtual ~LeeAlgorithm() = default;
+
+    Expected<MazePath> solve(Maze &maze) override;
 };
 
 class DijkstraAlgorithm : public SolvingAlgorithm {
-    public:
-        /* -- */ DijkstraAlgorithm();
-        virtual ~DijkstraAlgorithm() = default;
+public:
+    /* -- */ DijkstraAlgorithm();
 
-        Expected<MazePath> solve(Maze& maze) override;
+    virtual ~DijkstraAlgorithm() = default;
+
+    Expected<MazePath> solve(Maze &maze) override;
 };

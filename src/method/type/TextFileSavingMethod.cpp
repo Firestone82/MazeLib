@@ -1,12 +1,13 @@
-#include "../../headers/Head.h"
+#include "../Method.h"
+#include "../../headers/libs/json.hpp"
 
 using json = nlohmann::json;
 
-Expected<int> TextFileSavingMethod::save(const Maze& maze, std::string fileName) {
-    return this->save(maze, fileName,std::nullopt);
+Expected<int> TextFileSavingMethod::save(const Maze &maze, std::string fileName) {
+    return this->save(maze, fileName, std::nullopt);
 }
 
-Expected<int> TextFileSavingMethod::save(const Maze& maze, std::string fileName, std::optional<MazePath> path) {
+Expected<int> TextFileSavingMethod::save(const Maze &maze, std::string fileName, std::optional<MazePath> path) {
     if (maze.isValid().hasError()) return maze.isValid();
     if (path != std::nullopt && path->isValid().hasError()) return path->isValid();
 
@@ -16,35 +17,35 @@ Expected<int> TextFileSavingMethod::save(const Maze& maze, std::string fileName,
     }
 
     nlohmann::ordered_json mazeObject = {
-        {"width", maze.getWidth()},
-        {"height", maze.getHeight()},
-        {"generationTime", maze.getGenerationTime()},
-        {"generationAlgorithm", maze.getGenerationAlgorithm()},
-        {"coords", {
-            {"start", {std::get<0>(maze.getStart()), std::get<1>(maze.getStart())}},
-            {"end", {std::get<0>(maze.getEnd()), std::get<1>(maze.getEnd())}},
-        }},
-        {"pathWidth", maze.getPathWidth()},
-        {"wallWidth", maze.getWallWidth()},
-        {"seed", maze.getSeed()},
-        {"mazeNodes", json::array()},
-        {"pathNodes", json::array()}
+            {"width",               maze.getWidth()},
+            {"height",              maze.getHeight()},
+            {"generationTime",      maze.getGenerationTime()},
+            {"generationAlgorithm", maze.getGenerationAlgorithm()},
+            {"coords",              {
+                                            {"start", {std::get<0>(maze.getStart()), std::get<1>(maze.getStart())}},
+                                            {"end", {std::get<0>(maze.getEnd()), std::get<1>(maze.getEnd())}},
+                                    }},
+            {"pathWidth",           maze.getPathWidth()},
+            {"wallWidth",           maze.getWallWidth()},
+            {"seed",                maze.getSeed()},
+            {"mazeNodes",           json::array()},
+            {"pathNodes",           json::array()}
     };
 
     json nodes;
 
-    for (const auto& node : maze.getGraph()->getNodes()) {
+    for (const auto &node: maze.getGraph()->getNodes()) {
         json nodeObject = {
-                {"x", node->getX()},
-                {"y", node->getY()},
+                {"x",         node->getX()},
+                {"y",         node->getY()},
                 {"neighbors", {}}
         };
 
-        for (const auto& neighbor : node->getNeighbours()) {
+        for (const auto &neighbor: node->getNeighbours()) {
             nodeObject["neighbors"].push_back({
-                {"x", neighbor->getX()},
-                {"y", neighbor->getY()}
-            });
+                                                      {"x", neighbor->getX()},
+                                                      {"y", neighbor->getY()}
+                                              });
         }
 
         nodes.push_back(nodeObject);
@@ -56,10 +57,10 @@ Expected<int> TextFileSavingMethod::save(const Maze& maze, std::string fileName,
         json paths;
 
         for (const auto &node: path.value().getNodes()) {
-           paths.push_back({
-                {"x", node->getX()},
-                {"y", node->getY()}
-            });
+            paths.push_back({
+                                    {"x", node->getX()},
+                                    {"y", node->getY()}
+                            });
         }
 
         mazeObject["pathNodes"] = paths;
@@ -69,7 +70,7 @@ Expected<int> TextFileSavingMethod::save(const Maze& maze, std::string fileName,
         std::ofstream file(fileName);
         file << mazeObject.dump(4);
         file.close();
-    } catch (const std::exception& e) {
+    } catch (const std::exception &e) {
         return Expected<int>(e.what());
     }
 

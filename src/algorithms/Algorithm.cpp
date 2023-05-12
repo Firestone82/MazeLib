@@ -6,7 +6,7 @@
  * @param type algorithm type
  */
 Algorithm::Algorithm(std::string name, std::string type)
-    : name(name), type(type) {
+        : name(name), type(type) {
 
     // empty
 }
@@ -18,7 +18,7 @@ Algorithm::Algorithm(std::string name, std::string type)
  * @param complexity algorithm complexity
  */
 Algorithm::Algorithm(std::string name, std::string type, std::string complexity)
-    : name(name), type(type), complexity(complexity) {
+        : name(name), type(type), complexity(complexity) {
 
     // empty
 }
@@ -31,7 +31,7 @@ Algorithm::Algorithm(std::string name, std::string type, std::string complexity)
  * @param description algorithm description
  */
 Algorithm::Algorithm(std::string name, std::string type, std::string complexity, std::string description)
-    : name(name), type(type), complexity(complexity), description(description) {
+        : name(name), type(type), complexity(complexity), description(description) {
 
     // empty
 }
@@ -75,11 +75,11 @@ std::string Algorithm::getDescription() {
 std::vector<std::shared_ptr<Algorithm>> Algorithm::getAlgorithms() {
     std::vector<std::shared_ptr<Algorithm>> algorithms;
 
-    for (auto& generator : Algorithm::getGenerators()) {
+    for (auto &generator: Algorithm::getGenerators()) {
         algorithms.push_back(generator);
     }
 
-    for (auto& solver : Algorithm::getSolvers()) {
+    for (auto &solver: Algorithm::getSolvers()) {
         algorithms.push_back(solver);
     }
 
@@ -104,7 +104,7 @@ std::vector<std::shared_ptr<GeneratingAlgorithm>> Algorithm::getGenerators() {
  * @return Generator
  */
 std::shared_ptr<GeneratingAlgorithm> Algorithm::getGenerator(std::string name) {
-    return Algorithm::getGenerator(name,time(nullptr));
+    return Algorithm::getGenerator(name, time(nullptr));
 }
 
 /**
@@ -114,9 +114,9 @@ std::shared_ptr<GeneratingAlgorithm> Algorithm::getGenerator(std::string name) {
  * @return Generator
  */
 std::shared_ptr<GeneratingAlgorithm> Algorithm::getGenerator(std::string name, unsigned int seed) {
-    std::transform(name.begin(),name.end(),name.begin(),tolower);
+    std::transform(name.begin(), name.end(), name.begin(), tolower);
 
-    for (const auto& generator : Algorithm::getGenerators()) {
+    for (const auto &generator: Algorithm::getGenerators()) {
         std::string target = generator->getName();
         std::transform(target.begin(), target.end(), target.begin(), tolower);
 
@@ -150,7 +150,7 @@ std::vector<std::shared_ptr<SolvingAlgorithm>> Algorithm::getSolvers() {
 std::shared_ptr<SolvingAlgorithm> Algorithm::getSolver(std::string name) {
     std::transform(name.begin(), name.end(), name.begin(), tolower);
 
-    for (auto& solver : Algorithm::getSolvers()) {
+    for (auto &solver: Algorithm::getSolvers()) {
         std::string target = solver->getName();
         std::transform(target.begin(), target.end(), target.begin(), tolower);
 
@@ -172,7 +172,7 @@ std::shared_ptr<SolvingAlgorithm> Algorithm::getSolver(std::string name) {
  * @param seed seed of the algorithm
  */
 GeneratingAlgorithm::GeneratingAlgorithm(std::string name, unsigned int seed)
-    : Algorithm(name,"generating"), seed(seed) {
+        : Algorithm(name, "generating"), seed(seed) {
 
     // empty
 }
@@ -194,7 +194,7 @@ void GeneratingAlgorithm::setSeed(unsigned int seed) {
  * @param name algorithm name
  */
 SolvingAlgorithm::SolvingAlgorithm(std::string name)
-    : Algorithm(name,"solving") {
+        : Algorithm(name, "solving") {
 
     // empty
 }

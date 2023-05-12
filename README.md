@@ -1,3 +1,5 @@
+<img width="15%" src="assets/icon.png" align="right" alt="Icon">
+
 # Project for C++ (Maze Generator/Solver API/CLI)
 
 ## Project Theme
@@ -23,6 +25,9 @@ The graphical part of the project, written in Python, will use the tkinter libra
 libraries from the first part of the project to connect user interfaces with graphics. 
 The application will send requests to the API and render their outputs on the screen.
 
+## Example
+- 
+
 ## API Architecture
 Important classes for work:
  - Maze (Class for storing a maze)
@@ -34,43 +39,46 @@ Important classes for work:
  - Image (Class for exporting maze to an image)
  - Interface (Class for storing the interface)
 
-
 ## API Usage
-```c++
+```cpp
 void example() {
+
     // Creation of a maze
-    MazeBuilder mazeBuilderGenerated = KruskalAlgorithm(time(nullptr)).generate(10,10);
-    mazeBuilderGenerated.setStart({0,0});
-    mazeBuilderGenerated.setEnd({mazeBuilderGenerated.getWidth() - 1,mazeBuilderGenerated.getHeight() - 1});
-    mazeBuilderGenerated.setPathWidth(30);
-    mazeBuilderGenerated.setWallWidth(3);
+    MazeBuilder builder = KruskalAlgorithm(time(nullptr)).generate(10, 10);
+    builder.setPathWidth(30);
+    builder.setWallWidth(3);
 
     // Building the maze
-    Maze mazeGenerated = mazeBuilderGenerated.build();
+    Maze maze = builder.build();
 
     // Exporting the maze to a file
-    TextFileSavingMethod().save(mazeGenerated,"maze.txt");
+    TextFileSavingMethod().save(maze, "maze.txt");
 
     // Exporting the maze to an image
-    ImageSavingMethod().save(mazeGenerated,"maze.png");
+    ImageSavingMethod().save(maze, "maze.png");
+
+    // --------------------------------
 
     // Loading a maze from a file
-    Expected<MazeBuilder> mazeBuilderLoaded = TextFileLoadingMethod().load("maze.txt");
+    Expected<MazeBuilder> loaded = TextFileLoadingMethod().load("maze.txt");
 
     // Checking for errors
-    if (mazeBuilderLoaded.hasError()) {
-        cout << "Error: " << mazeBuilderLoaded.error() << endl;
-        return 1;
+    if (loaded.hasError()) {
+        cout << "Error: " << loaded.error() << endl;
+        return;
+    } else {
+        builder = loaded.value();
+        maze = builder.build();
     }
 
     // Solving the maze
-    MazePath generatedPath = DepthFirstSearchAlgorithm().solve(mazeGenerated);
+    MazePath path = DepthFirstSearchAlgorithm().solve(maze);
 
     // Exporting the maze to a file with the path
-    TextFileSavingMethod().save(mazeGenerated,"mazePath.txt",generatedPath);
+    TextFileSavingMethod().save(maze, "mazePath.txt", path);
 
     // Exporting the maze to an image with the path
-    ImageSavingMethod().save(mazeGenerated,"mazePath.png",generatedPath);
+    ImageSavingMethod().save(maze, "mazePath.png", path);
 }
 ```
 
@@ -82,7 +90,7 @@ void example() {
 ## Installation
 ```shell
 # Clone the repository
-git clone git@github.com:Firestone82/MazeLib.git
+git clone https://github.com/Firestone82/MazeLib.git
 cd MazeLib
 
 # Building as C++ CLI
@@ -98,12 +106,12 @@ pip install -r ../requirements.txt && pip install ..
 ## Images
 Example maze output:
 
-<p align="center" width="100%">
-    <img width="45%" src="assets/maze.png" alt="Not Solved Maze Image"> 
+<p>
+    <img src="assets/maze.png" alt="Not Solved Maze Image"> 
     &nbsp;
     &nbsp;
     &nbsp;
-    <img width="45%" src="assets/mazeSolved.png" alt="Solved Maze Image"> 
+    <img src="assets/mazeSolved.png" alt="Solved Maze Image"> 
 </p>
 
 ## CLI Usage
@@ -199,5 +207,5 @@ Options:
 </details>
 
 ---
-### Autor projektu: Pavel Mikula (MIK0486)
-- Took approximately 77 hours
+### Project Author: Pavel Mikula (MIK0486)
+- Took approximately 78 hours

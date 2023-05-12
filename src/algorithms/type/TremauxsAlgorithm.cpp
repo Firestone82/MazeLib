@@ -19,7 +19,7 @@ Expected<MazePath> TremauxsAlgorithm::solve(Maze &maze) {
     auto startTime = std::chrono::high_resolution_clock::now();
 
     // Set the IDs of the nodes
-    for (const auto& node : graph.getNodes()) {
+    for (const auto &node: graph.getNodes()) {
         node->setID(0);
     }
 
@@ -36,7 +36,7 @@ Expected<MazePath> TremauxsAlgorithm::solve(Maze &maze) {
     while (currentNode != endNode) {
         vector<std::shared_ptr<Node>> neighbours;
 
-        for (auto& neighbour : currentNode->getNeighbours()) {
+        for (auto &neighbour: currentNode->getNeighbours()) {
             if (neighbour->getID() == 0) {
                 neighbours.push_back(neighbour);
             }
@@ -64,5 +64,5 @@ Expected<MazePath> TremauxsAlgorithm::solve(Maze &maze) {
     auto endTime = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
 
-    return Expected(MazePath(duration,this->getName(),path));
+    return Expected(MazePath(duration, this->getName(), path));
 }

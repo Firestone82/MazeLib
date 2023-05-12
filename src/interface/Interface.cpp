@@ -1,11 +1,11 @@
-#include "../headers/Head.h"
+#include "Interface.h"
 
 /**
  * @brief Construct a new Option:: Option object
  * @param name
  */
 Option::Option(std::string name)
-    : name(name), required(false) {
+        : name(name), required(false) {
 
     // empty
 }
@@ -23,7 +23,7 @@ std::string Option::getName() const {
  * @param alias alias to add
  * @return option
  */
-Option& Option::addAlias(std::string alias) {
+Option &Option::addAlias(std::string alias) {
     this->aliases.push_back(alias);
     return *this;
 }
@@ -33,8 +33,8 @@ Option& Option::addAlias(std::string alias) {
  * @param aliases aliases to add
  * @return option
  */
-Option& Option::addAliases(std::vector<std::string> aliases) {
-    this->aliases.insert(this->aliases.end(),aliases.begin(),aliases.end());
+Option &Option::addAliases(std::vector<std::string> aliases) {
+    this->aliases.insert(this->aliases.end(), aliases.begin(), aliases.end());
     return *this;
 }
 
@@ -51,7 +51,7 @@ std::vector<std::string> Option::getAliases() const {
  * @param argument argument to add
  * @return option
  */
-Option& Option::addArgument(std::string argument) {
+Option &Option::addArgument(std::string argument) {
     this->arguments.push_back(argument);
     return *this;
 }
@@ -61,8 +61,8 @@ Option& Option::addArgument(std::string argument) {
  * @param arguments arguments to add
  * @return option
  */
-Option& Option::addArguments(std::vector<std::string> arguments) {
-    this->arguments.insert(this->arguments.end(),arguments.begin(),arguments.end());
+Option &Option::addArguments(std::vector<std::string> arguments) {
+    this->arguments.insert(this->arguments.end(), arguments.begin(), arguments.end());
     return *this;
 }
 
@@ -79,7 +79,7 @@ std::vector<std::string> Option::getArguments() const {
  * @param description description to set
  * @return option
  */
-Option& Option::setDescription(std::string description) {
+Option &Option::setDescription(std::string description) {
     this->description = description;
     return *this;
 }
@@ -97,7 +97,7 @@ std::string Option::getDescription() const {
  * @param required required flag to set
  * @return option
  */
-Option& Option::setRequired(bool required) {
+Option &Option::setRequired(bool required) {
     this->required = required;
     return *this;
 }
@@ -115,7 +115,7 @@ bool Option::isRequired() const {
  * @param defaultValue default value to set
  * @return option
  */
-Option& Option::setDefaults(std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>> defaultValues) {
+Option &Option::setDefaults(std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>> defaultValues) {
     this->defaultValues = defaultValues;
     return *this;
 }
@@ -137,7 +137,7 @@ std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>> Option
  * @param name name of the category
  */
 Category::Category(std::string name)
-    : name(name) {
+        : name(name) {
 
     // empty
 }
@@ -155,7 +155,7 @@ std::string Category::getName() const {
  * @param alias alias to add
  * @return category
  */
-Category& Category::addAlias(std::string alias) {
+Category &Category::addAlias(std::string alias) {
     this->aliases.push_back(alias);
     return *this;
 }
@@ -165,7 +165,7 @@ Category& Category::addAlias(std::string alias) {
  * @param aliases aliases to add
  * @return category
  */
-Category& Category::addAliases(std::vector<std::string> aliases) {
+Category &Category::addAliases(std::vector<std::string> aliases) {
     this->aliases.insert(this->aliases.end(), aliases.begin(), aliases.end());
     return *this;
 }
@@ -175,7 +175,7 @@ Category& Category::addAliases(std::vector<std::string> aliases) {
  * @param option option to add
  * @return category
  */
-Category& Category::addOption(const Option& option) {
+Category &Category::addOption(const Option &option) {
     this->options.push_back(option);
     return *this;
 }
@@ -194,7 +194,7 @@ std::vector<std::string> Category::getAliases() const {
  * @param description description to add
  * @return category
  */
-Category& Category::setDescription(std::string description) {
+Category &Category::setDescription(std::string description) {
     this->description = description;
     return *this;
 }
@@ -212,7 +212,7 @@ std::string Category::getDescription() const {
  * @param usage usage to set
  * @return category
  */
-Category& Category::setUsage(std::string usage) {
+Category &Category::setUsage(std::string usage) {
     this->usage = usage;
     return *this;
 }
@@ -230,8 +230,9 @@ std::string Category::getUsage() const {
  * @param callable callable to set
  * @return category
  */
-Category& Category::returns(std::function<int()> callable) {
-    this->callable = [callable](std::map<std::string, std::optional<std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>>>> args) {
+Category &Category::returns(std::function<int()> callable) {
+    this->callable = [callable](
+            std::map<std::string, std::optional<std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>>>> args) {
         return callable();
     };
 
@@ -243,7 +244,8 @@ Category& Category::returns(std::function<int()> callable) {
  * @param callable callable to set
  * @return category
  */
-Category& Category::returns(std::function<int(std::map<std::string, std::optional<std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>>>>)> callable) {
+Category &Category::returns(std::function<int(
+        std::map<std::string, std::optional<std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>>>>)> callable) {
     this->callable = callable;
     return *this;
 }
@@ -254,17 +256,18 @@ Category& Category::returns(std::function<int(std::map<std::string, std::optiona
  * @param argv argument values
  * @return int
  */
-int Category::call(int argc, char** argv) const {
+int Category::call(int argc, char **argv) const {
     std::map<std::string, std::optional<std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>>>> arguments;
 
     // If there are no options, run the callable
     if (this->options.empty()) {
-        return this->callable(std::map<std::string, std::optional<std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>>>>());
+        return this->callable(
+                std::map<std::string, std::optional<std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>>>>());
     }
 
     // Check if there is any required options
     bool required = false;
-    for (const auto& option : this->options) {
+    for (const auto &option: this->options) {
         if (option.isRequired()) {
             required = true;
         }
@@ -273,31 +276,32 @@ int Category::call(int argc, char** argv) const {
 
     // If there is no arguments but there is required options, show error
     if (argc == 0 && required) {
-        std::cout << std::endl << " mazelib: Missing required arguments, try 'mazelib " << this->getName() << " --help' for more information!" << std::endl;
+        std::cout << std::endl << " mazelib: Missing required arguments, try 'mazelib " << this->getName()
+                  << " --help' for more information!" << std::endl;
         return 1;
     }
 
     // Show help message
-    if (argc != 0 && strcmp(argv[0], "--help") == 0) {
+    if (argc != 0 && std::strcmp(argv[0], "--help") == 0) {
         std::cout << "" << std::endl;
         std::cout << " Command: " << this->getUsage() << std::endl;
         std::cout << "" << std::endl;
         std::cout << " Options:" << std::endl;
 
-        for (const auto& option : this->options) {
+        for (const auto &option: this->options) {
             std::cout << "   ";
 
             std::string aliases;
-            for (const auto& alias : option.getAliases()) {
+            for (const auto &alias: option.getAliases()) {
                 aliases += alias + ", ";
             }
-            aliases = aliases.substr(0,aliases.size() - 2);
+            aliases = aliases.substr(0, aliases.size() - 2);
 
-            std::cout << std::setw(15) << std::left  << aliases << "\t | ";
-            std::cout << std::setw(50) << std::left  << option.getDescription();
-            std::cout << std::setw(8)  << std::right << (option.isRequired() ? "REQUIRED" : "") << " | ";
+            std::cout << std::setw(15) << std::left << aliases << "\t | ";
+            std::cout << std::setw(50) << std::left << option.getDescription();
+            std::cout << std::setw(8) << std::right << (option.isRequired() ? "REQUIRED" : "") << " | ";
 
-            for (const auto& argument : option.getArguments()) {
+            for (const auto &argument: option.getArguments()) {
                 std::cout << "[" << argument << "] ";
             }
 
@@ -308,7 +312,7 @@ int Category::call(int argc, char** argv) const {
     }
 
     // Search for all the options
-    for (const auto& option : this->options) {
+    for (const auto &option: this->options) {
         std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>> values;
         int a = 0; // Argument index
 
@@ -321,14 +325,15 @@ int Category::call(int argc, char** argv) const {
             }
 
             // Loop through all the aliases
-            for (const auto& alias : option.getAliases()) {
+            for (const auto &alias: option.getAliases()) {
 
                 // Alias matches
                 if (alias == argv[i]) {
 
                     // Check if there is enough arguments
                     if (i + static_cast<int>(option.getArguments().size()) >= argc) {
-                        std::cout << std::endl << " mazelib: Missing arguments, try 'mazelib " << this->getName() << " --help' for more information!" << std::endl;
+                        std::cout << std::endl << " mazelib: Missing arguments, try 'mazelib " << this->getName()
+                                  << " --help' for more information!" << std::endl;
                         return 1;
                     }
 
@@ -362,11 +367,15 @@ int Category::call(int argc, char** argv) const {
                             } else if (type == "string") {
                                 values.emplace_back(argv[j]);
                             } else {
-                                std::cout << std::endl << " mazelib: Invalid argument type '" << type << "'! Try using 'mazelib " << this->getName() << " --help' for help!" << std::endl;
+                                std::cout << std::endl << " mazelib: Invalid argument type '" << type
+                                          << "'! Try using 'mazelib " << this->getName() << " --help' for help!"
+                                          << std::endl;
                                 return 2;
                             }
-                        } catch (std::invalid_argument& e) {
-                            std::cout << std::endl << " mazelib: Invalid values for option '" << option.getName() << "'. Try using 'mazelib " << this->getName() << " --help' for help!" << std::endl;
+                        } catch (std::invalid_argument &e) {
+                            std::cout << std::endl << " mazelib: Invalid values for option '" << option.getName()
+                                      << "'. Try using 'mazelib " << this->getName() << " --help' for help!"
+                                      << std::endl;
                             return 1;
                         }
                     }
@@ -383,7 +392,8 @@ int Category::call(int argc, char** argv) const {
             // If there is no arguments and option doesn't require them, then use the default values
             if (values.empty()) {
                 if (option.isRequired()) {
-                    std::cout << std::endl << " mazelib: Missing required argument '" << option.getName() << "'! Try using 'mazelib " << this->getName() << " --help' for help!" << std::endl;
+                    std::cout << std::endl << " mazelib: Missing required argument '" << option.getName()
+                              << "'! Try using 'mazelib " << this->getName() << " --help' for help!" << std::endl;
                     return 0;
                 } else {
                     for (const auto &value: option.getDefaults()) {
@@ -393,26 +403,31 @@ int Category::call(int argc, char** argv) const {
             } else {
                 // If there is more arguments than the option has, then it is invalid
                 if (values.size() > option.getArguments().size()) {
-                    std::cout << std::endl << " mazelib: Too many arguments for '" << option.getName() << "'! Try using 'mazelib " << this->getName() << " --help' for help!" << std::endl;
+                    std::cout << std::endl << " mazelib: Too many arguments for '" << option.getName()
+                              << "'! Try using 'mazelib " << this->getName() << " --help' for help!" << std::endl;
                     return 0;
                 }
 
                 // If there is fewer arguments than the option has, then it is invalid
                 if (values.size() < option.getArguments().size()) {
-                    std::cout << std::endl << " mazelib: Not enough arguments for '" << option.getName() << "'! Try using 'mazelib " << this->getName() << " --help' for help!" << std::endl;
+                    std::cout << std::endl << " mazelib: Not enough arguments for '" << option.getName()
+                              << "'! Try using 'mazelib " << this->getName() << " --help' for help!" << std::endl;
                     return 0;
                 }
             }
         }
 
         if (!values.empty()) {
-            arguments[option.getName()] = std::make_optional<std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>>>(values);
+            arguments[option.getName()] = std::make_optional<std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>>>(
+                    values);
         } else {
             arguments[option.getName()] = std::nullopt;
         }
     }
 
-    return this->callable(std::map<std::string, std::optional<std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>>>>(arguments));
+    return this->callable(
+            std::map<std::string, std::optional<std::vector<std::variant<int, double, bool, std::string, std::nullopt_t>>>>(
+                    arguments));
 }
 
 /**
@@ -465,20 +480,20 @@ std::string Interface::getUsage() const {
  * @param argv argument vector
  * @return an exit code
  */
-int Interface::run(int argc, char** argv) {
+int Interface::run(int argc, char **argv) {
     if (argc == 1) {
         std::cout << std::endl << this->usage << std::endl;
         return 0;
     }
 
-    for (const auto& category : this->categories) {
+    for (const auto &category: this->categories) {
         if (category.getName() == argv[1]) {
-            return category.call(argc - 2,argv + 2);
+            return category.call(argc - 2, argv + 2);
         }
 
-        for (const auto& alias : category.getAliases()) {
+        for (const auto &alias: category.getAliases()) {
             if (alias == argv[1]) {
-                return category.call(argc - 2,argv + 2);
+                return category.call(argc - 2, argv + 2);
             }
         }
     }

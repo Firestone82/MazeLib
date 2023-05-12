@@ -8,7 +8,7 @@ using namespace std;
 /**
  * @brief Construct a new Kruskal Algorithm:: Kruskal Algorithm object
  */
-KruskalAlgorithm::KruskalAlgorithm() : GeneratingAlgorithm("Kruskal",0) {
+KruskalAlgorithm::KruskalAlgorithm() : GeneratingAlgorithm("Kruskal", 0) {
     if (seed == 0) {
         this->seed = time(nullptr);
     }
@@ -37,8 +37,8 @@ KruskalAlgorithm::KruskalAlgorithm(unsigned int seed) : GeneratingAlgorithm("Kru
  * @return MazeBuilder object
  */
 Expected<MazeBuilder> KruskalAlgorithm::generate(int width, int height) {
-    if (this->seed <= 0)            return Expected<MazeBuilder>("Seed must be greater than 0");
-    if (width < 2 || height < 2)    return Expected<MazeBuilder>("Width and height must be greater than 1");
+    if (this->seed <= 0) return Expected<MazeBuilder>("Seed must be greater than 0");
+    if (width < 2 || height < 2) return Expected<MazeBuilder>("Width and height must be greater than 1");
 
     // Seed the random number generator
     srand(this->seed);
@@ -47,7 +47,7 @@ Expected<MazeBuilder> KruskalAlgorithm::generate(int width, int height) {
     auto startTime = std::chrono::high_resolution_clock::now();
 
     // Set the IDs of the nodes
-    for (const auto& node : graph->getNodes()) {
+    for (const auto &node: graph->getNodes()) {
         node->setID(node->getX() * width + node->getY());
     }
 
@@ -60,12 +60,24 @@ Expected<MazeBuilder> KruskalAlgorithm::generate(int width, int height) {
         int targetY = rand() % height;
 
         // Randomly choose a direction
-        tuple<int, int> direction = make_tuple(0,0);
+        tuple<int, int> direction = make_tuple(0, 0);
         switch (rand() % 4) {
-            case 1: { direction = {-1, 0}; break; } // LEFT
-            case 2: { direction = { 0,-1}; break; } // UP
-            case 3: { direction = { 1, 0}; break; } // RIGHT
-            case 4: { direction = { 0, 1}; break; } // DOWN
+            case 1: {
+                direction = {-1, 0};
+                break;
+            } // LEFT
+            case 2: {
+                direction = {0, -1};
+                break;
+            } // UP
+            case 3: {
+                direction = {1, 0};
+                break;
+            } // RIGHT
+            case 4: {
+                direction = {0, 1};
+                break;
+            } // DOWN
         }
 
         // Calculate the neighbour coordinates
@@ -78,10 +90,10 @@ Expected<MazeBuilder> KruskalAlgorithm::generate(int width, int height) {
         }
 
         // Randomly chosen node from the graph
-        shared_ptr<Node> node = graph->getNode(targetX,targetY);
+        shared_ptr<Node> node = graph->getNode(targetX, targetY);
 
         // Randomly chosen neighbour of the node
-        shared_ptr<Node> neighbour = graph->getNode(neighbourX,neighbourY);
+        shared_ptr<Node> neighbour = graph->getNode(neighbourX, neighbourY);
 
         // Check if the neighbour is already connected to the node
         if (node->getID() == neighbour->getID()) {
@@ -109,5 +121,5 @@ Expected<MazeBuilder> KruskalAlgorithm::generate(int width, int height) {
     auto endTime = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
 
-    return Expected<MazeBuilder>(MazeBuilder(width, height,duration,this->getName(), seed, graph));
+    return Expected<MazeBuilder>(MazeBuilder(width, height, duration, this->getName(), seed, graph));
 }

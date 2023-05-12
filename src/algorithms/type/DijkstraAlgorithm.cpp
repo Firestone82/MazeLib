@@ -10,7 +10,7 @@ DijkstraAlgorithm::DijkstraAlgorithm() : SolvingAlgorithm("DijkstraAlgorithm") {
     this->complexity = COMPLEXITY;
 }
 
-Expected<MazePath> DijkstraAlgorithm::solve(Maze& maze) {
+Expected<MazePath> DijkstraAlgorithm::solve(Maze &maze) {
     if (maze.isValid().hasError()) return Expected<MazePath>(maze.isValid().errors());
 
     std::map<std::shared_ptr<Node>, std::pair<int, std::shared_ptr<Node>>> nodes;
@@ -20,7 +20,7 @@ Expected<MazePath> DijkstraAlgorithm::solve(Maze& maze) {
     auto startTime = std::chrono::high_resolution_clock::now();
 
     // Set the IDs of the path
-    for (const auto& node : graph.getNodes()) {
+    for (const auto &node: graph.getNodes()) {
         node->setID(0);
     }
 
@@ -29,10 +29,10 @@ Expected<MazePath> DijkstraAlgorithm::solve(Maze& maze) {
     shared_ptr<Node> endNode = graph.getNode(maze.getEnd());
 
     // Initialize all distances to infinity, except for the start node which is 0
-    for (const auto& node : graph.getNodes()) {
-        nodes[node] = std::make_pair(std::numeric_limits<int>::max(),nullptr);
+    for (const auto &node: graph.getNodes()) {
+        nodes[node] = std::make_pair(std::numeric_limits<int>::max(), nullptr);
     }
-    nodes[startNode] = std::make_pair(0,nullptr);
+    nodes[startNode] = std::make_pair(0, nullptr);
 
     // Set start as visited
     std::shared_ptr<Node> currentNode = startNode;
@@ -42,7 +42,7 @@ Expected<MazePath> DijkstraAlgorithm::solve(Maze& maze) {
         // Find the node with the smallest distance
         int distance = std::numeric_limits<int>::max();
 
-        for (const auto& node : nodes) {
+        for (const auto &node: nodes) {
             if (node.first->getID() == 0 && node.second.first < distance) {
                 distance = node.second.first;
                 currentNode = node.first;
@@ -53,11 +53,11 @@ Expected<MazePath> DijkstraAlgorithm::solve(Maze& maze) {
         currentNode->setID(1);
 
         // Update the distances and parent nodes of the current node's neighbours
-        for (const auto& neighbour : currentNode->getNeighbours()) {
+        for (const auto &neighbour: currentNode->getNeighbours()) {
             int new_distance = nodes[currentNode].first + 1;
 
             if (new_distance < nodes[neighbour].first) {
-                nodes[neighbour] = std::make_pair(new_distance,currentNode);
+                nodes[neighbour] = std::make_pair(new_distance, currentNode);
             }
         }
     }
@@ -69,10 +69,10 @@ Expected<MazePath> DijkstraAlgorithm::solve(Maze& maze) {
     }
 
     // Reverse the path
-    std::reverse(path.begin(),path.end());
+    std::reverse(path.begin(), path.end());
 
     auto endTime = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
 
-    return Expected(MazePath(duration,this->getName(),path));
+    return Expected(MazePath(duration, this->getName(), path));
 }

@@ -1,11 +1,40 @@
-#include "headers/Head.h"
+#define VERSION "1.0.0"
+#define HEADER "\
+  __  __               _      _ _        \n\
+ |  \\/  |             | |    (_) |      \n\
+ | \\  / | __ _ _______| |     _| |__    \n\
+ | |\\/| |/ _` |_  / _ \\ |    | | '_ \\ \n\
+ | |  | | (_| |/ /  __/ |____| | |_) |   \n\
+ |_|  |_|\\__,_/___\\___|______|_|_.__/  \n\
+    Author: Pavel Mikula (MIK0486)       \n"
+
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
+#include <memory>
+#include <algorithm>
+#include <optional>
+#include <variant>
+#include <chrono>
+#include <iomanip>
+
+#include "headers/Expected.h"
+
+#include "graph/Graph.h"
+#include "maze/Maze.h"
+#include "algorithms/Algorithm.h"
+#include "method/Method.h"
+#include "interface/Interface.h"
+
+int example();
+
+int test();
 
 using namespace std;
 
 int main(int argc, char **argv) {
-//    example();
-//    test();
-//    return 0;
 
     Interface interface = Interface();
     interface.setUsage("mazelib: Unknown command, try 'mazelib --help' for more information!");
@@ -112,7 +141,8 @@ int main(int argc, char **argv) {
                         cout << " mazelib:  - Seed: " << seed << endl;
 
                         std::string target = std::get<std::string>(map["algorithm"].value()[0]);
-                        std::shared_ptr<GeneratingAlgorithm> generatingAlgorithm = Algorithm::getGenerator(target, seed);
+                        std::shared_ptr<GeneratingAlgorithm> generatingAlgorithm = Algorithm::getGenerator(target,
+                                                                                                           seed);
 
                         cout << " mazelib:  - Algorithm: " << target << endl;
 
@@ -130,7 +160,7 @@ int main(int argc, char **argv) {
                             cout << " mazelib: Maze generation failed. " << endl;
                             cout << " mazelib:   - Errors: " << endl;
 
-                            for (const auto& error: expectedBuilder.errors()) {
+                            for (const auto &error: expectedBuilder.errors()) {
                                 cout << " mazelib:      - " << error << endl;
                             }
 
@@ -159,7 +189,7 @@ int main(int argc, char **argv) {
                                 y = height - 1;
                             }
 
-                            builder.setEnd({x,y});
+                            builder.setEnd({x, y});
 
                             cout << " mazelib:  - End: (" << x << ", " << y << ")" << endl;
                         }
@@ -190,7 +220,7 @@ int main(int argc, char **argv) {
                             cout << " mazelib: Maze building failed. " << endl;
                             cout << " mazelib:   - Errors: " << endl;
 
-                            for (const auto& error: expectedMaze.errors()) {
+                            for (const auto &error: expectedMaze.errors()) {
                                 cout << " mazelib:      - " << error << endl;
                             }
 
@@ -211,7 +241,7 @@ int main(int argc, char **argv) {
 
                                 cout << " mazelib:  - Image Path: " << image << endl;
 
-                                Expected<int> status = ImageSavingMethod().save(maze,image);
+                                Expected<int> status = ImageSavingMethod().save(maze, image);
 
                                 if (status.hasError()) {
                                     cout << " mazelib:     - Image saving failed. Error: " << status.error() << endl;
@@ -225,7 +255,7 @@ int main(int argc, char **argv) {
 
                                 cout << " mazelib:  - File Path: " << file << endl;
 
-                                Expected<int> status = TextFileSavingMethod().save(maze,file);
+                                Expected<int> status = TextFileSavingMethod().save(maze, file);
 
                                 if (status.hasError()) {
                                     cout << " mazelib:     - File saving failed. Error: " << status.error() << endl;
@@ -237,11 +267,14 @@ int main(int argc, char **argv) {
                         }
 
                         auto endTime = std::chrono::high_resolution_clock::now();
-                        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
+                        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                                endTime - startTime).count();
 
-                        cout << " mazeLib:  - Maze generating time: " << (maze.getGenerationTime() / 1000) << "us" << endl;
+                        cout << " mazeLib:  - Maze generating time: " << (maze.getGenerationTime() / 1000) << "us"
+                             << endl;
 
-                        cout << endl << " mazelib: Maze generated successfully! Took: " << (duration  / 1000) << "us" << endl;
+                        cout << endl << " mazelib: Maze generated successfully! Took: " << (duration / 1000) << "us"
+                             << endl;
                         cout << "" << endl;
 
                         return 0;
@@ -334,7 +367,7 @@ int main(int argc, char **argv) {
                                 y = builder.getHeight() - 1;
                             }
 
-                            builder.setEnd({x,y});
+                            builder.setEnd({x, y});
 
                             cout << " mazelib:  - End: (" << x << ", " << y << ")" << endl;
                         }
@@ -358,7 +391,7 @@ int main(int argc, char **argv) {
                             cout << " mazelib: Maze solving failed. " << endl;
                             cout << " mazelib:  - Errors: " << endl;
 
-                            for (const auto& error: expected.errors()) {
+                            for (const auto &error: expected.errors()) {
                                 cout << " mazelib:     - " << error << endl;
                             }
 
@@ -376,7 +409,7 @@ int main(int argc, char **argv) {
 
                                 cout << " mazelib:  - Image Path: " << image << endl;
 
-                                Expected<int> status = ImageSavingMethod().save(maze,image,mazePath);
+                                Expected<int> status = ImageSavingMethod().save(maze, image, mazePath);
 
                                 if (status.hasError()) {
                                     cout << " mazelib:     - Image saving failed. Error: " << status.error() << endl;
@@ -390,7 +423,7 @@ int main(int argc, char **argv) {
 
                                 cout << " mazelib:  - File Path: " << file << endl;
 
-                                Expected<int> status = TextFileSavingMethod().save(maze,file,mazePath);
+                                Expected<int> status = TextFileSavingMethod().save(maze, file, mazePath);
 
                                 if (status.hasError()) {
                                     cout << " mazelib:     - File saving failed. Error: " << status.error() << endl;
@@ -408,7 +441,7 @@ int main(int argc, char **argv) {
                         cout << " mazeLib:     - ";
 
                         int count = 0;
-                        for (const auto& point: mazePath.getNodes()) {
+                        for (const auto &point: mazePath.getNodes()) {
                             if (point->getX() == get<0>(maze.getStart()) && point->getY() == get<1>(maze.getStart())) {
                                 cout << "Start --> ";
                                 count += 2;
@@ -432,11 +465,14 @@ int main(int argc, char **argv) {
                         }
 
                         auto endTime = std::chrono::high_resolution_clock::now();
-                        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
+                        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                                endTime - startTime).count();
 
-                        cout << endl << " mazeLib:  - Maze solving time: " << (mazePath.getSolvingTime() / 1000) << "us" << endl;
+                        cout << endl << " mazeLib:  - Maze solving time: " << (mazePath.getSolvingTime() / 1000) << "us"
+                             << endl;
 
-                        cout << endl << " mazelib: Maze solved successfully! Took: " << (duration  / 1000) << "us" << endl;
+                        cout << endl << " mazelib: Maze solved successfully! Took: " << (duration / 1000) << "us"
+                             << endl;
                         cout << "" << endl;
 
                         return 0;
@@ -498,7 +534,7 @@ int main(int argc, char **argv) {
 
                         std::vector<std::shared_ptr<SolvingAlgorithm>> algorithms;
                         std::string target = std::get<std::string>(map["algorithms"].value()[0]);
-                        std::transform(target.begin(),target.end(),target.begin(),::tolower);
+                        std::transform(target.begin(), target.end(), target.begin(), ::tolower);
 
                         cout << " mazelib:  - Algorithms: " << target << endl;
 
@@ -539,9 +575,12 @@ int main(int argc, char **argv) {
 
                             // Print table header
                             // TODO-Extra: Add centering
-                            cout << " mazelib: " << left << string(nameLength,'-') << " | " << "-------" << " | " << "------------" << " | " << "----------" << endl;
-                            cout << " mazelib: " << left << setw(nameLength) << "Algorithm Name" << " | " << "Status " << " | " << "Path Length " << " | " << "Time" << endl;
-                            cout << " mazelib: " << left << string(nameLength,'-') << " | " << "-------" << " | " << "------------" << " | " << "----------" << endl;
+                            cout << " mazelib: " << left << string(nameLength, '-') << " | " << "-------" << " | "
+                                 << "------------" << " | " << "----------" << endl;
+                            cout << " mazelib: " << left << setw(nameLength) << "Algorithm Name" << " | " << "Status "
+                                 << " | " << "Path Length " << " | " << "Time" << endl;
+                            cout << " mazelib: " << left << string(nameLength, '-') << " | " << "-------" << " | "
+                                 << "------------" << " | " << "----------" << endl;
 
                             // Test all algorithms
                             for (const auto &alg: algorithms) {
@@ -578,14 +617,17 @@ int main(int argc, char **argv) {
                                 MazePath path = mazePath.value();
 
                                 cout << " mazelib:     - Path length: " << mazePath.value().getLength() << endl;
-                                cout << " mazelib:     - Time taken: " << (path.getSolvingTime() / 1000) << "us" << endl;
+                                cout << " mazelib:     - Time taken: " << (path.getSolvingTime() / 1000) << "us"
+                                     << endl;
                             }
                         }
 
                         auto endTime = std::chrono::high_resolution_clock::now();
-                        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count();
+                        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                                endTime - startTime).count();
 
-                        cout << endl << " mazelib: Testing finished! Total time taken: " << (duration / 1000) << "us" << endl;
+                        cout << endl << " mazelib: Testing finished! Total time taken: " << (duration / 1000) << "us"
+                             << endl;
                         cout << "" << endl;
 
                         return 0;
@@ -630,7 +672,8 @@ int main(int argc, char **argv) {
 
                         // Check for valid type
                         if (type != "all" && type != "generating" && type != "solving") {
-                            cout << " mazelib: Invalid type of algorithms. Available: 'all', 'generating', 'solving'." << endl;
+                            cout << " mazelib: Invalid type of algorithms. Available: 'all', 'generating', 'solving'."
+                                 << endl;
                             return 1;
                         }
 
@@ -638,17 +681,20 @@ int main(int argc, char **argv) {
 
                         // Sort algorithms
                         if (order == "name") {
-                            std::sort(algorithms.begin(), algorithms.end(),[](const std::shared_ptr<Algorithm> &a, const std::shared_ptr<Algorithm> &b) {
-                                return a->getName() < b->getName();
-                            });
+                            std::sort(algorithms.begin(), algorithms.end(),
+                                      [](const std::shared_ptr<Algorithm> &a, const std::shared_ptr<Algorithm> &b) {
+                                          return a->getName() < b->getName();
+                                      });
                         } else if (order == "type") {
-                            std::sort(algorithms.begin(), algorithms.end(),[](const std::shared_ptr<Algorithm> &a, const std::shared_ptr<Algorithm> &b) {
-                                return a->getType() < b->getType();
-                            });
+                            std::sort(algorithms.begin(), algorithms.end(),
+                                      [](const std::shared_ptr<Algorithm> &a, const std::shared_ptr<Algorithm> &b) {
+                                          return a->getType() < b->getType();
+                                      });
                         } else if (order == "both") {
-                            std::sort(algorithms.begin(), algorithms.end(),[](const std::shared_ptr<Algorithm> &a, const std::shared_ptr<Algorithm> &b) {
-                                return a->getType() + a->getName() < b->getType() + b->getName();
-                            });
+                            std::sort(algorithms.begin(), algorithms.end(),
+                                      [](const std::shared_ptr<Algorithm> &a, const std::shared_ptr<Algorithm> &b) {
+                                          return a->getType() + a->getName() < b->getType() + b->getName();
+                                      });
                         }
 
                         cout << "" << endl;
@@ -671,7 +717,8 @@ int main(int argc, char **argv) {
 
                                 if (!std::get<bool>(map["desc"].value()[0])) {
                                     cout << " mazelib:  - " << algorithm->getName() << endl;
-                                    cout << " mazelib:     - Type: " << (algorithm->getType() == "generating" ? "Generating" : "Solving") << endl;
+                                    cout << " mazelib:     - Type: "
+                                         << (algorithm->getType() == "generating" ? "Generating" : "Solving") << endl;
                                     cout << " mazelib:     - Complexity: " << algorithm->getComplexity() << endl;
                                     cout << " mazelib:     - Description: " << endl;
 
@@ -691,8 +738,10 @@ int main(int argc, char **argv) {
 
                                     cout << " mazelib:        " << description << endl;
                                 } else {
-                                    cout << " mazelib:  - " << std::setw(nameLength) << std::left << algorithm->getName();
-                                    cout << " | " << std::setw(10) << std::left << (algorithm->getType() == "generating" ? "Generating" : "Solving");
+                                    cout << " mazelib:  - " << std::setw(nameLength) << std::left
+                                         << algorithm->getName();
+                                    cout << " | " << std::setw(10) << std::left
+                                         << (algorithm->getType() == "generating" ? "Generating" : "Solving");
                                     cout << " | " << std::setw(10) << std::left << algorithm->getComplexity();
                                     cout << endl;
                                 }

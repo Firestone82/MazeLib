@@ -1,4 +1,4 @@
-#include "../headers/Head.h"
+#include "Method.h"
 
 /**
  * @brief Construct a new Method:: Method object
@@ -6,7 +6,7 @@
  * @param type method type
  */
 Method::Method(std::string name, std::string type)
-    : name(name), type(type) {
+        : name(name), type(type) {
 
     // empty
 }
