@@ -98,11 +98,16 @@ pip install -r ../requirements.txt && pip install ..
 ## Images
 Example maze output:
 
-![Generated maze](assets/maze.png)
-![Solved maze](assets/mazeSolved.png)
+<p align="center" width="100%">
+    <img width="45%" src="assets/maze.png" alt="Not Solved Maze Image"> 
+    &nbsp;
+    &nbsp;
+    &nbsp;
+    <img width="45%" src="assets/mazeSolved.png" alt="Solved Maze Image"> 
+</p>
 
 ## CLI Usage
-<details>
+<details open>
 <summary>Click to show help CLI</summary>
 
 ```
