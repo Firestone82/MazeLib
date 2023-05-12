@@ -1,6 +1,11 @@
 <img width="15%" src="assets/icon.png" align="right" alt="Icon">
 
-# Project for C++ (Maze Generator/Solver API/CLI) [![CMake](https://github.com/Firestone82/MazeLib/actions/workflows/cmake.yml/badge.svg)](https://github.com/Firestone82/MazeLib/actions/workflows/cmake.yml)
+# Project for C++ (Maze Generator/Solver API/CLI) 
+
+<a href="https://github.com/Firestone82/MazeLib/actions/workflows/cmake.yml"><img src="https://github.com/Firestone82/MazeLib/actions/workflows/cmake.yml/badge.svg"></a>
+
+- Author: Pavel Mikula (MIK0486)
+- Took approximately 78 hours
 
 ## Project Theme
 The project will focus on generating and solving mazes. It will be divided into two parts for processing. 
@@ -25,9 +30,6 @@ The graphical part of the project, written in Python, will use the tkinter libra
 libraries from the first part of the project to connect user interfaces with graphics. 
 The application will send requests to the API and render their outputs on the screen.
 
-## Example
-- 
-
 ## API Architecture
 Important classes for work:
  - Maze (Class for storing a maze)
@@ -38,8 +40,45 @@ Important classes for work:
    - Node (Subclass for storing maze cell)
  - Image (Class for exporting maze to an image)
  - Interface (Class for storing the interface)
+ - Method (Class for saving or loading maze)
+ - Bind (Class for binding methods into python)
+
+## Requirements:
+- C++17
+- CMake 3.22.1+
+- Python 3.9.7+ (for GUI)
+
+## Installation
+```shell
+# Clone the repository
+git clone https://github.com/Firestone82/MazeLib.git
+cd MazeLib
+
+# Building as C++ CLI
+mkdir build && cd build
+
+# Build the project
+cmake .. && make -j
+
+# Build the project
+pip install -r ../requirements.txt && pip install ..
+```
+
+## Images
+Example maze output:
+
+<p>
+    <img src="assets/maze.png" alt="Not Solved Maze Image"> 
+    &nbsp;
+    &nbsp;
+    &nbsp;
+    <img src="assets/mazeSolved.png" alt="Solved Maze Image"> 
+</p>
 
 ## API Usage
+<details>
+<summary>Click to show example </summary>
+
 ```cpp
 void example() {
 
@@ -81,38 +120,7 @@ void example() {
     ImageSavingMethod().save(maze, "mazePath.png", path);
 }
 ```
-
-## Requirements:
-- C++17
-- CMake 3.22.1+
-- Python 3.9.7+ (for GUI)
-
-## Installation
-```shell
-# Clone the repository
-git clone https://github.com/Firestone82/MazeLib.git
-cd MazeLib
-
-# Building as C++ CLI
-mkdir build && cd build
-
-# Build the project
-cmake .. && make -j
-
-# Build the project
-pip install -r ../requirements.txt && pip install ..
-```
-
-## Images
-Example maze output:
-
-<p>
-    <img src="assets/maze.png" alt="Not Solved Maze Image"> 
-    &nbsp;
-    &nbsp;
-    &nbsp;
-    <img src="assets/mazeSolved.png" alt="Solved Maze Image"> 
-</p>
+</details>
 
 ## CLI Usage
 <details open>
@@ -205,7 +213,3 @@ Options:
   -d, --description     | Hide description of algorithms                             |
 ```
 </details>
-
----
-### Project Author: Pavel Mikula (MIK0486)
-- Took approximately 78 hours
