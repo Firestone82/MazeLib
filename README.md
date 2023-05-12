@@ -1,8 +1,10 @@
 <img width="15%" src="assets/icon.png" align="right" alt="Icon">
 
-# Project for C++ (Maze Generator/Solver API/CLI) 
+# Project for C++ (Maze Library API/CLI) 
 
-<a href="https://github.com/Firestone82/MazeLib/actions/workflows/cmake.yml"><img src="https://github.com/Firestone82/MazeLib/actions/workflows/cmake.yml/badge.svg"></a>
+<img alt="Testing" src="https://github.com/Firestone82/MazeLib/actions/workflows/cmake.yml/badge.svg">
+<img alt="License" src="https://img.shields.io/github/license/Firestone82/MazeLib">
+<img alt="GitHub issues" src="https://img.shields.io/github/issues/Firestone82/MazeLib">
 
 - Author: Pavel Mikula (MIK0486)
 - Took approximately 78 hours
@@ -168,7 +170,7 @@ Options:
 </details>
 
 ## API Usage
-<details>
+<details open>
 <summary>Click to show example </summary>
 
 ```cpp
@@ -213,7 +215,3 @@ void example() {
 }
 ```
 </details>
-
----
-# Program runing
-<img src="assets/dino.gif" alt="Just I Dont Know">
