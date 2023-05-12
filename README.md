@@ -1,6 +1,6 @@
 <img width="15%" src="assets/icon.png" align="right" alt="Icon">
 
-# Project for C++ (Maze Generator/Solver API/CLI)
+# Project for C++ (Maze Generator/Solver API/CLI) [![CMake](https://github.com/Firestone82/MazeLib/actions/workflows/cmake.yml/badge.svg)](https://github.com/Firestone82/MazeLib/actions/workflows/cmake.yml)
 
 ## Project Theme
 The project will focus on generating and solving mazes. It will be divided into two parts for processing. 
