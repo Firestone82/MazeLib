@@ -71,7 +71,7 @@ pip install -r ../requirements.txt && pip install ..
 ## Images
 Example maze output:
 
-<p>
+<p align="center">
     <img src="assets/maze.png" alt="Not Solved Maze Image"> 
     &nbsp;
     &nbsp;
