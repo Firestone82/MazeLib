@@ -1,12 +1,22 @@
+<img width="15%" src="assets/icon.png" align="right" alt="Icon">
+
 # MazeLib
 
 > **VŠB-TUO** — School project · Programming in C++
 
-![C++](https://img.shields.io/badge/C%2B%2B-17-blue) ![Python](https://img.shields.io/badge/Python-3.9%2B-yellow) ![CMake](https://img.shields.io/badge/CMake-3.22%2B-blue)
+<p>
+  <img alt="CI" src="https://github.com/Firestone82/MazeLib/actions/workflows/cmake.yml/badge.svg">
+  <img alt="License" src="https://img.shields.io/github/license/Firestone82/MazeLib">
+  <img alt="Issues" src="https://img.shields.io/github/issues/Firestone82/MazeLib">
+</p>
 
-## About
+A C++ maze generation and solving library with a CLI, programmatic API, and Python bindings. Mazes can be exported as PNG images or serialized to disk. Powers the companion [MazeLib-GUI](https://github.com/Firestone82/MazeLib-GUI) tkinter application.
 
-A C++ maze generation and solving library with a command-line interface, programmatic API, and Python bindings. Mazes can be exported as PNG images or serialized to disk for later use. The Python bindings power the companion [MazeLib-GUI](https://github.com/Firestone82/MazeLib-GUI) tkinter application.
+<p align="center">
+  <img src="assets/maze.png" alt="Unsolved maze" width="45%">
+  &nbsp;&nbsp;&nbsp;
+  <img src="assets/mazeSolved.png" alt="Solved maze" width="45%">
+</p>
 
 ## Features
 
@@ -21,7 +31,7 @@ A C++ maze generation and solving library with a command-line interface, program
 ## Requirements
 
 - C++17 compiler and CMake 3.22.1+
-- Python 3.9+ and pip *(for Python bindings and GUI)*
+- Python 3.9+ and pip *(for bindings and GUI)*
 
 ## Setup
 
@@ -34,34 +44,110 @@ A C++ maze generation and solving library with a command-line interface, program
 2. Build the C++ library and CLI:
    ```bash
    mkdir build && cd build
-   cmake ..
-   make -j$(nproc)
+   cmake .. && make -j$(nproc)
    cd ..
    ```
 
 3. *(Optional)* Install Python bindings (required for MazeLib-GUI):
    ```bash
-   pip install -r requirements.txt
-   pip install .
+   pip install -r requirements.txt && pip install .
    ```
 
-## Usage
+## CLI Usage
 
-```bash
-# Generate a 20×20 maze and save it
-./build/mazelib generate --width 20 --height 20 --algorithm dfs --output maze.dat
+<details open>
+<summary>General help</summary>
 
-# Solve a saved maze
-./build/mazelib solve --file maze.dat --algorithm dijkstra
+```
+Format: mazelib <cmd> [options]
 
-# Export a maze as a PNG image
-./build/mazelib generate --width 30 --height 30 --algorithm kruskal --image maze.png
+Commands:
+  generate, gen    Generate a maze to file or image
+  solve            Solve a maze from file or image
+  test             Benchmark algorithms
+  algorithms       List available algorithms
+```
+</details>
 
-# Benchmark all algorithms on a 50×50 maze
-./build/mazelib test --width 50 --height 50
+<details>
+<summary>generate</summary>
 
-# List available algorithms
-./build/mazelib list
+```
+Options:
+  -w, --width       Width of maze                  REQUIRED
+  -h, --height      Height of maze                 REQUIRED
+  -a, --algorithm   Generation algorithm           REQUIRED
+  -se, --seed       Seed for reproducible mazes
+  -s, --start       Start position  [int] [int]
+  -e, --end         End position    [int] [int]
+  -pw, --pathWidth  Path width between walls
+  -ww, --wallWidth  Wall width between paths
+  -f, --file        Output file path
+  -i, --image       Output image path
+```
+</details>
+
+<details>
+<summary>solve</summary>
+
+```
+Options:
+  -fi, --fileIn     Input maze file path           REQUIRED
+  -a, --algorithm   Solving algorithm              REQUIRED
+  -s, --start       Start position
+  -e, --end         End position
+  -fo, --fileOut    Output file path
+  -i, --image       Output image path
+```
+</details>
+
+<details>
+<summary>test</summary>
+
+```
+Options:
+  -fi, --fileIn     Maze file to benchmark         REQUIRED
+  -a, --algorithm   Algorithms to test (comma-sep)
+  -fo, --fileOut    Output file path
+  -t, --table       Print results as table
+```
+</details>
+
+<p align="center">
+  <img src="assets/generate.png" alt="generate command" width="48%">
+  &nbsp;
+  <img src="assets/solve.png" alt="solve command" width="48%">
+</p>
+<p align="center">
+  <img src="assets/test.png" alt="test command" width="48%">
+  &nbsp;
+  <img src="assets/algos.png" alt="algorithms command" width="48%">
+</p>
+
+## API Usage
+
+```cpp
+// Generate a maze
+MazeBuilder builder = KruskalAlgorithm(time(nullptr)).generate(10, 10);
+builder.setPathWidth(30);
+builder.setWallWidth(3);
+Maze maze = builder.build();
+
+// Export to file and image
+TextFileSavingMethod().save(maze, "maze.txt");
+ImageSavingMethod().save(maze, "maze.png");
+
+// Load a saved maze
+Expected<MazeBuilder> loaded = TextFileLoadingMethod().load("maze.txt");
+if (loaded.hasError()) {
+    cout << "Error: " << loaded.error() << endl;
+    return;
+}
+maze = loaded.value().build();
+
+// Solve and export with path
+MazePath path = DepthFirstSearchAlgorithm().solve(maze);
+ImageSavingMethod().save(maze, "mazePath.png", path);
 ```
 
 ## License
